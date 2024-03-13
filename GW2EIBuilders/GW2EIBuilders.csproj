@@ -1,19 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Version>0.43.0</Version>
     <Configurations>Debug;Release;NoRewards</Configurations>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>DEBUG</DefineConstants>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='NoRewards|AnyCPU'">
     <DefineConstants>DEBUG</DefineConstants>
   </PropertyGroup>
-
   <ItemGroup>
     <None Include="Resources\ei.css" />
     <None Include="Resources\ei.js" />
@@ -25,7 +21,7 @@
     <None Include="Resources\JS\global.js" />
     <None Include="Resources\JS\functions.js" />
     <None Include="Resources\JS\mixins.js" />
-    <None Include="Resources\htmlHealingExtensionTemplates\tmplHealingExtensionView.html"  />
+    <None Include="Resources\htmlHealingExtensionTemplates\tmplHealingExtensionView.html" />
     <None Include="Resources\htmlHealingExtensionTemplates\tmplTargetPlayers.html" />
     <None Include="Resources\htmlHealingExtensionTemplates\tmplIncomingHealingTable.html" />
     <None Include="Resources\htmlHealingExtensionTemplates\tmplOutgoingHealingTable.html" />
@@ -90,23 +86,21 @@
     <None Include="Resources\template.html" />
     <None Include="Resources\compressionUtils.html" />
   </ItemGroup>
-
   <PropertyGroup>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <Company>GW2 Elite Insights</Company>
     <Product>GW2 Elite Insights</Product>
     <Authors>EliphasNUIT</Authors>
-    <Description></Description>
+    <Description>
+    </Description>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <UserSecretsId>deaea9ef-69e9-4b48-ba82-b2294277674f</UserSecretsId>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\GW2EIEvtcParser\GW2EIEvtcParser.csproj" />
     <ProjectReference Include="..\GW2EIGW2API\GW2EIGW2API.csproj" />
     <ProjectReference Include="..\GW2EIJSON\GW2EIJSON.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -114,12 +108,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-
 </Project>

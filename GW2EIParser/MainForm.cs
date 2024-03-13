@@ -10,9 +10,12 @@ using GW2EIDiscord;
 using GW2EIParserCommons.Exceptions;
 using GW2EIParser.Setting;
 using GW2EIParserCommons;
+using System.Diagnostics;
+using System.Runtime.Versioning;
 
 namespace GW2EIParser
 {
+    [SupportedOSPlatform("windows")]
     internal partial class MainForm : Form
     {
         private readonly SettingsForm _settingsForm;
@@ -452,12 +455,20 @@ namespace GW2EIParser
                                 {
                                     if (File.Exists(path))
                                     {
-                                        System.Diagnostics.Process.Start(path);
+                                        var psi = new ProcessStartInfo(path)
+                                        {
+                                            UseShellExecute = true
+                                        };
+                                        Process.Start(psi);
                                     }
                                 }
                                 if (operation.OpenableFiles.Count < operation.GeneratedFiles.Count && operation.OutLocation != null && Directory.Exists(operation.OutLocation))
                                 {
-                                    System.Diagnostics.Process.Start(operation.OutLocation);
+                                    var psi = new ProcessStartInfo(operation.OutLocation)
+                                    {
+                                        UseShellExecute = true
+                                    };
+                                    Process.Start(psi);
                                 }
                                 break;
                         }
@@ -471,7 +482,11 @@ namespace GW2EIParser
                                 AddTraceMessage("UI: Opening folder where outputs have been generated");
                                 if (operation.OutLocation != null && Directory.Exists(operation.OutLocation))
                                 {
-                                    System.Diagnostics.Process.Start(operation.OutLocation);
+                                    var psi = new ProcessStartInfo(operation.OutLocation)
+                                    {
+                                        UseShellExecute = true
+                                    };
+                                    Process.Start(psi);
                                 }
                                 break;
                         }
@@ -511,7 +526,11 @@ namespace GW2EIParser
                     {
                         if (File.Exists(operation.InputFile))
                         {
-                            System.Diagnostics.Process.Start(new FileInfo(operation.InputFile).DirectoryName);
+                            var psi = new ProcessStartInfo(new FileInfo(operation.InputFile).DirectoryName)
+                            {
+                                UseShellExecute = true
+                            };
+                            Process.Start(psi);
                         }
                     }
                     break;

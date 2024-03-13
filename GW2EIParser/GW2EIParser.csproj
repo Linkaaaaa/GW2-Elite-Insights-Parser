@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <AssemblyName>GuildWars2EliteInsights</AssemblyName>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <!--<TargetFramework>netcoreapp3.1</TargetFramework>-->
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -43,7 +43,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <PlatformTarget>AnyCPU</PlatformTarget>  
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='NoRewards|AnyCPU'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -52,11 +52,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
-    <PlatformTarget>AnyCPU</PlatformTarget>  
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
   <PropertyGroup>
     <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);NETSDK1107</MSBuildWarningsAsMessages>
   </PropertyGroup>
@@ -65,6 +62,9 @@
     <Authors>EliphasNUIT, Baaron</Authors>
     <PackageId>GW2EIParser</PackageId>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AssemblyVersion>2.64.2.0</AssemblyVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <RepositoryUrl>https://github.com/baaron4/GW2-Elite-Insights-Parser</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
