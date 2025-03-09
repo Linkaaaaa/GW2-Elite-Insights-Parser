@@ -144,6 +144,6 @@ static class Vector
 
     public static float GetRoundedZRotationDeg(this in Vector3 facing)
     {
-        return (float)Math.Round(ParserHelper.RadianToDegree(Math.Atan2(facing.Y, facing.X)), ParserHelper.CombatReplayDataDigit);
+        return (float)Math.Round(Trigonometry.RadianToDegree(Math.Atan2(facing.Y, facing.X)), ParserHelper.CombatReplayDataDigit);
     }
 }

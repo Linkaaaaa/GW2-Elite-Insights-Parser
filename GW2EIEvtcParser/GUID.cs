@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using GW2EIEvtcParser.ParserHelpers;
 namespace GW2EIEvtcParser;
 
 [StructLayout(LayoutKind.Sequential, Pack = 8)]
@@ -66,7 +67,7 @@ public readonly struct GUID : IEquatable<GUID>
     {
         fixed(UInt64* ptr = &first8)
         {
-            return ParserHelper.ToHexString(new ReadOnlySpan<byte>(ptr, 16));
+            return StringExtensions.ToHexString(new ReadOnlySpan<byte>(ptr, 16));
         }
     }
     public readonly unsafe string ToBase64()

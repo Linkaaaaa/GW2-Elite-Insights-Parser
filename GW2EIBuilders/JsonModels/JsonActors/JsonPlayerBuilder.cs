@@ -246,7 +246,7 @@ internal static class JsonPlayerBuilder
     private static List<JsonBuffsUptime> GetPlayerJsonBuffsUptime(SingleActor player, List<IReadOnlyDictionary<long, BuffStatistics>> buffs, List<IReadOnlyDictionary<long, BuffByActorStatistics>> buffDictionaries, ParsedEvtcLog log, RawFormatSettings settings, Dictionary<long, Buff> buffMap, Dictionary<string, HashSet<long>> personalBuffs)
     {
         var res = new List<JsonBuffsUptime>(buffs[0].Count);
-        var profEnums = new HashSet<Source>(SpecToSources(player.Spec));
+        var profEnums = new HashSet<Source>(ProfHelper.SpecToSources(player.Spec));
         IReadOnlyList<PhaseData> phases = log.FightData.GetPhases(log);
         foreach (KeyValuePair<long, BuffStatistics> pair in buffs[0])
         {
@@ -340,7 +340,7 @@ internal static class JsonPlayerBuilder
     private static List<JsonBuffVolumes> GetPlayerJsonBuffVolumes(SingleActor player, List<IReadOnlyDictionary<long, BuffVolumeStatistics>> buffVolumes, List<IReadOnlyDictionary<long, BuffVolumeByActorStatistics>> buffVolumeDictionaries, ParsedEvtcLog log, RawFormatSettings settings, Dictionary<long, Buff> buffMap, Dictionary<string, HashSet<long>> personalBuffs)
     {
         var res = new List<JsonBuffVolumes>(buffVolumes[0].Count);
-        var profEnums = new HashSet<Source>(SpecToSources(player.Spec));
+        var profEnums = new HashSet<Source>(ProfHelper.SpecToSources(player.Spec));
         IReadOnlyList<PhaseData> phases = log.FightData.GetPhases(log);
         foreach (KeyValuePair<long, BuffVolumeStatistics> pair in buffVolumes[0])
         {

@@ -148,7 +148,7 @@ public class DamageModifiersContainer
 
     public List<OutgoingDamageModifier> GetOutgoingModifiersPerSpec(ParserHelper.Spec spec)
     {
-        var srcs = ParserHelper.SpecToSources(spec);
+        var srcs = ProfHelper.SpecToSources(spec);
         var res = new List<OutgoingDamageModifier>(srcs.Count); //TODO(Rennorb) @perf: find average complexity
         foreach (ParserHelper.Source src in srcs)
         {
@@ -162,7 +162,7 @@ public class DamageModifiersContainer
 
     public List<IncomingDamageModifier> GetIncomingModifiersPerSpec(ParserHelper.Spec spec)
     {
-        var srcs = ParserHelper.SpecToSources(spec);
+        var srcs = ProfHelper.SpecToSources(spec);
         var res = new List<IncomingDamageModifier>(srcs.Count); //TODO(Rennorb) @perf: find average complexity
         foreach (ParserHelper.Source src in srcs)
         {

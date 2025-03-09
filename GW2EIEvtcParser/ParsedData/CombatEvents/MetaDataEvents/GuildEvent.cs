@@ -1,4 +1,5 @@
 ﻿using System.Buffers.Binary;
+using GW2EIEvtcParser.ParserHelpers;
 
 namespace GW2EIEvtcParser.ParsedData;
 
@@ -36,15 +37,15 @@ public class GuildEvent : MetaDataEvent
 
         // 8f55c4ee-09cc-4b0d-896c-d81e58be0042
         Span<char> strBuffer = stackalloc char[32 + 4];
-        ParserHelper.AppendHexString(strBuffer[..8], _guid[..4]);
+        StringExtensions.AppendHexString(strBuffer[..8], _guid[..4]);
         strBuffer[8] = '-';
-        ParserHelper.AppendHexString(strBuffer[9..13], _guid[4..6]);
+        StringExtensions.AppendHexString(strBuffer[9..13], _guid[4..6]);
         strBuffer[13] = '-';
-        ParserHelper.AppendHexString(strBuffer[14..18], _guid[6..8]);
+        StringExtensions.AppendHexString(strBuffer[14..18], _guid[6..8]);
         strBuffer[18] = '-';
-        ParserHelper.AppendHexString(strBuffer[19..23], _guid[8..10]);
+        StringExtensions.AppendHexString(strBuffer[19..23], _guid[8..10]);
         strBuffer[23] = '-';
-        ParserHelper.AppendHexString(strBuffer[24..36], _guid[10..16]);
+        StringExtensions.AppendHexString(strBuffer[24..36], _guid[10..16]);
 
         _guildKey = new String(strBuffer);
     }

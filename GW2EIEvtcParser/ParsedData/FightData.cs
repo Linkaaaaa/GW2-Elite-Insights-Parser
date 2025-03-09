@@ -1,6 +1,7 @@
 ﻿using GW2EIEvtcParser.EIData;
 using GW2EIEvtcParser.EncounterLogic;
 using GW2EIEvtcParser.EncounterLogic.OpenWorld;
+using GW2EIEvtcParser.ParserHelpers;
 using static GW2EIEvtcParser.ArcDPSEnums;
 using static GW2EIEvtcParser.ParsedData.AgentItem;
 using static GW2EIEvtcParser.SpeciesIDs;
@@ -27,7 +28,7 @@ public class FightData
     {
         get
         {
-            return ParserHelper.ToDurationString(FightDuration);
+            return StringExtensions.ToDurationString(FightDuration);
         }
     }
     public bool Success { get; private set; }

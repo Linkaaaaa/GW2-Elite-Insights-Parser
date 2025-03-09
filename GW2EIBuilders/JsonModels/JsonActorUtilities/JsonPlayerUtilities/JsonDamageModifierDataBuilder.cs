@@ -1,5 +1,6 @@
 ﻿using GW2EIEvtcParser;
 using GW2EIEvtcParser.EIData;
+using GW2EIEvtcParser.ParsedData;
 using GW2EIJSON;
 using static GW2EIJSON.JsonDamageModifierData;
 
@@ -37,7 +38,7 @@ internal static class JsonDamageModifierDataBuilder
     public static List<JsonDamageModifierData> GetOutgoingDamageModifiers(SingleActor player, List<IReadOnlyDictionary<int, DamageModifierStat>> damageModDicts, ParsedEvtcLog log, Dictionary<int, DamageModifier> damageModMap, Dictionary<string, HashSet<long>> personalDamageMods)
     {
         var dict = new Dictionary<int, List<JsonDamageModifierItem>>(50);
-        var profEnums = new HashSet<ParserHelper.Source>(ParserHelper.SpecToSources(player.Spec));
+        var profEnums = new HashSet<ParserHelper.Source>(ProfHelper.SpecToSources(player.Spec));
         foreach (IReadOnlyDictionary<int, DamageModifierStat> damageModDict in damageModDicts)
         {
             foreach (int key in damageModDict.Keys)
@@ -87,7 +88,7 @@ internal static class JsonDamageModifierDataBuilder
     public static List<JsonDamageModifierData> GetIncomingDamageModifiers(SingleActor player, List<IReadOnlyDictionary<int, DamageModifierStat>> damageModDicts, ParsedEvtcLog log, Dictionary<int, DamageModifier> damageModMap, Dictionary<string, HashSet<long>> personalDamageMods)
     {
         var dict = new Dictionary<int, List<JsonDamageModifierItem>>(50);
-        var profEnums = new HashSet<ParserHelper.Source>(ParserHelper.SpecToSources(player.Spec));
+        var profEnums = new HashSet<ParserHelper.Source>(ProfHelper.SpecToSources(player.Spec));
         foreach (IReadOnlyDictionary<int, DamageModifierStat> damageModDict in damageModDicts)
         {
             foreach (int key in damageModDict.Keys)

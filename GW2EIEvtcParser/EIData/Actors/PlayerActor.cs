@@ -1,6 +1,6 @@
 ﻿using GW2EIEvtcParser.Exceptions;
 using GW2EIEvtcParser.ParsedData;
-using static GW2EIEvtcParser.ParserHelper;
+using GW2EIEvtcParser.ParserHelpers;
 
 namespace GW2EIEvtcParser.EIData;
 
@@ -41,7 +41,7 @@ public class PlayerActor : SingleActor
 
     public override string GetIcon()
     {
-        return !IsFriendlyPlayer ? GetHighResolutionProfIcon(Spec) : GetProfIcon(Spec);
+        return !IsFriendlyPlayer ? ImagesHelper.GetHighResolutionProfIcon(Spec) : ImagesHelper.GetProfIcon(Spec);
     }
 
     protected override void InitAdditionalCombatReplayData(ParsedEvtcLog log, CombatReplay replay)

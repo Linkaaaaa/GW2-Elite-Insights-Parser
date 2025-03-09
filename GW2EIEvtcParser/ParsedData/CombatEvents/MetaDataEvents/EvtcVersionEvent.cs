@@ -47,7 +47,7 @@ public class EvtcVersionEvent : MetaDataEvent
         bytes.PushNative(evtcItem.IsMoving);
 
         string evtcVersion = System.Text.Encoding.UTF8.GetString(bytes).TrimEnd('\0');
-        var majorSplit = StringExt.SplitOnce(evtcVersion, '.');
+        var majorSplit = StringExtensions.SplitOnce(evtcVersion, '.');
         Build = int.Parse(majorSplit.Tail);
         var minorSplit = majorSplit.Head.SplitOnce('-');
         Revision = int.Parse(minorSplit.Tail);

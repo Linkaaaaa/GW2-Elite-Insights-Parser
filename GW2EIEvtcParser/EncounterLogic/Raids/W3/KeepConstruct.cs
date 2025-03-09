@@ -339,7 +339,7 @@ internal class KeepConstruct : StrongholdOfTheFaithful
                         replay.Decorations.Add(new CircleDecoration(200, (start, start + (ticks + 1) * 1000), Colors.Red, 0.4, connector));
                         float initialAngle1 = facing.GetRoundedZRotationDeg();
                         replay.Decorations.Add(new PieDecoration(bladeRadius, bladeOpeningAngle, (start, start + 2 * duration), Colors.Magenta, 0.5, connector).UsingRotationConnector(new AngleConnector(initialAngle1))); // First blade lasts twice as long
-                        float initialAngle2 = RadianToDegreeF(Math.Atan2(-facing.Y, -facing.X));
+                        float initialAngle2 = Trigonometry.RadianToDegreeF(Math.Atan2(-facing.Y, -facing.X));
                         replay.Decorations.Add(new PieDecoration(bladeRadius, bladeOpeningAngle, (start, start + 2 * duration), Colors.Magenta, 0.5, connector).UsingRotationConnector(new AngleConnector(initialAngle2))); // First blade lasts twice as long
                         for (int i = 1; i < ticks; i++)
                         {
@@ -359,7 +359,7 @@ internal class KeepConstruct : StrongholdOfTheFaithful
                     {
                         var connector = new AgentConnector(target);
                         replay.Decorations.Add(new CircleDecoration(200, (start, start + (ticks + 1) * 1000), Colors.Red, 0.4, connector));
-                        float initialAngle1 = RadianToDegreeF(Math.Atan2(-facing.Y, -facing.X));
+                        float initialAngle1 = Trigonometry.RadianToDegreeF(Math.Atan2(-facing.Y, -facing.X));
                         replay.Decorations.Add(new PieDecoration(bladeRadius, bladeOpeningAngle, (start, start + 2 * duration), Colors.Magenta, 0.5, connector).UsingRotationConnector(new AngleConnector(initialAngle1))); // First blade lasts twice as long
                         float initialAngle2 = initialAngle1 + 120;
                         replay.Decorations.Add(new PieDecoration(bladeRadius, bladeOpeningAngle, (start, start + 2 * duration), Colors.Magenta, 0.5, connector).UsingRotationConnector(new AngleConnector(initialAngle2))); // First blade lasts twice as long

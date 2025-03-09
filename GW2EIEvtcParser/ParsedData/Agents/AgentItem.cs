@@ -49,7 +49,7 @@ public class AgentItem
         Agent = agent;
         Name = name;
         Spec = spec;
-        BaseSpec = ParserHelper.SpecToBaseSpec(spec);
+        BaseSpec = ProfHelper.SpecToBaseSpec(spec);
         ID = id;
         Type = type;
         Toughness = toughness;
@@ -117,7 +117,7 @@ public class AgentItem
     internal void OverrideSpec(ParserHelper.Spec spec)
     {
         Spec = spec;
-        BaseSpec = ParserHelper.SpecToBaseSpec(spec);
+        BaseSpec = ProfHelper.SpecToBaseSpec(spec);
     }
 
     internal void OverrideIsNotInSquadFriendlyPlayer(bool status)

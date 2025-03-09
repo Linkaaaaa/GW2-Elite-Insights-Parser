@@ -1,15 +1,12 @@
-﻿using GW2EIEvtcParser.EIData;
-using GW2EIEvtcParser.Extensions;
+﻿using GW2EIEvtcParser.Extensions;
 using GW2EIEvtcParser.ParsedData;
-using GW2EIEvtcParser.ParserHelpers;
 using static GW2EIEvtcParser.ArcDPSEnums;
-using static GW2EIEvtcParser.SpeciesIDs;
 
 namespace GW2EIEvtcParser;
 
 public static class ParserHelper
 {
-
+    internal delegate bool ExtraRedirection(CombatItem evt, AgentItem from, AgentItem to);
     internal static readonly AgentItem _unknownAgent = new();
 
     public const int CombatReplayPollingRate = 300;
@@ -76,6 +73,8 @@ public static class ParserHelper
         Unknown
     };
 
+    public enum BuffEnum { Self, Group, OffGroup, Squad };
+
     [Flags]
     public enum DamageType
     {
@@ -134,7 +133,6 @@ public static class ParserHelper
         str += " Damage";
         return str;
     }
-    public enum BuffEnum { Self, Group, OffGroup, Squad };
 
     internal static Dictionary<long, List<T>> GroupByTime<T>(IEnumerable<T> list) where T : TimeCombatEvent
     {
@@ -157,48 +155,6 @@ public static class ParserHelper
         return groupByTime;
     }
 
-    internal static double RadianToDegree(double radian)
-    {
-        return radian * 180.0 / Math.PI;
-    }
-
-    internal static float RadianToDegreeF(double radian)
-    {
-        return (float)RadianToDegree(radian);
-    }
-
-    internal static double DegreeToRadian(double degree)
-    {
-        return degree * Math.PI / 180.0;
-    }
-
-    internal static float DegreeToRadianF(double degree)
-    {
-        return (float)DegreeToRadian(degree);
-    }
-
-    /// <summary>
-    /// Given a <paramref name="degree"/>, calculates the <see cref="Math.Cos(double)"/> and <see cref="Math.Sin(double)"/> values.
-    /// </summary>
-    /// <param name="degree"></param>
-    /// <returns>(<see cref="float"/>, <see cref="float"/>) tuple containing the resulting X and Y values.</returns>
-    internal static (float, float) DegreeToRadiansTrigonometricF(double degree)
-    {
-        return ((float, float))DegreeToRadiansTrigonometric(degree);
-    }
-
-    /// <summary>
-    /// Given a <paramref name="degree"/>, calculates the <see cref="Math.Cos(double)"/> and <see cref="Math.Sin(double)"/> values.
-    /// </summary>
-    /// <param name="degree"></param>
-    /// <returns>(<see cref="double"/>, <see cref="double"/>) tuple containing the resulting X and Y values.</returns>
-    internal static (double, double) DegreeToRadiansTrigonometric(double degree)
-    {
-        double x = Math.Cos(DegreeToRadian(degree));
-        double y = Math.Sin(DegreeToRadian(degree));
-        return (x, y);
-    }
-
     internal static T MaxBy<T, TComparable>(this IEnumerable<T> en, Func<T, TComparable> evaluate) where TComparable : IComparable<TComparable>
     {
         return en.Select(t => (value: t, eval: evaluate(t)))
@@ -209,23 +165,6 @@ public static class ParserHelper
     {
         return en.Select(t => (value: t, eval: evaluate(t)))
             .Aggregate((max, next) => next.eval.CompareTo(max.eval) < 0 ? next : max).value;
-    }
-
-    internal static string ToHexString(ReadOnlySpan<byte> bytes)
-    {
-        using var buffer = new ArrayPoolReturner<char>(bytes.Length * 2);
-        AppendHexString(buffer, bytes);
-        return new String(buffer);
-    }
-    internal static void AppendHexString(Span<char> destination, ReadOnlySpan<byte> bytes)
-    {
-        const string CHARSET = "0123456789ABCDEF";
-        int offset = 0;
-        foreach(var c in bytes)
-        {
-            destination[offset++] = CHARSET[(c & 0xf0) >> 4];
-            destination[offset++] = CHARSET[c & 0x0f];
-        }
     }
 
     internal static bool IsSupportedStateChange(StateChange state)
@@ -272,24 +211,6 @@ public static class ParserHelper
         return final;
     }
 
-
-    public static string ToDurationString(long duration)
-    {
-        var durationTimeSpan = TimeSpan.FromMilliseconds(Math.Abs(duration));
-        string durationString = durationTimeSpan.ToString("mm") + "m " + durationTimeSpan.ToString("ss") + "s " + durationTimeSpan.Milliseconds + "ms";
-        if (durationTimeSpan.Hours > 0)
-        {
-            durationString = durationTimeSpan.ToString("hh") + "h " + durationString;
-        }
-        if (duration < 0)
-        {
-            durationString = "-" + durationString;
-        }
-        return durationString;
-    }
-
-
-    internal delegate bool ExtraRedirection(CombatItem evt, AgentItem from, AgentItem to);
     /// <summary>
     /// Method used to redirect a subset of events from redirectFrom to to
     /// </summary>
@@ -447,194 +368,6 @@ public static class ParserHelper
         agentData.SwapMasters(redirectFrom, to);
     }
 
-    /// <summary>
-    /// Dictionary to find the <see cref="Spec"/> Specialization / Profession given a <see cref="string"/> as reference.
-    /// </summary>
-    private static IReadOnlyDictionary<string, Spec> ProfToSpecDictionary = new Dictionary<string, Spec>()
-    {
-        { "NPC", Spec.NPC },
-        { "GDG", Spec.Gadget },
-        { "Untamed", Spec.Untamed },
-        { "Druid", Spec.Druid },
-        { "Soulbeast", Spec.Soulbeast },
-        { "Ranger", Spec.Ranger },
-        { "Scrapper", Spec.Scrapper },
-        { "Holosmith", Spec.Holosmith },
-        { "Mechanist", Spec.Mechanist },
-        { "Engineer", Spec.Engineer },
-        { "Specter", Spec.Specter },
-        { "Daredevil", Spec.Daredevil },
-        { "Deadeye", Spec.Deadeye },
-        { "Thief", Spec.Thief },
-        { "Catalyst", Spec.Catalyst },
-        { "Weaver", Spec.Weaver },
-        { "Tempest", Spec.Tempest },
-        { "Elementalist", Spec.Elementalist },
-        { "Virtuoso", Spec.Virtuoso },
-        { "Mirage", Spec.Mirage },
-        { "Chronomancer", Spec.Chronomancer },
-        { "Mesmer", Spec.Mesmer },
-        { "Harbinger", Spec.Harbinger },
-        { "Scourge", Spec.Scourge },
-        { "Reaper", Spec.Reaper },
-        { "Necromancer", Spec.Necromancer },
-        { "Bladesworn", Spec.Bladesworn },
-        { "Spellbreaker", Spec.Spellbreaker },
-        { "Berserker", Spec.Berserker },
-        { "Warrior", Spec.Warrior },
-        { "Willbender", Spec.Willbender },
-        { "Firebrand", Spec.Firebrand },
-        { "Dragonhunter", Spec.Dragonhunter },
-        { "Guardian", Spec.Guardian },
-        { "Vindicator", Spec.Vindicator },
-        { "Renegade", Spec.Renegade },
-        { "Herald", Spec.Herald },
-        { "Revenant", Spec.Revenant },
-        { "", Spec.Unknown },
-    };
-
-    internal static Spec ProfToSpec(string prof)
-    {
-        return ProfToSpecDictionary.TryGetValue(prof, out Spec spec) ? spec : Spec.Unknown;
-    }
-
-    /// <summary>
-    /// Dictionary to find the base <see cref="Spec"/> Profession given a <see cref="Spec"/> Elite Specialization.
-    /// </summary>
-    private static IReadOnlyDictionary<Spec, Spec> SpecToBaseProfDictionary = new Dictionary<Spec, Spec>()
-    {
-        { Spec.Untamed, Spec.Ranger },
-        { Spec.Soulbeast, Spec.Ranger },
-        { Spec.Druid, Spec.Ranger },
-        { Spec.Ranger, Spec.Ranger },
-        { Spec.Mechanist, Spec.Engineer },
-        { Spec.Holosmith, Spec.Engineer },
-        { Spec.Scrapper, Spec.Engineer },
-        { Spec.Engineer, Spec.Engineer },
-        { Spec.Specter, Spec.Thief },
-        { Spec.Deadeye, Spec.Thief },
-        { Spec.Daredevil, Spec.Thief },
-        { Spec.Thief, Spec.Thief },
-        { Spec.Catalyst, Spec.Elementalist },
-        { Spec.Weaver, Spec.Elementalist },
-        { Spec.Tempest, Spec.Elementalist },
-        { Spec.Elementalist, Spec.Elementalist },
-        { Spec.Virtuoso, Spec.Mesmer },
-        { Spec.Mirage, Spec.Mesmer },
-        { Spec.Chronomancer, Spec.Mesmer },
-        { Spec.Mesmer, Spec.Mesmer },
-        { Spec.Harbinger, Spec.Necromancer },
-        { Spec.Scourge, Spec.Necromancer },
-        { Spec.Reaper, Spec.Necromancer },
-        { Spec.Necromancer, Spec.Necromancer },
-        { Spec.Bladesworn, Spec.Warrior },
-        { Spec.Spellbreaker, Spec.Warrior },
-        { Spec.Berserker, Spec.Warrior },
-        { Spec.Warrior, Spec.Warrior },
-        { Spec.Willbender, Spec.Guardian },
-        { Spec.Firebrand, Spec.Guardian },
-        { Spec.Dragonhunter, Spec.Guardian },
-        { Spec.Guardian, Spec.Guardian },
-        { Spec.Vindicator, Spec.Revenant },
-        { Spec.Renegade, Spec.Revenant },
-        { Spec.Herald, Spec.Revenant },
-        { Spec.Revenant, Spec.Revenant },
-    };
-
-    internal static Spec SpecToBaseSpec(Spec spec)
-    {
-        return SpecToBaseProfDictionary.TryGetValue(spec, out Spec prof) ? prof : spec;
-    }
-
-    /// <summary>
-    /// Dictionary to find the <see cref="Source"/> given a specific <see cref="Spec"/>.
-    /// </summary>
-    private static IReadOnlyDictionary<Spec, List<Source>> SpecToSourcesDictionary = new Dictionary<Spec, List<Source>>()
-    {
-        { Spec.Untamed, new List<Source> { Source.Ranger, Source.Untamed } },
-        { Spec.Soulbeast, new List<Source> { Source.Ranger, Source.Soulbeast } },
-        { Spec.Druid, new List<Source> { Source.Ranger, Source.Druid } },
-        { Spec.Ranger, new List<Source> { Source.Ranger } },
-        { Spec.Mechanist, new List<Source> { Source.Engineer, Source.Mechanist } },
-        { Spec.Holosmith, new List<Source> { Source.Engineer, Source.Holosmith } },
-        { Spec.Scrapper, new List<Source> { Source.Engineer, Source.Scrapper } },
-        { Spec.Engineer, new List<Source> { Source.Engineer } },
-        { Spec.Specter, new List<Source> { Source.Thief, Source.Specter } },
-        { Spec.Deadeye, new List<Source> { Source.Thief, Source.Deadeye } },
-        { Spec.Daredevil, new List<Source> { Source.Thief, Source.Daredevil } },
-        { Spec.Thief, new List<Source> { Source.Thief } },
-        { Spec.Catalyst, new List<Source> { Source.Elementalist, Source.Catalyst } },
-        { Spec.Weaver, new List<Source> { Source.Elementalist, Source.Weaver } },
-        { Spec.Tempest, new List<Source> { Source.Elementalist, Source.Tempest } },
-        { Spec.Elementalist, new List<Source> { Source.Elementalist } },
-        { Spec.Virtuoso, new List<Source> { Source.Mesmer, Source.Virtuoso } },
-        { Spec.Mirage, new List<Source> { Source.Mesmer, Source.Mirage } },
-        { Spec.Chronomancer, new List<Source> { Source.Mesmer, Source.Chronomancer } },
-        { Spec.Mesmer, new List<Source> { Source.Mesmer } },
-        { Spec.Harbinger, new List<Source> { Source.Necromancer, Source.Harbinger } },
-        { Spec.Scourge, new List<Source> { Source.Necromancer, Source.Scourge } },
-        { Spec.Reaper, new List<Source> { Source.Necromancer, Source.Reaper } },
-        { Spec.Necromancer, new List<Source> { Source.Necromancer } },
-        { Spec.Bladesworn, new List<Source> { Source.Warrior, Source.Bladesworn } },
-        { Spec.Spellbreaker, new List<Source> { Source.Warrior, Source.Spellbreaker } },
-        { Spec.Berserker, new List<Source> { Source.Warrior, Source.Berserker } },
-        { Spec.Warrior, new List<Source> { Source.Warrior } },
-        { Spec.Willbender, new List<Source> { Source.Guardian, Source.Willbender } },
-        { Spec.Firebrand, new List<Source> { Source.Guardian, Source.Firebrand } },
-        { Spec.Dragonhunter, new List<Source> { Source.Guardian, Source.Dragonhunter } },
-        { Spec.Guardian, new List<Source> { Source.Guardian } },
-        { Spec.Vindicator, new List<Source> { Source.Revenant, Source.Vindicator } },
-        { Spec.Renegade, new List<Source> { Source.Revenant, Source.Renegade } },
-        { Spec.Herald, new List<Source> { Source.Revenant, Source.Herald } },
-        { Spec.Revenant, new List<Source> { Source.Revenant } },
-    };
-
-    public static IReadOnlyList<Source> SpecToSources(Spec spec)
-    {
-        return SpecToSourcesDictionary.TryGetValue(spec, out var sourceList) ? sourceList : [ ];
-    }
-
-    internal static string GetHighResolutionProfIcon(Spec spec)
-    {
-        return ParserIcons.HighResProfIcons.TryGetValue(spec, out var icon) ? icon : ParserIcons.UnknownProfessionIcon;
-    }
-
-    internal static string GetProfIcon(Spec spec)
-    {
-        return ParserIcons.BaseResProfIcons.TryGetValue(spec, out var icon) ? icon : ParserIcons.UnknownProfessionIcon;
-    }
-
-    internal static string GetGadgetIcon()
-    {
-        return ParserIcons.GenericGadgetIcon;
-    }
-
-    internal static string GetNPCIcon(int id)
-    {
-        if (id == 0)
-        {
-            return ParserIcons.UnknownNPCIcon;
-        }
-
-        TargetID target = GetTargetID(id);
-        if (target != TargetID.Unknown)
-        {
-            return ParserIcons.TargetNPCIcons.TryGetValue(target, out var targetIcon) ? targetIcon : ParserIcons.GenericEnemyIcon;
-        }
-        TrashID trash = GetTrashID(id);
-        if (trash != TrashID.Unknown)
-        {
-            return ParserIcons.TrashNPCIcons.TryGetValue(trash, out var trashIcon) ? trashIcon : ParserIcons.GenericEnemyIcon;
-        }
-        MinionID minion = GetMinionID(id);
-        if (minion != MinionID.Unknown)
-        {
-            return ParserIcons.MinionNPCIcons.TryGetValue(minion, out var minionIcon) ? minionIcon : ParserIcons.GenericEnemyIcon;
-        }
-
-        return ParserIcons.GenericEnemyIcon;
-    }
-
     public static IReadOnlyDictionary<BuffAttribute, string> BuffAttributesStrings { get; private set; } = new Dictionary<BuffAttribute, string>()
     {
         { BuffAttribute.Power, "Power" },
@@ -738,106 +471,7 @@ public static class ParserHelper
         { BuffAttribute.SkillActivationDamageFormula, " replaces" },
         { BuffAttribute.Unknown, "Unknown" },
     };
-
-    public static bool IsKnownMinionID(AgentItem minion, Spec spec)
-    {
-        if (minion.Type == AgentItem.AgentType.Gadget)
-        {
-            return false;
-        }
-        int id = minion.ID;
-        bool res = ProfHelper.IsKnownMinionID(id);
-        switch (spec)
-        {
-            //
-            case Spec.Elementalist:
-            case Spec.Tempest:
-            case Spec.Weaver:
-            case Spec.Catalyst:
-                res |= ElementalistHelper.IsKnownMinionID(id);
-                break;
-            //
-            case Spec.Necromancer:
-            case Spec.Scourge:
-            case Spec.Harbinger:
-                res |= NecromancerHelper.IsKnownMinionID(id);
-                break;
-            case Spec.Reaper:
-                res |= NecromancerHelper.IsKnownMinionID(id);
-                res |= ReaperHelper.IsKnownMinionID(id);
-                break;
-            //
-            case Spec.Mesmer:
-                res |= MesmerHelper.IsKnownMinionID(id);
-                break;
-            case Spec.Chronomancer:
-                res |= MesmerHelper.IsKnownMinionID(id);
-                res |= ChronomancerHelper.IsKnownMinionID(id);
-                break;
-            case Spec.Mirage:
-                res |= MesmerHelper.IsKnownMinionID(id);
-                res |= MirageHelper.IsKnownMinionID(id);
-                break;
-            case Spec.Virtuoso:
-                res |= MesmerHelper.IsKnownMinionID(id);
-                res |= VirtuosoHelper.IsKnownMinionID(id);
-                break;
-            //
-            case Spec.Thief:
-                res |= ThiefHelper.IsKnownMinionID(id);
-                break;
-            case Spec.Daredevil:
-                res |= ThiefHelper.IsKnownMinionID(id);
-                res |= DaredevilHelper.IsKnownMinionID(id);
-                break;
-            case Spec.Deadeye:
-                res |= ThiefHelper.IsKnownMinionID(id);
-                res |= DeadeyeHelper.IsKnownMinionID(id);
-                break;
-            case Spec.Specter:
-                res |= ThiefHelper.IsKnownMinionID(id);
-                res |= SpecterHelper.IsKnownMinionID(id);
-                break;
-            //
-            case Spec.Engineer:
-            case Spec.Holosmith:
-                res |= EngineerHelper.IsKnownMinionID(id);
-                break;
-            case Spec.Scrapper:
-                res |= EngineerHelper.IsKnownMinionID(id);
-                res |= ScrapperHelper.IsKnownMinionID(id);
-                break;
-            case Spec.Mechanist:
-                res |= EngineerHelper.IsKnownMinionID(id);
-                res |= MechanistHelper.IsKnownMinionID(id);
-                break;
-            //
-            case Spec.Ranger:
-            case Spec.Druid:
-            case Spec.Soulbeast:
-            case Spec.Untamed:
-                res |= RangerHelper.IsKnownMinionID(id);
-                break;
-            //
-            case Spec.Revenant:
-            case Spec.Herald:
-            case Spec.Vindicator:
-                res |= RevenantHelper.IsKnownMinionID(id);
-                break;
-            case Spec.Renegade:
-                res |= RevenantHelper.IsKnownMinionID(id);
-                res |= RenegadeHelper.IsKnownMinionID(id);
-                break;
-            //
-            case Spec.Guardian:
-            case Spec.Dragonhunter:
-            case Spec.Firebrand:
-            case Spec.Willbender:
-                res |= GuardianHelper.IsKnownMinionID(id);
-                break;
-        }
-        return res;
-    }
+    
     public static void Add<TKey, TValue>(Dictionary<TKey, List<TValue>> dict, TKey key, TValue evt)
     {
         if (dict.TryGetValue(key, out List<TValue>? list))

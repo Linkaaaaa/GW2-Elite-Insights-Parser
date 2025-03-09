@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using GW2EIEvtcParser.EIData;
 using static GW2EIEvtcParser.ParserHelper;
 
 namespace GW2EIEvtcParser.ParsedData;
@@ -16,7 +17,7 @@ public abstract class AbstractEffectEvent : StatusEvent
     /// The effect's rotation around each axis in <b>degrees</b>.
     /// Like <see cref="Orientation"/> but using degrees.
     /// </summary>
-    public Vector3 Rotation => new(RadianToDegreeF(Orientation.X), RadianToDegreeF(Orientation.Y), RadianToDegreeF(Orientation.Z));
+    public Vector3 Rotation => new(Trigonometry.RadianToDegreeF(Orientation.X), Trigonometry.RadianToDegreeF(Orientation.Y), Trigonometry.RadianToDegreeF(Orientation.Z));
 
     /// <summary>
     /// The effect's position in the game's coordinate system, if <see cref="IsAroundDst"/> is <c>false</c>.

@@ -224,7 +224,7 @@ public class ParsedEvtcLog
                 {
                     continue;
                 }
-                if (ParserHelper.IsKnownMinionID(minions.ReferenceAgentItem, actor.Spec))
+                if (ProfHelper.IsKnownMinionID(minions.ReferenceAgentItem, actor.Spec))
                 {
                     fromNonFriendliesSet.UnionWith(minions.MinionList);
                 }

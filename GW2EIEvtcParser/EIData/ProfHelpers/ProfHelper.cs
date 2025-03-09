@@ -8,7 +8,7 @@ using static GW2EIEvtcParser.SpeciesIDs;
 
 namespace GW2EIEvtcParser.EIData;
 
-internal static class ProfHelper
+public static class ProfHelper
 {
 
     private static readonly List<InstantCastFinder> _genericInstantCastFinders =
@@ -597,6 +597,159 @@ internal static class ProfHelper
     }
     #endif
 
+    #region SPECIALIZATIONS
+
+    /// <summary>
+    /// Dictionary to find the <see cref="Spec"/> Specialization / Profession given a <see cref="string"/> as reference.
+    /// </summary>
+    private static IReadOnlyDictionary<string, Spec> ProfToSpecDictionary = new Dictionary<string, Spec>()
+    {
+        { "NPC", Spec.NPC },
+        { "GDG", Spec.Gadget },
+        { "Untamed", Spec.Untamed },
+        { "Druid", Spec.Druid },
+        { "Soulbeast", Spec.Soulbeast },
+        { "Ranger", Spec.Ranger },
+        { "Scrapper", Spec.Scrapper },
+        { "Holosmith", Spec.Holosmith },
+        { "Mechanist", Spec.Mechanist },
+        { "Engineer", Spec.Engineer },
+        { "Specter", Spec.Specter },
+        { "Daredevil", Spec.Daredevil },
+        { "Deadeye", Spec.Deadeye },
+        { "Thief", Spec.Thief },
+        { "Catalyst", Spec.Catalyst },
+        { "Weaver", Spec.Weaver },
+        { "Tempest", Spec.Tempest },
+        { "Elementalist", Spec.Elementalist },
+        { "Virtuoso", Spec.Virtuoso },
+        { "Mirage", Spec.Mirage },
+        { "Chronomancer", Spec.Chronomancer },
+        { "Mesmer", Spec.Mesmer },
+        { "Harbinger", Spec.Harbinger },
+        { "Scourge", Spec.Scourge },
+        { "Reaper", Spec.Reaper },
+        { "Necromancer", Spec.Necromancer },
+        { "Bladesworn", Spec.Bladesworn },
+        { "Spellbreaker", Spec.Spellbreaker },
+        { "Berserker", Spec.Berserker },
+        { "Warrior", Spec.Warrior },
+        { "Willbender", Spec.Willbender },
+        { "Firebrand", Spec.Firebrand },
+        { "Dragonhunter", Spec.Dragonhunter },
+        { "Guardian", Spec.Guardian },
+        { "Vindicator", Spec.Vindicator },
+        { "Renegade", Spec.Renegade },
+        { "Herald", Spec.Herald },
+        { "Revenant", Spec.Revenant },
+        { "", Spec.Unknown },
+    };
+
+    internal static Spec ProfToSpec(string prof)
+    {
+        return ProfToSpecDictionary.TryGetValue(prof, out Spec spec) ? spec : Spec.Unknown;
+    }
+
+    /// <summary>
+    /// Dictionary to find the base <see cref="Spec"/> Profession given a <see cref="Spec"/> Elite Specialization.
+    /// </summary>
+    private readonly static IReadOnlyDictionary<Spec, Spec> SpecToBaseProfDictionary = new Dictionary<Spec, Spec>()
+    {
+        { Spec.Untamed, Spec.Ranger },
+        { Spec.Soulbeast, Spec.Ranger },
+        { Spec.Druid, Spec.Ranger },
+        { Spec.Ranger, Spec.Ranger },
+        { Spec.Mechanist, Spec.Engineer },
+        { Spec.Holosmith, Spec.Engineer },
+        { Spec.Scrapper, Spec.Engineer },
+        { Spec.Engineer, Spec.Engineer },
+        { Spec.Specter, Spec.Thief },
+        { Spec.Deadeye, Spec.Thief },
+        { Spec.Daredevil, Spec.Thief },
+        { Spec.Thief, Spec.Thief },
+        { Spec.Catalyst, Spec.Elementalist },
+        { Spec.Weaver, Spec.Elementalist },
+        { Spec.Tempest, Spec.Elementalist },
+        { Spec.Elementalist, Spec.Elementalist },
+        { Spec.Virtuoso, Spec.Mesmer },
+        { Spec.Mirage, Spec.Mesmer },
+        { Spec.Chronomancer, Spec.Mesmer },
+        { Spec.Mesmer, Spec.Mesmer },
+        { Spec.Harbinger, Spec.Necromancer },
+        { Spec.Scourge, Spec.Necromancer },
+        { Spec.Reaper, Spec.Necromancer },
+        { Spec.Necromancer, Spec.Necromancer },
+        { Spec.Bladesworn, Spec.Warrior },
+        { Spec.Spellbreaker, Spec.Warrior },
+        { Spec.Berserker, Spec.Warrior },
+        { Spec.Warrior, Spec.Warrior },
+        { Spec.Willbender, Spec.Guardian },
+        { Spec.Firebrand, Spec.Guardian },
+        { Spec.Dragonhunter, Spec.Guardian },
+        { Spec.Guardian, Spec.Guardian },
+        { Spec.Vindicator, Spec.Revenant },
+        { Spec.Renegade, Spec.Revenant },
+        { Spec.Herald, Spec.Revenant },
+        { Spec.Revenant, Spec.Revenant },
+    };
+
+    internal static Spec SpecToBaseSpec(Spec spec)
+    {
+        return SpecToBaseProfDictionary.TryGetValue(spec, out Spec prof) ? prof : spec;
+    }
+
+    /// <summary>
+    /// Dictionary to find the <see cref="Source"/> given a specific <see cref="Spec"/>.
+    /// </summary>
+    private static readonly IReadOnlyDictionary<Spec, List<Source>> SpecToSourcesDictionary = new Dictionary<Spec, List<Source>>()
+    {
+        { Spec.Untamed, new List<Source> { Source.Ranger, Source.Untamed } },
+        { Spec.Soulbeast, new List<Source> { Source.Ranger, Source.Soulbeast } },
+        { Spec.Druid, new List<Source> { Source.Ranger, Source.Druid } },
+        { Spec.Ranger, new List<Source> { Source.Ranger } },
+        { Spec.Mechanist, new List<Source> { Source.Engineer, Source.Mechanist } },
+        { Spec.Holosmith, new List<Source> { Source.Engineer, Source.Holosmith } },
+        { Spec.Scrapper, new List<Source> { Source.Engineer, Source.Scrapper } },
+        { Spec.Engineer, new List<Source> { Source.Engineer } },
+        { Spec.Specter, new List<Source> { Source.Thief, Source.Specter } },
+        { Spec.Deadeye, new List<Source> { Source.Thief, Source.Deadeye } },
+        { Spec.Daredevil, new List<Source> { Source.Thief, Source.Daredevil } },
+        { Spec.Thief, new List<Source> { Source.Thief } },
+        { Spec.Catalyst, new List<Source> { Source.Elementalist, Source.Catalyst } },
+        { Spec.Weaver, new List<Source> { Source.Elementalist, Source.Weaver } },
+        { Spec.Tempest, new List<Source> { Source.Elementalist, Source.Tempest } },
+        { Spec.Elementalist, new List<Source> { Source.Elementalist } },
+        { Spec.Virtuoso, new List<Source> { Source.Mesmer, Source.Virtuoso } },
+        { Spec.Mirage, new List<Source> { Source.Mesmer, Source.Mirage } },
+        { Spec.Chronomancer, new List<Source> { Source.Mesmer, Source.Chronomancer } },
+        { Spec.Mesmer, new List<Source> { Source.Mesmer } },
+        { Spec.Harbinger, new List<Source> { Source.Necromancer, Source.Harbinger } },
+        { Spec.Scourge, new List<Source> { Source.Necromancer, Source.Scourge } },
+        { Spec.Reaper, new List<Source> { Source.Necromancer, Source.Reaper } },
+        { Spec.Necromancer, new List<Source> { Source.Necromancer } },
+        { Spec.Bladesworn, new List<Source> { Source.Warrior, Source.Bladesworn } },
+        { Spec.Spellbreaker, new List<Source> { Source.Warrior, Source.Spellbreaker } },
+        { Spec.Berserker, new List<Source> { Source.Warrior, Source.Berserker } },
+        { Spec.Warrior, new List<Source> { Source.Warrior } },
+        { Spec.Willbender, new List<Source> { Source.Guardian, Source.Willbender } },
+        { Spec.Firebrand, new List<Source> { Source.Guardian, Source.Firebrand } },
+        { Spec.Dragonhunter, new List<Source> { Source.Guardian, Source.Dragonhunter } },
+        { Spec.Guardian, new List<Source> { Source.Guardian } },
+        { Spec.Vindicator, new List<Source> { Source.Revenant, Source.Vindicator } },
+        { Spec.Renegade, new List<Source> { Source.Revenant, Source.Renegade } },
+        { Spec.Herald, new List<Source> { Source.Revenant, Source.Herald } },
+        { Spec.Revenant, new List<Source> { Source.Revenant } },
+    };
+
+    public static IReadOnlyList<Source> SpecToSources(Spec spec)
+    {
+        return SpecToSourcesDictionary.TryGetValue(spec, out var sourceList) ? sourceList : [];
+    }
+
+    #endregion
+
+    #region MINIONS
+
     private static readonly HashSet<Spec> _canSummonClones =
     [
         Spec.Mesmer,
@@ -655,9 +808,104 @@ internal static class ProfHelper
         (int)MinionID.RavenSpiritShadow,
     ];
 
-    internal static bool IsKnownMinionID(int id)
+    public static bool IsKnownMinionID(AgentItem minion, Spec spec)
     {
-        return CommonMinions.Contains(id);
+        if (minion.Type == AgentItem.AgentType.Gadget)
+        {
+            return false;
+        }
+        int id = minion.ID;
+        bool res = CommonMinions.Contains(id);
+        switch (spec)
+        {
+            // Elementalist
+            case Spec.Elementalist:
+            case Spec.Tempest:
+            case Spec.Weaver:
+            case Spec.Catalyst:
+                res |= ElementalistHelper.IsKnownMinionID(id);
+                break;
+            // Necromancer
+            case Spec.Necromancer:
+            case Spec.Scourge:
+            case Spec.Harbinger:
+                res |= NecromancerHelper.IsKnownMinionID(id);
+                break;
+            case Spec.Reaper:
+                res |= NecromancerHelper.IsKnownMinionID(id);
+                res |= ReaperHelper.IsKnownMinionID(id);
+                break;
+            // Mesmer
+            case Spec.Mesmer:
+                res |= MesmerHelper.IsKnownMinionID(id);
+                break;
+            case Spec.Chronomancer:
+                res |= MesmerHelper.IsKnownMinionID(id);
+                res |= ChronomancerHelper.IsKnownMinionID(id);
+                break;
+            case Spec.Mirage:
+                res |= MesmerHelper.IsKnownMinionID(id);
+                res |= MirageHelper.IsKnownMinionID(id);
+                break;
+            case Spec.Virtuoso:
+                res |= MesmerHelper.IsKnownMinionID(id);
+                res |= VirtuosoHelper.IsKnownMinionID(id);
+                break;
+            // Thief
+            case Spec.Thief:
+                res |= ThiefHelper.IsKnownMinionID(id);
+                break;
+            case Spec.Daredevil:
+                res |= ThiefHelper.IsKnownMinionID(id);
+                res |= DaredevilHelper.IsKnownMinionID(id);
+                break;
+            case Spec.Deadeye:
+                res |= ThiefHelper.IsKnownMinionID(id);
+                res |= DeadeyeHelper.IsKnownMinionID(id);
+                break;
+            case Spec.Specter:
+                res |= ThiefHelper.IsKnownMinionID(id);
+                res |= SpecterHelper.IsKnownMinionID(id);
+                break;
+            // Engineer
+            case Spec.Engineer:
+            case Spec.Holosmith:
+                res |= EngineerHelper.IsKnownMinionID(id);
+                break;
+            case Spec.Scrapper:
+                res |= EngineerHelper.IsKnownMinionID(id);
+                res |= ScrapperHelper.IsKnownMinionID(id);
+                break;
+            case Spec.Mechanist:
+                res |= EngineerHelper.IsKnownMinionID(id);
+                res |= MechanistHelper.IsKnownMinionID(id);
+                break;
+            // Ranger
+            case Spec.Ranger:
+            case Spec.Druid:
+            case Spec.Soulbeast:
+            case Spec.Untamed:
+                res |= RangerHelper.IsKnownMinionID(id);
+                break;
+            // Revenant
+            case Spec.Revenant:
+            case Spec.Herald:
+            case Spec.Vindicator:
+                res |= RevenantHelper.IsKnownMinionID(id);
+                break;
+            case Spec.Renegade:
+                res |= RevenantHelper.IsKnownMinionID(id);
+                res |= RenegadeHelper.IsKnownMinionID(id);
+                break;
+            // Guardian
+            case Spec.Guardian:
+            case Spec.Dragonhunter:
+            case Spec.Firebrand:
+            case Spec.Willbender:
+                res |= GuardianHelper.IsKnownMinionID(id);
+                break;
+        }
+        return res;
     }
 
     public static void ComputeMinionCombatReplayActors(SingleActor minion, SingleActor master, ParsedEvtcLog log, CombatReplay combatReplay)
@@ -677,6 +925,7 @@ internal static class ProfHelper
         }
     }
 
+    #endregion
 
     public delegate bool EffectCastEventsChecker(IReadOnlyList<EffectEvent> effects, EffectEvent effect, CombatData combatData, SkillData skillData);
 

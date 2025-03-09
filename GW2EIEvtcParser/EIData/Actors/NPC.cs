@@ -1,4 +1,5 @@
 ﻿using GW2EIEvtcParser.ParsedData;
+using GW2EIEvtcParser.ParserHelpers;
 
 namespace GW2EIEvtcParser.EIData;
 
@@ -75,7 +76,7 @@ public class NPC : SingleActor
 
     public override string GetIcon()
     {
-        return AgentItem.Type == AgentItem.AgentType.Gadget ? ParserHelper.GetGadgetIcon() : ParserHelper.GetNPCIcon(ID);
+        return AgentItem.Type == AgentItem.AgentType.Gadget ? ImagesHelper.GetGadgetIcon() : ImagesHelper.GetNPCIcon(ID);
     }
 
     protected override void InitAdditionalCombatReplayData(ParsedEvtcLog log, CombatReplay replay)

@@ -208,7 +208,7 @@ public class BuffsContainer
     public IReadOnlyList<Buff> GetPersonalBuffsList(ParserHelper.Spec spec)
     {
         var result = new List<Buff>();
-        foreach (ParserHelper.Source src in ParserHelper.SpecToSources(spec))
+        foreach (ParserHelper.Source src in ProfHelper.SpecToSources(spec))
         {
             if (BuffsBySource.TryGetValue(src, out var buffs))
             {

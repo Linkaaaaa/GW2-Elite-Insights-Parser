@@ -279,7 +279,7 @@ public class Minions : Actor
         {
             return true;
         }
-        if (ParserHelper.IsKnownMinionID(ReferenceAgentItem, Master.Spec))
+        if (ProfHelper.IsKnownMinionID(ReferenceAgentItem, Master.Spec))
         {
             return true;
         }

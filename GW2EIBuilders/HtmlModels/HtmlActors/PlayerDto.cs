@@ -1,6 +1,7 @@
 ﻿using GW2EIEvtcParser;
 using GW2EIEvtcParser.EIData;
 using GW2EIEvtcParser.ParsedData;
+using GW2EIEvtcParser.ParserHelpers;
 
 namespace GW2EIBuilders.HtmlModels.HTMLActors;
 
@@ -63,7 +64,7 @@ internal class PlayerDto : ActorDto
         if (actor is Player p)
         {
             IsCommander = p.IsCommander(log);
-            CommanderStates = IsCommander ? p.GetCommanderStatesNoTagValues(log).Select(x => new string[2] { ParserHelper.ToDurationString(x.Start), ParserHelper.ToDurationString(x.End) }).ToList() : null;
+            CommanderStates = IsCommander ? p.GetCommanderStatesNoTagValues(log).Select(x => new string[2] { StringExtensions.ToDurationString(x.Start), StringExtensions.ToDurationString(x.End) }).ToList() : null;
         }
         (ColTarget, ColCleave, ColTotal) = GetSpecGraphColor(actor.BaseSpec);
         IsFake = actor.IsFakeActor;
