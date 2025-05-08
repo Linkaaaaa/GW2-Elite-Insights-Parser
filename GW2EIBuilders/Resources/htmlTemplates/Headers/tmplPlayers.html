@@ -7,8 +7,12 @@
                     class="player-cell d-flex flex-column align-items-center justify-content-center"
                     :class="{active: player.active}" @click="select(player.id)">
                     <div>
-                        <img :src="player.icon" :alt="player.profession" class="icon"
-                            :data-original-title="player.profession">
+                        <div class="icon-display-20"
+                            :data-original-title="player.profession"
+                            :style="getProfessionIcon(player.profession, 20)"
+                            :aria-label="player.profession"
+                            role="img">
+                        </div>
                         <img v-if="player.health > 0" :src="UIIcons.VitalityChar"
                             alt="Health" class="icon" :data-original-title="'Health: ' + player.health">
                         <img v-if="player.condi > 0" :src="UIIcons.ConditionDamageChar"
@@ -86,7 +90,59 @@
                     }
                 }
                 return str;
-            }
+            },
+            getProfessionIcon: function (profession, size) {
+                // `-X -Y`
+                switch (profession) {
+                    // Guardian
+                    case "Guardian": return { backgroundPosition: size == 20 ? `-0px -0px` : `-0px -0px` };
+                    case "Dragonhunter": return { backgroundPosition: size == 20 ? `-0px -21px` : `-0px -201px` };
+                    case "Firebrand": return { backgroundPosition: size == 20 ? `-0px -41px` : `-0px -401px` };
+                    case "Willbender": return { backgroundPosition: size == 20 ? `-0px -61px` : `-0px -601px` };
+                    // Revenant
+                    case "Revenant": return { backgroundPosition: size == 20 ? `-21px -0px` : `-201px -0px` };
+                    case "Herald": return { backgroundPosition: size == 20 ? `-21px -21px` : `-201px -201px` };
+                    case "Renegade": return { backgroundPosition: size == 20 ? `-21px -41px` : `-201px -401px` };
+                    case "Vindicator": return { backgroundPosition: size == 20 ? `-21px -61px` : `-201px -601px` };
+                    // Warrior
+                    case "Warrior": return { backgroundPosition: size == 20 ? `-41px -0px` : `-401px -0px` };
+                    case "Berserker": return { backgroundPosition: size == 20 ? `-41px -21px` : `-401px -201px` };
+                    case "Spellbreaker": return { backgroundPosition: size == 20 ? `-41px -41px` : `-401px -401px` };
+                    case "Bladesworn": return { backgroundPosition: size == 20 ? `-41px -61px` : `-401px -601px` };
+                    // Engineer
+                    case "Engineer": return { backgroundPosition: size == 20 ? `-61px -0px` : `-601px -0px` };
+                    case "Scrapper": return { backgroundPosition: size == 20 ? `-61px -21px` : `-601px -201px` };
+                    case "Holosmith": return { backgroundPosition: size == 20 ? `-61px -41px` : `-601px -401px` };
+                    case "Mechanist": return { backgroundPosition: size == 20 ? `-61px -61px` : `-601px -601px` };
+                    // Ranger
+                    case "Ranger": return { backgroundPosition: size == 20 ? `-81px -0px` : `-801px -0px` };
+                    case "Druid": return { backgroundPosition: size == 20 ? `-81px -21px` : `-801px -201px` };
+                    case "Soulbeast": return { backgroundPosition: size == 20 ? `-81px -41px` : `-801px -401px` };
+                    case "Untamed": return { backgroundPosition: size == 20 ? `-81px -61px` : `-801px -601px` };
+                    // Thief
+                    case "Thief": return { backgroundPosition: size == 20 ? `-101px -0px` : `-1001px -0px` };
+                    case "Daredevil": return { backgroundPosition: size == 20 ? `-101px -21px` : `-1001px -201px` };
+                    case "Deadeye": return { backgroundPosition: size == 20 ? `-101px -41px` : `-1001px -401px` };
+                    case "Specter": return { backgroundPosition: size == 20 ? `-101px -61px` : `-1001px -601px` };
+                    // Elementalist
+                    case "Elementalist": return { backgroundPosition: size == 20 ? `-121px -0px` : `-1201px -0px` };
+                    case "Tempest": return { backgroundPosition: size == 20 ? `-121px -21px` : `-1201px -201px` };
+                    case "Weaver": return { backgroundPosition: size == 20 ? `-121px -41px` : `-1201px -401px` };
+                    case "Catalyst": return { backgroundPosition: size == 20 ? `-121px -61px` : `-1201px -601px` };
+                    // Mesmer
+                    case "Mesmer": return { backgroundPosition: size == 20 ? `-141px -0px` : `-1401px -0px` };
+                    case "Chronomancer": return { backgroundPosition: size == 20 ? `-141px -21px` : `-1401px -201px` };
+                    case "Mirage": return { backgroundPosition: size == 20 ? `-141px -41px` : `-1401px -401px` };
+                    case "Virtuoso": return { backgroundPosition: size == 20 ? `-141px -61px` : `-1401px -601px` };
+                    // Necromancer
+                    case "Necromancer": return { backgroundPosition: size == 20 ? `-161px -0px` : `-1601px -0px` };
+                    case "Reaper": return { backgroundPosition: size == 20 ? `-161px -21px` : `-1601px -201px` };
+                    case "Scourge": return { backgroundPosition: size == 20 ? `-161px -41px` : `-1601px -401px` };
+                    case "Harbinger": return { backgroundPosition: size == 20 ? `-161px -61px` : `-1601px -601px` };
+                    default:
+                        return;
+                }
+            },
         },
         computed: {
             scoreV2: function() {

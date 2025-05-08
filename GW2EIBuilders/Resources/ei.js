@@ -203,10 +203,6 @@ function mainLoad() {
                         key: "DPS Reports Link (EI)", 
                         url: "" 
                     },
-                    { 
-                        key: "Raidar Link", 
-                        url: "" 
-                    }
                 ];
                 var hasAny = false;
                 for (var i = 0; i < logData.uploadLinks.length; i++) {
