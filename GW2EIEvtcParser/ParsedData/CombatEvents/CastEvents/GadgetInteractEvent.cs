@@ -12,6 +12,13 @@ public class GadgetInteractEvent : AnimatedCastEvent
     {
         var item = (startItem ?? endItem ?? throw new InvalidOperationException("Either start or end item must be non null"));
         Gadget = agentData.GetAgentByInstID((ushort)item.Pad, item.Time);
+        // Bandaid, may not be perfect
+        if (AnimStop != AnimationStop.MovePos && AnimStop != AnimationStop.Ended && Status != AnimationStatus.Interrupted)
+        {
+            Status = AnimationStatus.Interrupted;
+            SavedDuration = -ActualDuration;
+        }
+        ExpectedDuration = (int)(ExpectedDuration / AcceleratedToNonAcceleratedRatio);
     }
 
 }

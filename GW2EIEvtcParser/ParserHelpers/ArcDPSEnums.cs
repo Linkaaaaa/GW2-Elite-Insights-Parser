@@ -112,7 +112,6 @@ public static class ArcDPSEnums
     {
         return bt < (byte)Activation.Unknown ? (Activation)bt : Activation.Unknown;
     }
-#if DEBUG
     public enum AnimationStart : byte
     {
         None = 0,
@@ -161,7 +160,6 @@ public static class ArcDPSEnums
     {
         return bt < (byte)AnimationStop.Unknown ? (AnimationStop)bt : AnimationStop.Unknown;
     }
-#endif
     // Buff remove
     public enum BuffRemove : byte
     {

@@ -12,10 +12,8 @@ public class AnimatedCastEvent : CastEvent
 
     public bool HasEffectPosition => EffectPosition != null;
 
-#if DEBUG
     public readonly AnimationStart AnimStart;
     public readonly AnimationStop AnimStop;
-#endif
 
     private void SetAcceleration(CombatItem endItem)
     {
@@ -90,9 +88,7 @@ public class AnimatedCastEvent : CastEvent
                 ActualDuration = ExpectedDuration;
                 CutAt(maxEnd);
             }
-#if DEBUG
             AnimStart = GetAnimationStart(startItem.Result);
-#endif
         }
         // End is present
         if (endItem != null)
@@ -129,9 +125,8 @@ public class AnimatedCastEvent : CastEvent
                 }
                 SetAcceleration(endItem);
             }
-#if DEBUG
             AnimStop = GetAnimationStop(endItem.Result);
-#endif
+
         }
     }
 
