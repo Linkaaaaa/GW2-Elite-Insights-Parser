@@ -353,6 +353,11 @@ internal class Xera : StrongholdOfTheFaithful
         // find split
         if (agentData.TryGetFirstAgentItem(TargetID.Xera2, out var secondXera))
         {
+            firstXera.AddMergeFrom(firstXera, firstXera.FirstAware, firstXera.LastAware);
+            // Add custom spawn and despawn event
+            combatData.Add(new CombatItem(firstXera.FirstAware, firstXera.Agent, 0, 0, 0, 0, 0, firstXera.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Spawn, 0, 0, 0, 0));
+            combatData.Add(new CombatItem(firstXera.LastAware, firstXera.Agent, 0, 0, 0, 0, 0, firstXera.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Despawn, 0, 0, 0, 0));
+            //
             firstXera.OverrideAwareTimes(firstXera.FirstAware, secondXera.LastAware);
             AgentManipulationHelper.RedirectAllEvents(combatData, extensions, agentData, secondXera, firstXera);
         }
