@@ -131,7 +131,7 @@ internal class Deimos : BastionOfThePenitent
                     {
                         evt.OverrideSrcAgent(_unknownAgent);
                     }
-                    }
+                }
             );
         }
     }
@@ -358,12 +358,22 @@ internal class Deimos : BastionOfThePenitent
         CombatItem? invulApp = combatData.FirstOrDefault(x => x.DstMatchesAgent(deimos.AgentItem) && x.IsBuffApply() && x.SkillID == Determined762);
         invulApp?.OverrideValue((int)(deimos.LastAware - invulApp.Time));
         deimos.OverrideName("Deimos");
+        var originalLastAware = deimos.AgentItem.LastAware;
+        var originalDeimosSpawnRelatedEvents = combatData.Where(x => x.SrcMatchesAgent(deimos.AgentItem) && (x.IsStateChange == StateChange.Spawn || x.IsStateChange == StateChange.Despawn)).ToList();
         deimos.AgentItem.OverrideAwareTimes(deimos.FirstAware, lastAware);
         if (deimosStructBody != null)
         {
             deimos.AgentItem.AddMergeFrom(deimos.AgentItem, deimos.FirstAware, structStartTime);
             MergeWithGadgets(deimos.AgentItem, structStartTime, gadgetAgents, deimosStructBody, combatData, agentData, extensions);
             // Add custom spawn event
+            if (!originalDeimosSpawnRelatedEvents.Any(x => x.IsStateChange == StateChange.Spawn))
+            {
+                combatData.Add(new CombatItem(deimos.FirstAware, deimos.AgentItem.Agent, 0, 0, 0, 0, 0, deimos.AgentItem.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Spawn, 0, 0, 0, 0));
+            }
+            if (!originalDeimosSpawnRelatedEvents.Any(x => x.IsStateChange == StateChange.Despawn))
+            {
+                combatData.Add(new CombatItem(originalLastAware, deimos.AgentItem.Agent, 0, 0, 0, 0, 0, deimos.AgentItem.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Despawn, 0, 0, 0, 0));
+            }
             combatData.Add(new CombatItem(structStartTime, deimos.AgentItem.Agent, 0, 0, 0, 0, 0, deimos.AgentItem.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Spawn, 0, 0, 0, 0));
             combatData.SortByTime();
         }
