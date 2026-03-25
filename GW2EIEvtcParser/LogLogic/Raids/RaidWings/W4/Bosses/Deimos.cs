@@ -109,7 +109,7 @@ internal class Deimos : BastionOfThePenitent
     {
         foreach (AgentItem gadget in gadgets)
         {
-            AgentManipulationHelper.RedirectNPCEventsAndCopyPreviousStates(combatData, extensions, agentData, gadget, [gadget], deimos, false,
+            AgentManipulationHelper.RedirectNPCEventsAndCopyPreviousStates(combatData, extensions, agentData, gadget, [gadget], deimos, upperTimeThreshold, false,
                 (evt, from, to) =>
                 {
                     // Only keep damage events from arms
@@ -126,15 +126,12 @@ internal class Deimos : BastionOfThePenitent
                 },
                 (evt, from, to) =>
                 {
-                    if (evt.IsStateChange == StateChange.MaxHealthUpdate)
+                    // Discard non damage events from arms
+                    if (from != mainBody || evt.IsStateChange == StateChange.MaxHealthUpdate)
                     {
                         evt.OverrideSrcAgent(_unknownAgent);
                     }
-                    if (evt.IsGeographical && evt.Time < upperTimeThreshold)
-                    {
-                        evt.OverrideTime(upperTimeThreshold);
                     }
-                }
             );
         }
     }

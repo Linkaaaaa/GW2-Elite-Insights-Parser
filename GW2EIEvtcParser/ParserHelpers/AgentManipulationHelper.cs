@@ -61,7 +61,7 @@ public static class AgentManipulationHelper
     /// <param name="to">AgentItem the events need to be redirected to</param>
     /// <param name="copyPositionalDataFromAttackTarget">If true, "to" will get the positional data from attack targets, if possible</param>
     /// <param name="extraRedirections">function to handle special conditions, given event either src or dst matches from</param>
-    internal static void RedirectNPCEventsAndCopyPreviousStates(List<CombatItem> combatData, IReadOnlyDictionary<uint, ExtensionHandler> extensions, AgentData agentData, AgentItem redirectFrom, List<AgentItem> stateCopyFroms, AgentItem to, bool copyPositionalDataFromAttackTarget, ExtraRedirection? extraRedirections = null, StateEventProcessing? stateEventProcessing = null)
+    internal static void RedirectNPCEventsAndCopyPreviousStates(List<CombatItem> combatData, IReadOnlyDictionary<uint, ExtensionHandler> extensions, AgentData agentData, AgentItem redirectFrom, List<AgentItem> stateCopyFroms, AgentItem to, long redirectionStart, bool copyPositionalDataFromAttackTarget, ExtraRedirection? extraRedirections = null, StateEventProcessing? stateEventProcessing = null)
     {
         if (!(redirectFrom.IsNPC && to.IsNPC))
         {
@@ -70,7 +70,7 @@ public static class AgentManipulationHelper
         // Redirect combat events
         foreach (CombatItem evt in combatData)
         {
-            if (to.InAwareTimes(evt.Time))
+            if (to.InAwareTimes(evt.Time) && evt.Time >= redirectionStart)
             {
                 var srcMatchesAgent = evt.SrcMatchesAgent(redirectFrom, extensions);
                 var dstMatchesAgent = evt.DstMatchesAgent(redirectFrom, extensions);
@@ -97,7 +97,7 @@ public static class AgentManipulationHelper
         foreach (CombatItem c in attackTargetsToCopy)
         {
             var cExtra = new CombatItem(c);
-            cExtra.OverrideTime(to.FirstAware - 1); // To make sure they are put before all actual agent events
+            cExtra.OverrideTime(redirectionStart - 1); // To make sure they are put before all actual agent events
             cExtra.OverrideDstAgent(to);
             combatData.Add(cExtra);
             copied.Add(cExtra);
@@ -128,7 +128,7 @@ public static class AgentManipulationHelper
         }
         foreach (Func<CombatItem, bool> stateChangeCopyCondition in stateChangeCopyFromAgentConditions)
         {
-            CombatItem? stateToCopy = combatData.LastOrDefault(x => stateChangeCopyCondition(x) && canCopyFromAgent(x) && x.Time <= to.FirstAware);
+            CombatItem? stateToCopy = combatData.LastOrDefault(x => stateChangeCopyCondition(x) && canCopyFromAgent(x) && x.Time <= redirectionStart);
             if (stateToCopy != null)
             {
                 stateEventsToCopy.Add(stateToCopy);
@@ -146,7 +146,7 @@ public static class AgentManipulationHelper
             };
             foreach (Func<CombatItem, bool> stateChangeCopyCondition in stateChangeCopyFromAttackTargetConditions)
             {
-                CombatItem? stateToCopy = combatData.LastOrDefault(x => stateChangeCopyCondition(x) && canCopyFromAttackTarget(x) && x.Time <= to.FirstAware);
+                CombatItem? stateToCopy = combatData.LastOrDefault(x => stateChangeCopyCondition(x) && canCopyFromAttackTarget(x) && x.Time <= redirectionStart);
                 if (stateToCopy != null)
                 {
                     stateEventsToCopy.Add(stateToCopy);
@@ -158,7 +158,7 @@ public static class AgentManipulationHelper
             foreach (CombatItem c in stateEventsToCopy)
             {
                 var cExtra = new CombatItem(c);
-                cExtra.OverrideTime(to.FirstAware-1); // To make sure they are put before all actual agent events
+                cExtra.OverrideTime(redirectionStart - 1); // To make sure they are put before all actual agent events
                 cExtra.OverrideSrcAgent(to);
                 combatData.Add(cExtra);
                 copied.Add(cExtra);
@@ -169,7 +169,7 @@ public static class AgentManipulationHelper
             combatData.SortByTime();
             foreach (CombatItem c in copied)
             {
-                c.OverrideTime(to.FirstAware);
+                c.OverrideTime(redirectionStart);
                 if (stateEventProcessing != null)
                 {
                     combatData.SortByTime();
@@ -194,7 +194,7 @@ public static class AgentManipulationHelper
             }
         }
 
-        to.AddMergeFrom(redirectFrom, to.FirstAware, to.LastAware);
+        to.AddMergeFrom(redirectFrom, redirectionStart, to.LastAware);
     }
 
     internal static void SplitPlayerPerSpecSubgroupAndSwap(IReadOnlyList<EnterCombatEvent> enterCombatEvents, IReadOnlyList<ExitCombatEvent> exitCombatEvents, IReadOnlyDictionary<uint, ExtensionHandler> extensions, AgentData agentData, AgentItem originalPlayer, bool splitByEnterCombat)
