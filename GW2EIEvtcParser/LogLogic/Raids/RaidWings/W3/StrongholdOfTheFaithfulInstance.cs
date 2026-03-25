@@ -312,8 +312,7 @@ internal class StrongholdOfTheFaithfulInstance : StrongholdOfTheFaithful
             var attachedXera = xeras.LastOrDefault(x => x.FirstAware < xera2.FirstAware && x.FirstAware >= start);
             if (attachedXera != null)
             {
-                attachedXera.OverrideAwareTimes(attachedXera.FirstAware, xera2.LastAware);
-                AgentManipulationHelper.RedirectAllEvents(combatData, extensions, agentData, xera2, attachedXera);
+                Xera.MergeSecondXeraToFirstXera(attachedXera, xera2, agentData, combatData, extensions);
             }
             start = xera2.LastAware;
         }

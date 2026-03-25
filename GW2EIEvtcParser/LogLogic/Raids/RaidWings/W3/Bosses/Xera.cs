@@ -338,6 +338,17 @@ internal class Xera : StrongholdOfTheFaithful
         });
     }
 
+    internal static void MergeSecondXeraToFirstXera(AgentItem firstXera, AgentItem secondXera, AgentData agentData, List<CombatItem> combatData, IReadOnlyDictionary<uint, ExtensionHandler> extensions)
+    {
+        firstXera.AddMergeFrom(firstXera, firstXera.FirstAware, firstXera.LastAware);
+        // Add custom spawn and despawn event
+        combatData.Add(new CombatItem(firstXera.FirstAware, firstXera.Agent, 0, 0, 0, 0, 0, firstXera.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Spawn, 0, 0, 0, 0));
+        combatData.Add(new CombatItem(firstXera.LastAware, firstXera.Agent, 0, 0, 0, 0, 0, firstXera.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Despawn, 0, 0, 0, 0));
+        //
+        firstXera.OverrideAwareTimes(firstXera.FirstAware, secondXera.LastAware);
+        AgentManipulationHelper.RedirectAllEvents(combatData, extensions, agentData, secondXera, firstXera);
+    }
+
     internal override void EIEvtcParse(ulong gw2Build, EvtcVersionEvent evtcVersion, LogData logData, AgentData agentData, List<CombatItem> combatData, IReadOnlyDictionary<uint, ExtensionHandler> extensions)
     {
         // find target
@@ -353,13 +364,7 @@ internal class Xera : StrongholdOfTheFaithful
         // find split
         if (agentData.TryGetFirstAgentItem(TargetID.Xera2, out var secondXera))
         {
-            firstXera.AddMergeFrom(firstXera, firstXera.FirstAware, firstXera.LastAware);
-            // Add custom spawn and despawn event
-            combatData.Add(new CombatItem(firstXera.FirstAware, firstXera.Agent, 0, 0, 0, 0, 0, firstXera.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Spawn, 0, 0, 0, 0));
-            combatData.Add(new CombatItem(firstXera.LastAware, firstXera.Agent, 0, 0, 0, 0, 0, firstXera.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Despawn, 0, 0, 0, 0));
-            //
-            firstXera.OverrideAwareTimes(firstXera.FirstAware, secondXera.LastAware);
-            AgentManipulationHelper.RedirectAllEvents(combatData, extensions, agentData, secondXera, firstXera);
+            MergeSecondXeraToFirstXera(firstXera, secondXera, agentData, combatData, extensions);
         }
         base.EIEvtcParse(gw2Build, evtcVersion, logData, agentData, combatData, extensions);
         RenameBloodStones(Targets);
