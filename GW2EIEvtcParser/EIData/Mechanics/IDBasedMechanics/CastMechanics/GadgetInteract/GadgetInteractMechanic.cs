@@ -12,6 +12,7 @@ internal abstract class GadgetInteractMechanic : CastMechanic
 
     public GadgetInteractMechanic(long[] mechanicIDs, MechanicPlotlySetting plotlySetting, string shortName, string description, string fullName, int internalCoolDown) : base(mechanicIDs, plotlySetting, shortName, description, fullName, internalCoolDown)
     {
+        UsingEnable(log => log.CombatData.HasGadgetInteractData);
     }
     internal override void CheckMechanic(ParsedEvtcLog log, Dictionary<Mechanic, List<MechanicEvent>> mechanicLogs, Dictionary<int, SingleActor> regroupedMobs)
     {
