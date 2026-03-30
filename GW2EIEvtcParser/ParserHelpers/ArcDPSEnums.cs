@@ -608,4 +608,13 @@ public static class ArcDPSEnums
             : LanguageEnum.Unknown;
     }
 
+    // Region
+
+    public enum RegionEnum : byte
+    {
+        US = 0,
+        EU = 1,
+        CN = 2,
+    }
+
 }
