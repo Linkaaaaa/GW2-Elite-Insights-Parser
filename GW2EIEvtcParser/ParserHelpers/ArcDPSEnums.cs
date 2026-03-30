@@ -589,4 +589,23 @@ public static class ArcDPSEnums
         return bt < (byte)IFF.Unknown ? (IFF)bt : IFF.Unknown;
     }
 
+    // Language
+
+    public enum LanguageEnum : byte
+    {
+        English = 0,
+        Missing = 1,
+        French = 2,
+        German = 3,
+        Spanish = 4,
+        Chinese = 5,
+        Unknown = 6
+    }
+
+    public static LanguageEnum GetLanguage(byte bt)
+    {
+        return bt < (byte)LanguageEnum.Unknown ? (LanguageEnum)bt
+            : LanguageEnum.Unknown;
+    }
+
 }
