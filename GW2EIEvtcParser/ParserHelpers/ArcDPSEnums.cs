@@ -152,6 +152,7 @@ public static class ArcDPSEnums
         MovePos = 17,
         Any = 18,
         AnyViaReset = 19,
+        ManualExpiry = 20,
 
         Unknown
     };
