@@ -2,11 +2,13 @@
 
 public class ShardEvent : MetaDataEvent
 {
-    public readonly int ShardID;
+    public readonly ulong ShardID;
+    public readonly ushort UpperShardID;
 
     internal ShardEvent(CombatItem evtcItem) : base(evtcItem)
     {
-        ShardID = (int)evtcItem.SrcAgent;
+        ShardID = evtcItem.SrcAgent;
+        UpperShardID = (ushort)(evtcItem.DstAgent & 0x000000FF);
     }
 
 }
