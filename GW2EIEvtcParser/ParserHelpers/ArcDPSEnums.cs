@@ -34,6 +34,7 @@ public static class ArcDPSEnums
         public const int SpeciesSkillGUIDs = 20250428;
         public const int MissilesIntroduced = 20250525;
         public const int BuffFormulaOriginalAttribute = 20250913;
+        public const int EmoteAndGadgetInteractionAdded = 20260318;
         //
         public const int EndOfLife = int.MaxValue;
     }
@@ -111,7 +112,55 @@ public static class ArcDPSEnums
     {
         return bt < (byte)Activation.Unknown ? (Activation)bt : Activation.Unknown;
     }
+    public enum AnimationStart : byte
+    {
+        None = 0,
+        Command = 1,
+        Dodge = 2,
+        StowDraw = 3,
+        MoveSkill = 4,
+        MotionSkill = 5,
+        GadgetInteract = 6,
+        Emote = 7,
 
+        Unknown
+    };
+
+    public static AnimationStart GetAnimationStart(byte bt)
+    {
+        return bt < (byte)AnimationStart.Unknown ? (AnimationStart)bt : AnimationStart.Unknown;
+    }
+    public enum AnimationStop : byte
+    {
+        None = 0,
+        Instant = 1,
+        MultiDefunc = 2,
+        Transition = 3,
+        Partial = 4,
+        Ended = 5,
+        Cancel = 6,
+        StowDraw = 7,
+        Interrupt = 8,
+        Death = 9,
+        Downed = 10,
+        CrowdControl = 11,
+        Command = 12,
+        MotionSkill = 13,
+        MoveDodge = 14,
+        MotionSkillViaReset = 15,
+        MoveSkill = 16,
+        MovePos = 17,
+        Any = 18,
+        AnyViaReset = 19,
+        ManualExpiry = 20,
+
+        Unknown
+    };
+
+    public static AnimationStop GetAnimationStop(byte bt)
+    {
+        return bt < (byte)AnimationStop.Unknown ? (AnimationStop)bt : AnimationStop.Unknown;
+    }
     // Buff remove
     public enum BuffRemove : byte
     {
@@ -518,6 +567,7 @@ public static class ArcDPSEnums
         Skill = 2,
         Species = 3,
         Team = 4,
+        Emote = 5,
         Unknown
     }
     public static ContentLocal GetContentLocal(byte bt)
@@ -538,6 +588,34 @@ public static class ArcDPSEnums
     public static IFF GetIFF(byte bt)
     {
         return bt < (byte)IFF.Unknown ? (IFF)bt : IFF.Unknown;
+    }
+
+    // Language
+
+    public enum LanguageEnum : byte
+    {
+        English = 0,
+        Missing = 1,
+        French = 2,
+        German = 3,
+        Spanish = 4,
+        Chinese = 5,
+        Unknown = 6
+    }
+
+    public static LanguageEnum GetLanguage(byte bt)
+    {
+        return bt < (byte)LanguageEnum.Unknown ? (LanguageEnum)bt
+            : LanguageEnum.Unknown;
+    }
+
+    // Region
+
+    public enum RegionEnum : byte
+    {
+        US = 0,
+        EU = 1,
+        CN = 2,
     }
 
 }

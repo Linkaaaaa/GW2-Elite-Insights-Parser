@@ -806,7 +806,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                 double lastHPUpdate = 1e6;
                 AgentItem extra = agentData.AddCustomNPCAgent(start, end, dragonVoid.Name, dragonVoid.Spec, id, false, dragonVoid.Toughness, dragonVoid.Healing, dragonVoid.Condition, dragonVoid.Concentration, atAgent.HitboxWidth > 0 ? atAgent.HitboxWidth : 800, atAgent.HitboxHeight);
                 lastLastAware = extra.LastAware;
-                AgentManipulationHelper.RedirectNPCEventsAndCopyPreviousStates(combatData, extensions, agentData, dragonVoid, copyEventsFrom, extra, true,
+                AgentManipulationHelper.RedirectNPCEventsAndCopyPreviousStates(combatData, extensions, agentData, dragonVoid, copyEventsFrom, extra, extra.FirstAware, true,
                     (evt, from, to) =>
                     {
                         if (evt.IsStateChange == StateChange.HealthUpdate)

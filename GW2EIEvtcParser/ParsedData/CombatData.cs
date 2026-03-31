@@ -59,6 +59,13 @@ public partial class CombatData
     private readonly Dictionary<AgentItem, List<AnimatedCastEvent>> _animatedCastData;
     private readonly Dictionary<long, List<AnimatedCastEvent>> _animatedCastDataByID;
 
+    private readonly Dictionary<AgentItem, List<EmoteEvent>> _emoteCastData;
+    private readonly Dictionary<long, List<EmoteEvent>> _emoteCastDataByEmoteID;
+
+    private readonly Dictionary<AgentItem, List<GadgetInteractEvent>> _gadgetInteractCastData;
+    private readonly Dictionary<long, List<GadgetInteractEvent>> _gadgetInteractCastDataBySpeciesID;
+    private readonly Dictionary<AgentItem, List<GadgetInteractEvent>> _gadgetInteractCastDataByGadget;
+
     private readonly Dictionary<AgentItem, List<InstantCastEvent>> _instantCastData;
     private readonly Dictionary<long, List<InstantCastEvent>> _instantCastDataByID;
 
@@ -79,6 +86,8 @@ public partial class CombatData
     public readonly bool HasCrowdControlData = false;
     public readonly bool HasEffectData = false;
     public readonly bool HasMarkerData = false;
+    public readonly bool HasEmoteData = false;
+    public readonly bool HasGadgetInteractData = false;
     public readonly bool HasSpeciesAndSkillGUIDs = false;
     public readonly bool HasMissileData = false;
 
@@ -593,14 +602,41 @@ public partial class CombatData
         skillData.CombineWithSkillInfo(_metaDataEvents.SkillInfoEvents);
         
         operation.UpdateProgressWithCancellationCheck("Parsing: Creating Cast Events");
-        List<AnimatedCastEvent> animatedCastData = CombatEventFactory.CreateCastEvents(castCombatEvents, agentData, skillData, logData);
+        List<AnimatedCastEvent> animatedCastData = CombatEventFactory.CreateCastEvents(evtcVersion, castCombatEvents, agentData, skillData, logData, _metaDataEvents.EmoteGUIDEventsByEmoteID);
         _weaponSwapData = wepSwaps.GroupBy(x => x.Caster).ToDictionary(x => x.Key, x => x.ToList());
         _animatedCastData = animatedCastData.GroupBy(x => x.Caster).ToDictionary(x => x.Key, x => x.ToList());
         //TODO_PERF(Rennorb)
         _instantCastData = [];
         _instantCastDataByID = [];
         _animatedCastDataByID = animatedCastData.GroupBy(x => x.SkillID).ToDictionary(x => x.Key, x => x.ToList());
-        
+        if (evtcVersion.Build >= ArcDPSBuilds.EmoteAndGadgetInteractionAdded && _animatedCastDataByID.TryGetValue(ArcDPSEmote, out var emoteCasts))
+        {
+            operation.UpdateProgressWithCancellationCheck("Parsing: Creating Emote Events");
+            var emotes = emoteCasts.OfType<EmoteEvent>().ToList();
+            HasEmoteData = emotes.Count > 0;
+            _emoteCastData = emotes.GroupBy(x => x.Caster).ToDictionary(x => x.Key, x => x.ToList());
+            _emoteCastDataByEmoteID = emotes.GroupBy(x => x.EmoteID).ToDictionary(x => x.Key, x => x.ToList());
+        } 
+        else
+        {
+            _emoteCastData = [];
+            _emoteCastDataByEmoteID = [];
+        }
+        if (evtcVersion.Build >= ArcDPSBuilds.EmoteAndGadgetInteractionAdded && _animatedCastDataByID.TryGetValue(ArcDPSGadgetInteract, out var gadgetInteractCasts))
+        {
+            operation.UpdateProgressWithCancellationCheck("Parsing: Creating Gadget Iteract Events");
+            var gadgetInteracts = gadgetInteractCasts.OfType<GadgetInteractEvent>().ToList();
+            HasGadgetInteractData = gadgetInteracts.Count > 0;
+            _gadgetInteractCastData = gadgetInteracts.GroupBy(x => x.Caster).ToDictionary(x => x.Key, x => x.ToList());
+            _gadgetInteractCastDataByGadget = gadgetInteracts.GroupBy(x => x.Gadget).ToDictionary(x => x.Key, x => x.ToList());
+            _gadgetInteractCastDataBySpeciesID = gadgetInteracts.GroupBy(x => (long)x.Gadget.ID).ToDictionary(x => x.Key, x => x.ToList());
+        }
+        else
+        {
+            _gadgetInteractCastData = [];
+            _gadgetInteractCastDataByGadget = [];
+            _gadgetInteractCastDataBySpeciesID = [];
+        }
         operation.UpdateProgressWithCancellationCheck("Parsing: Creating Buff Events");
         _buffDataByDst = buffEvents.GroupBy(x => x.To).ToDictionary(x => x.Key, x => x.ToList());
         _buffDataBySrc = buffEvents.Where(x => x is not BuffExtensionEvent).GroupBy(x => x.By).ToDictionary(x => x.Key, x => x.ToList());
