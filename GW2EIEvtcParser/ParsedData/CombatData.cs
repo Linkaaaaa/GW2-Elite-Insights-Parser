@@ -3,6 +3,7 @@ using GW2EIEvtcParser.EIData;
 using GW2EIEvtcParser.Exceptions;
 using GW2EIEvtcParser.Extensions;
 using GW2EIEvtcParser.ParserHelpers;
+using GW2EIGW2API;
 using Tracing;
 using static GW2EIEvtcParser.ArcDPSEnums;
 using static GW2EIEvtcParser.ParserHelper;
@@ -504,7 +505,7 @@ public partial class CombatData
         }
     }
 
-    internal CombatData(IReadOnlyList<CombatItem> allCombatItems, LogData logData, AgentData agentData, SkillData skillData, IReadOnlyList<Player> players, ParserController operation, IReadOnlyDictionary<uint, ExtensionHandler> extensions, EvtcVersionEvent evtcVersion, EvtcParserSettings settings)
+    internal CombatData(IReadOnlyList<CombatItem> allCombatItems, LogData logData, AgentData agentData, SkillData skillData, IReadOnlyList<Player> players, ParserController operation, IReadOnlyDictionary<uint, ExtensionHandler> extensions, EvtcVersionEvent evtcVersion, EvtcParserSettings settings, GW2APIController apiController)
     {
         using var _t = new AutoTrace("CombatData");
         _metaDataEvents.EvtcVersionEvent = evtcVersion;
@@ -528,7 +529,7 @@ public partial class CombatData
         {
             if (combatItem.IsEssentialMetadata)
             {
-                CombatEventFactory.AddStateChangeEvent(logData.EvtcLogOffset, combatItem, agentData, skillData, _metaDataEvents, _statusEvents, _rewardEvents, wepSwaps, buffEvents, evtcVersion, settings);
+                CombatEventFactory.AddStateChangeEvent(logData.EvtcLogOffset, combatItem, agentData, skillData, _metaDataEvents, _statusEvents, _rewardEvents, wepSwaps, buffEvents, evtcVersion, settings, apiController);
             }
         }
         foreach (CombatItem combatItem in combatEvents)
@@ -551,7 +552,7 @@ public partial class CombatData
                 else
                 {
                     insertToSkillIDs = combatItem.IsStateChange == StateChange.BuffInitial;
-                    CombatEventFactory.AddStateChangeEvent(logData.EvtcLogOffset, combatItem, agentData, skillData, _metaDataEvents, _statusEvents, _rewardEvents, wepSwaps, buffEvents, evtcVersion, settings);
+                    CombatEventFactory.AddStateChangeEvent(logData.EvtcLogOffset, combatItem, agentData, skillData, _metaDataEvents, _statusEvents, _rewardEvents, wepSwaps, buffEvents, evtcVersion, settings, apiController);
                 }
 
             }

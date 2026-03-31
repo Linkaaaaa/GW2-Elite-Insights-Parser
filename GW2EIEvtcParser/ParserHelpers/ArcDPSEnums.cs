@@ -616,6 +616,8 @@ public static class ArcDPSEnums
         US = 0,
         EU = 1,
         CN = 2,
+
+        Unknown,
     }
 
 }
