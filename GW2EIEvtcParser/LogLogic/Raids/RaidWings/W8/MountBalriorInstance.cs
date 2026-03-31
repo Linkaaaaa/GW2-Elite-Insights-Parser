@@ -381,4 +381,13 @@ internal class MountBalriorInstance : MountBalrior
         }
         return sortIDs;
     }
+
+    internal override LogData.Mode GetLogMode(CombatData combatData, AgentData agentData, LogData logData)
+    {
+        foreach (var ura in Targets.Where(x => x.IsSpecies(TargetID.Ura)))
+        {
+            UraTheSteamshrieker.AdjustUraHP(ura, ura.GetHealth(combatData), UraTheSteamshrieker.GetHealedPhaseStartEvent(combatData, ura, logData.LogStart, logData.LogEnd) != null);
+        }
+        return base.GetLogMode(combatData, agentData, logData);
+    }
 }
