@@ -129,8 +129,11 @@ public class HealingStatsExtensionHandler : ExtensionHandler
         DaybreakingSlash,
         SymbolOfLuminanceSkill,
         LuminousStaff,
+        LivelyLuteAfterimage,
+        DeafeningDrumAfterimage,
         NightmareWeaponBuff,
         SovereignOfLight,
+        FlusteringFluteAfterimage,
         RelicOfTheNauticalBeastDamageHealing,
         LesserSymbolOfBlades,
     ];

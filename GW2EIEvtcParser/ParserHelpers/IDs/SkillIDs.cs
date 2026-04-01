@@ -5196,6 +5196,7 @@ public static class SkillIDs
     public const long AlteredChord = 76759;
     public const long OnYourKneesEcho = 76763;
     public const long XinraesWeaponSharedBuff = 76764;
+    public const long HarmoniousHarpAfterimage = 76765;
     public const long ExhilaratingEphemera = 76768;
     public const long NeverSurrender = 76769;
     public const long POV_Motivation = 76770; // PoV buff for Paragon's Motivation
@@ -5222,6 +5223,7 @@ public static class SkillIDs
     public const long ChakShield = 76816;
     public const long FormOfTheDervishDamage = 76818;
     public const long Syncopate = 76822; // Procs twice, on Deafening Drum cast and on a 3s delay when ID 76689 activates
+    public const long LivelyLuteAfterimage = 76823;
     public const long MitoticStateBuff = 76837;
     public const long RitualistStormSpiritAura2 = 76839; // Reused buff from Storm Spirit for Ritualist's Spirits
     public const long ElementalProcession = 76841;
@@ -5244,7 +5246,7 @@ public static class SkillIDs
     public const long WillingHost = 76885;
     public const long AntivenomDraught = 76886;
     public const long RapaciousStrain = 76888;
-    public const long DeafeningDrumAfterImage = 76892;
+    public const long DeafeningDrumAfterimage = 76892;
     public const long ZephyriteSunCrystal = 76895;
     public const long FormOfTheDervishRazahActiveBuff = 76896;
     public const long SummonKryptisTurretSkillUnderwater = 76900;
@@ -5359,7 +5361,7 @@ public static class SkillIDs
     public const long EmpoweredArmaments = 77169;
     public const long SupersonicArrow = 77174;
     public const long FoxPassive = 77175;
-    public const long FlusteringFluteAfterImage = 77176;
+    public const long FlusteringFluteAfterimage = 77176;
     public const long RitualistHealingRain = 77177; // Buff - Applied by Summon Spirits skill with Preservation summoned
     public const long TaleOfTheValiantMarshal = 77178;
     public const long ZapBuffTargetToPlayer = 77180; // Buff applied from the target to the player
