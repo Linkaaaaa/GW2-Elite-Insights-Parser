@@ -228,7 +228,7 @@ public partial class CombatData
         return res;
     }
 
-    private void EICastParse(IReadOnlyList<AgentItem> players, SkillData skillData, LogData logData, AgentData agentData)
+    private void EICastParse(IReadOnlyList<AgentItem> players, SkillData skillData, LogData logData, AgentData agentData, EvtcVersionEvent evtcVersion)
     {
         List<CastEvent> toAdd = logData.Logic.SpecialCastEventProcess(this, agentData, skillData);
         ulong gw2Build = GetGW2BuildEvent().Build;
@@ -241,6 +241,9 @@ public partial class CombatData
         {
             switch (p.Spec)
             {
+                case Spec.Luminary:
+                    LuminaryHelper.FlagLuminaryRadiantForgeWeaponSwapEvents(GetAnimatedCastData(p), GetWeaponSwapData(p), evtcVersion);
+                    break;
                 case Spec.Willbender:
                     toAdd.AddRange(ProfHelper.ComputeEndWithBuffApplyCastEvents(p, this, skillData, FlowingResolveSkill, 440, 500, FlowingResolveBuff));
                     break;
@@ -437,7 +440,7 @@ public partial class CombatData
         operation.UpdateProgressWithCancellationCheck("Parsing: Creating Custom Damage Events");
         EIDamageParse(skillData, agentData, logData);
         operation.UpdateProgressWithCancellationCheck("Parsing: Creating Custom Cast Events");
-        EICastParse(players, skillData, logData, agentData);
+        EICastParse(players, skillData, logData, agentData, evtcVersion);
         operation.UpdateProgressWithCancellationCheck("Parsing: Creating Custom Status Events");
         EIMetaAndStatusParse(logData, agentData, evtcVersion);
     }

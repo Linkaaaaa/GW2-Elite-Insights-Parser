@@ -124,6 +124,33 @@ internal static class LuminaryHelper
         new Buff("Restorative Glow (Shared)", RestorativeGlowSharedBuff, Source.Luminary, BuffClassification.Defensive, SkillImages.RestorativeGlow),
     ];
 
+    internal static void FlagLuminaryRadiantForgeWeaponSwapEvents(IReadOnlyList<AnimatedCastEvent> castEvents, IReadOnlyList<WeaponSwapEvent> weaponSwaps, EvtcVersionEvent evtcVersion)
+    {
+        var radiantForgeWeaponCasts = castEvents.Where(x => x.SkillID == DazzlingHammer || x.SkillID == LuminousStaff || x.SkillID == GleamingBlade || x.SkillID == RadiantBulwark).ToList();
+        var weaponSwapIndex = 0;
+        var relevantSwaps = weaponSwaps.Where(x => x.SwappedTo == WeaponSetIDs.TransformSet || x.SwappedFrom == WeaponSetIDs.TransformSet).ToList();
+        foreach (var radiantForgeWeaponCast in radiantForgeWeaponCasts)
+        {
+            for (var i = weaponSwapIndex; i < relevantSwaps.Count; i++)
+            {
+                var weaponSwap = relevantSwaps[i];
+                if (radiantForgeWeaponCast.Time <= weaponSwap.Time + ServerDelayConstant)
+                {
+                    if (weaponSwap.Time - radiantForgeWeaponCast.Time < ServerDelayConstant)
+                    {
+                        weaponSwap.FlagAsSpecialBundleSwap();
+                    } 
+                    else
+                    {
+                        weaponSwapIndex = i;
+                        break;
+                    }
+                }
+            }
+
+        }
+    }
+
     internal static void ComputeProfessionCombatReplayActors(PlayerActor player, ParsedEvtcLog log, CombatReplay replay)
     {
         {
