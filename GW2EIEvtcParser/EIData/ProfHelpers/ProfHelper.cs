@@ -826,6 +826,9 @@ internal static class ProfHelper
             case Spec.Evoker:
                 EvokerHelper.AdjustMinionName(minion);
                 break;
+            case Spec.Troubadour:
+                TroubadourHelper.AdjustMinionName(minion);
+                break;
             default:
                 break;
         }

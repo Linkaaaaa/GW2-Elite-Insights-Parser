@@ -1457,6 +1457,11 @@ internal static class ParserIcons
         { MinionID.IllusionaryWhaler, MinionIllusionaryWhaler },
         { MinionID.IllusionaryMariner, MinionIllusionaryMariner },
         { MinionID.IllusionarySharpShooter, MinionIllusionarySharpShooter },
+        // TODO: add icons
+        { MinionID.LivelyLuteAfterimage, MinionMesmerClone },
+        { MinionID.FlusteringFluteAfterimage, MinionMesmerClone },
+        { MinionID.DeafeningDrumAfterimage, MinionMesmerClone },
+        { MinionID.HarmoniousHarpAfterimage, MinionMesmerClone },
         { MinionID.JadeMech, MinionJadeMech },
         { MinionID.EraBreakrazor, MinionEraBreakrazor },
         { MinionID.KusDarkrazor, MinionKusDarkrazor },

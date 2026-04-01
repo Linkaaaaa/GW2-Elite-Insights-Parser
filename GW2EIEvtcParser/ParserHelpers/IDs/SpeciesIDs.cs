@@ -813,6 +813,11 @@ public static class SpeciesIDs
         IllusionaryAvenger = 15188,
         IllusionarySharpShooter = 26152,
         IllusionaryLancer = 26271,
+        // Troubadour after images
+        LivelyLuteAfterimage = 27021,
+        DeafeningDrumAfterimage = 27022,
+        HarmoniousHarpAfterimage = 27024,
+        FlusteringFluteAfterimage = 27034,
         // Mesmer Clones
         // - Single Weapon
         CloneSword = 8108,
