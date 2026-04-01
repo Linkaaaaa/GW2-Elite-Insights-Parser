@@ -32,7 +32,11 @@ public class ShardEvent : MetaDataEvent
         UpperShardID = evtcItem.DstAgent;
         UserWorldID0 = (uint)evtcItem.Value;
         UserWorldID1 = (uint)evtcItem.BuffDmg;
-        if (mapEvent != null)
+        if (UserWorldID0 > 0)
+        {
+            Region = GetRegion(UserWorldID0);
+        } 
+        else if (mapEvent != null)
         {
             var mapAPI = apiController.GetAPIMap(mapEvent.MapID);
             if (mapAPI != null && mapAPI.Type == "Instance")
