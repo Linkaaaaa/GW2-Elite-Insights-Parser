@@ -143,6 +143,10 @@ public static class SkillItemOverrides
         { PhantasmalBerserkerProjectileDamage, "Phantasmal Berserker (Greatsword Projectile Hit)" },
         { HealingPrism, "Healing Prism" },
         { SyncopateDelayedWave, "Syncopate (Delay Wave)" },
+        { DeafeningDrumAfterimage, "Deafening Drum (Afterimage)" },
+        { FlusteringFluteAfterimage, "Flustering Flute (Afterimage)" },
+        { LivelyLuteAfterimage, "Lively Lute (Afterimage)" },
+        { HarmoniousHarpAfterimage, "Harmonious Harp (Afterimage)" },
         #endregion Mesmer
         #region Necromancer
         { DesertEmpowerment, "Desert Empowerment" },
@@ -763,8 +767,10 @@ public static class SkillItemOverrides
             { PsystrikeClone, SkillImages.Psystrike },
             { PsycutClone, SkillImages.Psycut },
             { MindPierceClone, SkillImages.MindPierce },
-            { DeafeningDrumAfterImage, SkillImages.DeafeningDrum },
-            { FlusteringFluteAfterImage, SkillImages.FlusteringFlute },
+            { DeafeningDrumAfterimage, SkillImages.DeafeningDrum },
+            { FlusteringFluteAfterimage, SkillImages.FlusteringFlute },
+            { LivelyLuteAfterimage, SkillImages.LivelyLute },
+            { HarmoniousHarpAfterimage, SkillImages.HarmoniousHarp },
             #endregion  MesmerIcons
             #region NecromancerIcons
             { LifeFromDeath, TraitImages.LifeFromDeath },
