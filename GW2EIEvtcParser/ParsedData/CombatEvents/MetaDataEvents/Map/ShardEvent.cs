@@ -6,7 +6,9 @@ namespace GW2EIEvtcParser.ParsedData;
 public class ShardEvent : MetaDataEvent
 {
     public readonly ulong ShardID;
-    public readonly ushort UpperShardID;
+    public readonly ulong UpperShardID;
+    public readonly uint UserWorldID0;
+    public readonly uint UserWorldID1;
 
     public readonly RegionEnum Region = RegionEnum.Unknown;
 
@@ -27,7 +29,9 @@ public class ShardEvent : MetaDataEvent
     internal ShardEvent(CombatItem evtcItem, MapIDEvent? mapEvent, GW2APIController apiController) : base(evtcItem)
     {
         ShardID = evtcItem.SrcAgent;
-        UpperShardID = (ushort)(evtcItem.DstAgent & 0x000000FF);
+        UpperShardID = evtcItem.DstAgent;
+        UserWorldID0 = (uint)evtcItem.Value;
+        UserWorldID1 = (uint)evtcItem.BuffDmg;
         if (mapEvent != null)
         {
             var mapAPI = apiController.GetAPIMap(mapEvent.MapID);
