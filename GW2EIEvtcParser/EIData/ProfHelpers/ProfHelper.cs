@@ -813,7 +813,7 @@ internal static class ProfHelper
 
     public static void AdjustMinionName(AgentItem minion)
     {
-        switch (minion.GetFinalMaster().BaseSpec)
+        switch (minion.GetFinalMaster().GetBaseSpecAtTime(minion.HalfAware))
         {
             case Spec.Mesmer:
                 MesmerHelper.AdjustMinionName(minion);
@@ -821,7 +821,7 @@ internal static class ProfHelper
             default:
                 break;
         }
-        switch (minion.GetFinalMaster().Spec)
+        switch (minion.GetFinalMaster().GetSpecAtTime(minion.HalfAware))
         {
             case Spec.Evoker:
                 EvokerHelper.AdjustMinionName(minion);
