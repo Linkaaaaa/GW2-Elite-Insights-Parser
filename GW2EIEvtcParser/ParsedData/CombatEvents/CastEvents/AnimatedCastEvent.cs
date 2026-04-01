@@ -158,6 +158,11 @@ public class AnimatedCastEvent : CastEvent
         return EndTime;
     }
 
+    public override bool IgnoreOnRotationRender()
+    {
+        return false;
+    }
+
     public bool IntersectsExpectedCastWindow(long time, long threshold = ParserHelper.ServerDelayConstant)
     {
         return time >= Time - threshold && ExpectedEndTime + threshold >= time;
