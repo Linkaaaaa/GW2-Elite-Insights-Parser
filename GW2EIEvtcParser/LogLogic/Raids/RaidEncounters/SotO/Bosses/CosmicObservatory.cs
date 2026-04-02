@@ -522,7 +522,7 @@ internal class CosmicObservatory : SecretOfTheObscureRaidEncounter
             return LogData.Mode.Normal;
         }
         SingleActor dagda = Targets.FirstOrDefault(x => x.IsSpecies(TargetID.Dagda)) ?? throw new MissingKeyActorsException("Dagda not found");
-        return (dagda.GetHealth(combatData) > 56e6) ? LogData.Mode.CM : LogData.Mode.Normal;
+        return (dagda.GetHealth(combatData) > 50e6) ? LogData.Mode.CM : LogData.Mode.Normal;
     }
 
     internal override string GetLogicName(CombatData combatData, AgentData agentData, GW2APIController apiController)
