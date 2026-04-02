@@ -715,6 +715,7 @@ public static class SkillItemOverrides
             { HammerOfWisdom, SkillImages.HammerOfWisdom },
             { EffulgentStanceDamage, SkillImages.EffulgentStance },
             { RestorativeGlowHealingBuff, SkillImages.RestorativeGlow },
+            { SovereignOfLight, TraitImages.SovereignOfLight },
 #endregion GuardianIcons
             #region MesmerIcons
             { HealingPrism, TraitImages.HealingPrism },

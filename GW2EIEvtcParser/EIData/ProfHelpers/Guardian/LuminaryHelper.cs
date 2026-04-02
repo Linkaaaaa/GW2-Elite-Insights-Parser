@@ -25,6 +25,11 @@ internal static class LuminaryHelper
             .UsingSecondaryEffectSameSrcChecker(EffectGUIDs.LuminaryRadiantResolve2),
         new EffectCastFinder(RadiantCourageSkill, EffectGUIDs.LuminaryRadiantCourage1)
             .UsingSecondaryEffectSameSrcChecker(EffectGUIDs.LuminaryRadiantCourage2),
+        new EffectCastFinder(SovereignOfLight, EffectGUIDs.LuminarySovereignOfLightModel)
+            // Collision if left alone
+            .UsingSecondaryEffectSameSrcChecker(EffectGUIDs.LuminarySovereignOfLightAudio)
+            .UsingSrcSpecChecker(Spec.Luminary)
+            .UsingOrigin(InstantCastOrigin.Trait),
         // Radiant Forge
         new BuffGainCastFinder(EnterRadiantForge, RadiantForge)
             .UsingBeforeWeaponSwap(),
