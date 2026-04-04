@@ -613,7 +613,7 @@ public partial class CombatData
         _instantCastData = [];
         _instantCastDataByID = [];
         _animatedCastDataByID = animatedCastData.GroupBy(x => x.SkillID).ToDictionary(x => x.Key, x => x.ToList());
-        if (evtcVersion.Build >= ArcDPSBuilds.EmoteAndGadgetInteractionAdded && _animatedCastDataByID.TryGetValue(ArcDPSEmote, out var emoteCasts))
+        if (evtcVersion.Build >= ArcDPSBuilds.EmoteAndGadgetInteractionAdded && _animatedCastDataByID.TryGetValue(ArcDPSGenericEmote, out var emoteCasts))
         {
             operation.UpdateProgressWithCancellationCheck("Parsing: Creating Emote Events");
             var emotes = emoteCasts.OfType<EmoteEvent>().ToList();
@@ -626,7 +626,7 @@ public partial class CombatData
             _emoteCastData = [];
             _emoteCastDataByEmoteID = [];
         }
-        if (evtcVersion.Build >= ArcDPSBuilds.EmoteAndGadgetInteractionAdded && _animatedCastDataByID.TryGetValue(ArcDPSGadgetInteract, out var gadgetInteractCasts))
+        if (evtcVersion.Build >= ArcDPSBuilds.EmoteAndGadgetInteractionAdded && _animatedCastDataByID.TryGetValue(ArcDPSGenericGadgetInteract, out var gadgetInteractCasts))
         {
             operation.UpdateProgressWithCancellationCheck("Parsing: Creating Gadget Iteract Events");
             var gadgetInteracts = gadgetInteractCasts.OfType<GadgetInteractEvent>().ToList();
