@@ -230,7 +230,7 @@ public partial class CombatData
 
     private void EICastParse(IReadOnlyList<AgentItem> players, SkillData skillData, LogData logData, AgentData agentData, EvtcVersionEvent evtcVersion)
     {
-        List<CastEvent> toAdd = logData.Logic.SpecialCastEventProcess(this, agentData, skillData);
+        List<CastEvent> toAdd = logData.Logic.SpecialCastEventProcess(this, agentData, skillData, _animatedCastDataByID);
         ulong gw2Build = GetGW2BuildEvent().Build;
         // Redirections
         {

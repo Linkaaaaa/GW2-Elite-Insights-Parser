@@ -18,8 +18,8 @@ public static class SkillItemOverrides
         { ArcDPSDodge20220307, "Dodge" },
         { ArcDPSGenericBreakbar, "Generic Breakbar" },
         { ArcDPSGenericBreakbar20220307, "Generic Breakbar" },
-        { ArcDPSGadgetInteract, "Gadget Interaction" },
-        { ArcDPSEmote, "Emote" },
+        { ArcDPSGenericGadgetInteract, "Gadget Interaction" },
+        { ArcDPSGenericEmote, "Emote" },
 #endregion
         { WaterBlastCombo1, "Water Blast Combo" },
         { WaterBlastCombo2, "Water Blast Combo" },
@@ -284,6 +284,7 @@ public static class SkillItemOverrides
         { MajorSoulSplit, "Major Soul Split" },
         { ExpelEnergySAK, "Expel Energy" },
         { DeathMarkKnockback, "Death Mark (Knockback)" },
+        { DhuumEtherealSealInteract, "Ethereal Seal Interact" },
         // Conjured Amalgamate
         { ConjuredSlashSAK, "Conjured Slash" },
         // Adina

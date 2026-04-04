@@ -268,9 +268,9 @@ internal class SunquaPeakInstance : SunquaPeak
         return _aiKeeperOfThePeak.SpecialBuffEventProcess(combatData, skillData);
     }
 
-    internal override List<CastEvent> SpecialCastEventProcess(CombatData combatData, AgentData agentData, SkillData skillData)
+    internal override List<CastEvent> SpecialCastEventProcess(CombatData combatData, AgentData agentData, SkillData skillData, Dictionary<long, List<AnimatedCastEvent>> animatedCastDataByID)
     {
-        return _aiKeeperOfThePeak.SpecialCastEventProcess(combatData, agentData, skillData);
+        return _aiKeeperOfThePeak.SpecialCastEventProcess(combatData, agentData, skillData, animatedCastDataByID);
     }
 
     internal override List<HealthDamageEvent> SpecialDamageEventProcess(CombatData combatData, AgentData agentData, SkillData skillData)

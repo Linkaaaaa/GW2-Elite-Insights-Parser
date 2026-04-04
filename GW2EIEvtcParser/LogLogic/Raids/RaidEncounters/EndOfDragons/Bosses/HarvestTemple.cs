@@ -536,7 +536,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
         ];
     }
 
-    internal override List<CastEvent> SpecialCastEventProcess(CombatData combatData, AgentData agentData, SkillData skillData)
+    internal override List<CastEvent> SpecialCastEventProcess(CombatData combatData, AgentData agentData, SkillData skillData, Dictionary<long, List<AnimatedCastEvent>> animatedCastDataByID)
     {
         List<CastEvent> res = [];
         foreach (var target in Targets)

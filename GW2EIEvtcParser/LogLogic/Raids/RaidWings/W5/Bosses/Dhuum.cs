@@ -63,11 +63,11 @@ internal class Dhuum : HallOfChains
                     .UsingChecker((de,log) => de.HealthDamage > 0),
             ]),
             new MechanicGroup([
-                new PlayerGadgetInteractStartMechanic((int)TargetID.EtherealSeal, new MechanicPlotlySetting(Symbols.CircleOpen,Colors.Teal), "Eth.Seal.S","Started channeling an Ethereal Seal", "Ethereal Seal channeling",0)
+                new PlayerCastStartMechanic(DhuumEtherealSealInteract, new MechanicPlotlySetting(Symbols.CircleOpen,Colors.Teal), "Eth.Seal.S","Started channeling an Ethereal Seal", "Ethereal Seal channeling",0)
                     .UsingChecker((gie, log) => !gie.IsInterrupted),
-                new PlayerGadgetInteractEndMechanic((int)TargetID.EtherealSeal, new MechanicPlotlySetting(Symbols.Circle,Colors.Teal), "Eth.Seal.I","Succesfully interacted with an Ethereal Seal", "Ethereal Seal interacted",0)
+                new PlayerCastEndMechanic(DhuumEtherealSealInteract, new MechanicPlotlySetting(Symbols.Circle,Colors.Teal), "Eth.Seal.I","Succesfully interacted with an Ethereal Seal", "Ethereal Seal interacted",0)
                     .UsingChecker((gie, log) => !gie.IsInterrupted),
-                new PlayerGadgetInteractEndMechanic((int)TargetID.EtherealSeal, new MechanicPlotlySetting(Symbols.CircleCross,Colors.Teal), "Eth.Seal.F","Failed to interact with an Ethereal Seal", "Ethereal Seal failed",0)
+                new PlayerCastEndMechanic(DhuumEtherealSealInteract, new MechanicPlotlySetting(Symbols.CircleCross,Colors.Teal), "Eth.Seal.F","Failed to interact with an Ethereal Seal", "Ethereal Seal failed",0)
                     .UsingChecker((gie, log) => gie.IsInterrupted),
             ]),
             new PlayerDstBuffApplyMechanic(Superspeed, new MechanicPlotlySetting(Symbols.TriangleRight, Colors.Grey), "SupSpeed.Orb", "Gained Superspeed from Desmina (Walked over orb)", "Took Superspeed orb", 0)
@@ -138,6 +138,23 @@ internal class Dhuum : HallOfChains
                 return state;
             }),
         ];
+    }
+
+    internal override List<CastEvent> SpecialCastEventProcess(CombatData combatData, AgentData agentData, SkillData skillData, Dictionary<long, List<AnimatedCastEvent>> animatedCastDataByID)
+    {
+        var res = base.SpecialCastEventProcess(combatData, agentData, skillData, animatedCastDataByID);
+        var etherealSealInteracts = combatData.GetGadgetInteractCastDataByGadgetSpeciesID((int)TargetID.EtherealSeal);
+        var interactSkill = skillData.Get(DhuumEtherealSealInteract);
+        foreach (var etherealSealInteract in etherealSealInteracts)
+        {
+            etherealSealInteract.OverrideSkill(interactSkill);
+        }
+        if (etherealSealInteracts.Count > 0)
+        {
+            animatedCastDataByID[ArcDPSGenericGadgetInteract] = animatedCastDataByID[ArcDPSGenericGadgetInteract].Where(x => x.SkillID == ArcDPSGenericGadgetInteract).ToList();
+            animatedCastDataByID[DhuumEtherealSealInteract] = etherealSealInteracts.OfType<AnimatedCastEvent>().ToList();
+        }
+        return res;
     }
 
     //TODO_PERF(Rennorb)

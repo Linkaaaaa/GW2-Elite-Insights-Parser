@@ -469,7 +469,7 @@ public abstract class LogLogic
         return [ ];
     }
 
-    internal virtual List<CastEvent> SpecialCastEventProcess(CombatData combatData, AgentData agentData, SkillData skillData)
+    internal virtual List<CastEvent> SpecialCastEventProcess(CombatData combatData, AgentData agentData, SkillData skillData, Dictionary<long, List<AnimatedCastEvent>> animatedCastDataByID)
     {
         return [ ];
     }
