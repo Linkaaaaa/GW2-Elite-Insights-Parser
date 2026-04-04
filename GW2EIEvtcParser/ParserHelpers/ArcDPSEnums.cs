@@ -613,7 +613,7 @@ public static class ArcDPSEnums
 
     public enum RegionEnum : byte
     {
-        US = 0,
+        NA = 0,
         EU = 1,
         CN = 2,
 

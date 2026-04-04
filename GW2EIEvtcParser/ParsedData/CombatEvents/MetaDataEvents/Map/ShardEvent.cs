@@ -18,7 +18,7 @@ public class ShardEvent : MetaDataEvent
         // TODO: china
         if (shardID < 2000 && shardID > 1000)
         {
-            return RegionEnum.US;
+            return RegionEnum.NA;
         } 
         else if (shardID > 2000 && shardID < 3000)
         {
@@ -44,6 +44,17 @@ public class ShardEvent : MetaDataEvent
                 Region = GetRegion(ShardID);
             }
         }
+    }
+
+    public string? RegionToString()
+    {
+        return Region switch
+        {
+            RegionEnum.NA => "NA",
+            RegionEnum.EU => "EU",
+            RegionEnum.CN => "China",
+            _ => null,
+        };
     }
 
 }
