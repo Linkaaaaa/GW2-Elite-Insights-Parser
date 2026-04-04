@@ -351,7 +351,7 @@ public class CombatItem
         {
             return false;
         }
-        return IsActivation == Activation.CancelFire || IsActivation == Activation.Reset || IsActivation == Activation.CancelCancel;
+        return IsActivation == Activation.CancelFire || IsActivation == Activation.Reset || IsActivation == Activation.CancelCancel || IsActivation == Activation.NoData;
     }
 
     ///

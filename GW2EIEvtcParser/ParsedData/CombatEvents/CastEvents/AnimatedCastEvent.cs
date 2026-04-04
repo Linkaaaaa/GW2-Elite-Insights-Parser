@@ -44,6 +44,7 @@ public class AnimatedCastEvent : CastEvent
                     Status = AnimationStatus.Full;
                     break;
                 case Activation.CancelFire:
+                case Activation.NoData:
                     int scaledExpectedDuration = (int)Math.Round(ExpectedDuration / nonScaledToScaledRatio);
                     SavedDuration = Math.Max(scaledExpectedDuration - ActualDuration, 0);
                     Status = AnimationStatus.Reduced;

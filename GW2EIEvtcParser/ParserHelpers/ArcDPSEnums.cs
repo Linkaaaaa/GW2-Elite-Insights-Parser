@@ -98,12 +98,13 @@ public static class ArcDPSEnums
     // Activation
     public enum Activation : byte
     {
-        None = 0,
-        Normal = 1,
-        Quickness = 2,
-        CancelFire = 3,
-        CancelCancel = 4,
-        Reset = 5,
+        None = 0, // not used - not this kind of event
+        Normal = 1, // started skill/animation activation
+        Quickness = 2, // unused as of nov 5 2019
+        CancelFire = 3,  // stopped skill activation with reaching tooltip time
+        CancelCancel = 4, // stopped skill activation without reaching tooltip time
+        Reset = 5, // animation completed fully
+        NoData = 6, // Treat it as CancelFire
 
         Unknown
     };
