@@ -15,7 +15,6 @@ public class ShardEvent : MetaDataEvent
 
     private static RegionEnum GetRegion(ulong shardID)
     {
-        // TODO: china
         if (shardID < 2000 && shardID > 1000)
         {
             return RegionEnum.NA;
@@ -23,6 +22,10 @@ public class ShardEvent : MetaDataEvent
         else if (shardID > 2000 && shardID < 3000)
         {
             return RegionEnum.EU;
+        }
+        else if (shardID > 7000 && shardID < 8000)
+        {
+            return RegionEnum.CN;
         }
         return RegionEnum.Unknown;
     }
