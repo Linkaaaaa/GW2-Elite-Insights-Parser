@@ -1308,7 +1308,9 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
             .Select(x => new MaxHealthUpdateEvent(x, agentData))
             .GroupBy(x => x.MaxHealth).ToDictionary(x => x.Key);
         //
-        if (maxHPEvents.TryGetValue(491550, out var dragonOrbMaxHPs))
+        var dragonOrbs = agentData.GetNPCsByID(TargetID.DragonEnergyOrb);
+        // For old logs
+        if (dragonOrbs.Count == 0 && maxHPEvents.TryGetValue(491550, out var dragonOrbMaxHPs))
         {
             foreach (MaxHealthUpdateEvent dragonOrbMaxHP in dragonOrbMaxHPs)
             {
@@ -1318,6 +1320,13 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                     dragonOrb.OverrideName("Dragon Orb");
                     dragonOrb.OverrideID(TargetID.DragonEnergyOrb, agentData);
                 }
+            }
+        } 
+        else if (dragonOrbs.Count > 0)
+        {
+            foreach (var dragonOrb in dragonOrbs)
+            {
+                dragonOrb.OverrideName("Dragon Orb");
             }
         }
         //

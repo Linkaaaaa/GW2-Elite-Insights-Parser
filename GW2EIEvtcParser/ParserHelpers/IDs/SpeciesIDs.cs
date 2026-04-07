@@ -508,7 +508,7 @@ public static class SpeciesIDs
         VoidStormseer = 24677,
         VoidMelter = 24223,
         VoidGoliath = 24761,
-        DragonEnergyOrb = DragonOrb,
+        DragonEnergyOrb = 21941,
         GravityBall = SpeciesIDs.GravityBall,
         JormagMovingFrostBeamCenter = 23747,
         JormagMovingFrostBeamNorth = 24541,
@@ -1157,7 +1157,7 @@ public static class SpeciesIDs
     private const int VentariTablet = -25;
     private const int PoisonMushroom = -26;
     private const int SpearAggressionRevulsion = -27;
-    private const int DragonOrb = -28;
+    // -28 empty
     private const int ChestOfSouls = -29;
     private const int ShackledPrisoner = -30;
     private const int DemonicBond = -31;
