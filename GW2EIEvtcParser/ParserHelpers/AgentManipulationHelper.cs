@@ -326,7 +326,8 @@ public static class AgentManipulationHelper
                 foreach (var curAgent in npcsByInstdID.Value)
                 {
                     var curStateTime = squadCombatStartCombatEnds.Last(x => x <= curAgent.HalfAware);
-                    if (curAgent.CouldBeEqual(previousAgent) && curStateTime == previousStateTime)
+                    // Ignore minions of players
+                    if (curAgent.CouldBeEqual(previousAgent) && curStateTime == previousStateTime && curAgent.GetFinalMaster().IsPlayer)
                     {
                         agentToRegroup.Add(curAgent);
                     } 
