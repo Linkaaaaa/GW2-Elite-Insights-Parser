@@ -54,7 +54,7 @@ internal class TargetDto : ActorDto
                 {
                     activeFound = true;
                     behaviorValue = 1;
-                    HpLeft = (int)(bar.hpValue * HpLeftPercent / 100);
+                    HpLeft += (int)(bar.hpValue * Math.Max(HpLeftPercent - bar.minPercent, 0.0) / 100);
                 } 
                 else if (activeFound)
                 {
