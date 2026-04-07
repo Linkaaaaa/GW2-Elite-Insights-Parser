@@ -499,6 +499,11 @@ internal static class ParserIcons
     private const string MinionIllusionaryWhaler = "https://i.imgur.com/vVqpOvR.png";
     private const string MinionIllusionaryMariner = "https://i.imgur.com/2oSj7rI.png";
     private const string MinionIllusionarySharpShooter = "https://i.imgur.com/6HX5zTh.png";
+    private const string MinionIllusionaryLancer = "https://i.imgur.com/poA3gy6.png";
+    private const string MinionLivelyLuteAfterimage = "https://i.imgur.com/poA3gy6.png";
+    private const string MinionFlusteringFluteAfterimage = "https://i.imgur.com/H735iRU.png";
+    private const string MinionDeafeningDrumAfterimage = "https://i.imgur.com/u9ITD16.png";
+    private const string MinionHarmoniousHarpAfterimage = "https://i.imgur.com/h1jAaMc.png";
     private const string MinionJadeMech = "https://i.imgur.com/54evTaq.png";
     private const string MinionEraBreakrazor = "https://i.imgur.com/2X3G3Fl.png";
     private const string MinionKusDarkrazor = "https://i.imgur.com/rJq4Ngh.png";
@@ -1457,11 +1462,12 @@ internal static class ParserIcons
         { MinionID.IllusionaryWhaler, MinionIllusionaryWhaler },
         { MinionID.IllusionaryMariner, MinionIllusionaryMariner },
         { MinionID.IllusionarySharpShooter, MinionIllusionarySharpShooter },
+        { MinionID.IllusionaryLancer, MinionIllusionaryLancer },
         // TODO: add icons
-        { MinionID.LivelyLuteAfterimage, MinionMesmerClone },
-        { MinionID.FlusteringFluteAfterimage, MinionMesmerClone },
-        { MinionID.DeafeningDrumAfterimage, MinionMesmerClone },
-        { MinionID.HarmoniousHarpAfterimage, MinionMesmerClone },
+        { MinionID.LivelyLuteAfterimage, MinionLivelyLuteAfterimage },
+        { MinionID.FlusteringFluteAfterimage, MinionFlusteringFluteAfterimage },
+        { MinionID.DeafeningDrumAfterimage, MinionDeafeningDrumAfterimage },
+        { MinionID.HarmoniousHarpAfterimage, MinionHarmoniousHarpAfterimage },
         { MinionID.JadeMech, MinionJadeMech },
         { MinionID.EraBreakrazor, MinionEraBreakrazor },
         { MinionID.KusDarkrazor, MinionKusDarkrazor },
