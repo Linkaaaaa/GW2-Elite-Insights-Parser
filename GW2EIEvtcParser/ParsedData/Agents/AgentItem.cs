@@ -149,6 +149,14 @@ public class AgentItem
         IsUnknown = true;
     }
 
+    internal bool CouldBeEqual(AgentItem other)
+    {
+        return InstID == other.InstID && ID == other.ID &&
+            Type == other.Type && Unamed == other.Unamed &&
+            Name == other.Name && HitboxWidth == other.HitboxWidth &&
+            HitboxHeight == other.HitboxHeight && Master == other.Master;
+    }
+
     internal void SetInstid(ushort instid)
     {
         InstID = instid;

@@ -312,12 +312,12 @@ public static class AgentManipulationHelper
             .Where(x => x.IsStateChange == StateChange.SquadCombatStart || x.IsStateChange == StateChange.SquadCombatEnd)
             .Select(x => x.Time));
         squadCombatStartCombatEnds.Add(long.MaxValue);
-        var combatDataDict = combatItems.Where(x => x.SrcIsAgent(extensions) || x.DstIsAgent(extensions));
+        var combatDataDict = combatItems.Where(x => x.SrcIsAgent(extensions) || x.DstIsAgent(extensions)).ToList();
         var srcCombatDataDict = combatDataDict.Where(x => x.SrcIsAgent(extensions)).GroupBy(x => agentData.GetAgent(x.SrcAgent, x.Time)).ToDictionary(x => x.Key, x => x.ToList());
         var dstCombatDataDict = combatDataDict.Where(x => x.DstIsAgent(extensions)).GroupBy(x => agentData.GetAgent(x.DstAgent, x.Time)).ToDictionary(x => x.Key, x => x.ToList());
         // NPCs
         {
-            var npcsByInstIDs = agentData.GetAgentByType(AgentItem.AgentType.NPC).Where(x => !x.IsNonIdentifiedSpecies()).GroupBy(x => x.InstID).ToDictionary(x => x.Key, x => x.ToList());
+            var npcsByInstIDs = agentData.GetAgentByType(AgentItem.AgentType.NPC).GroupBy(x => x.InstID).ToDictionary(x => x.Key, x => x.ToList());
             foreach (var npcsByInstdID in npcsByInstIDs)
             {
                 var agentToRegroup = new List<AgentItem>(5);
@@ -326,7 +326,7 @@ public static class AgentManipulationHelper
                 foreach (var curAgent in npcsByInstdID.Value)
                 {
                     var curStateTime = squadCombatStartCombatEnds.Last(x => x <= curAgent.HalfAware);
-                    if (previousAgent.ID == curAgent.ID && curAgent.Master == previousAgent.Master && curStateTime == previousStateTime)
+                    if (curAgent.CouldBeEqual(previousAgent) && curStateTime == previousStateTime)
                     {
                         agentToRegroup.Add(curAgent);
                     } 
