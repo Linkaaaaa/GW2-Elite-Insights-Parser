@@ -15,6 +15,10 @@ internal class TargetDto : ActorDto
 
     public List<double[]> HpBars { get; set; }
 
+    private const int HPBarConsumed = 0;
+    private const int HPBarActive = 1;
+    private const int HPBarUntouched = 2;
+
     public TargetDto(SingleActor target, ParsedEvtcLog log, ActorDetailsDto details) : base(target, log, details)
     {
         HbHeight = target.HitboxHeight;
@@ -46,22 +50,22 @@ internal class TargetDto : ActorDto
             Health = 0;
             HpBars = new(healthBars.Count);
             bool activeFound = false;
-            foreach (var bar in healthBars)
+            foreach (var (maxPercent, minPercent, hpValue, active) in healthBars)
             {
-                Health += (long)(bar.hpValue * (bar.maxPercent - bar.minPercent) / 100);
-                var behaviorValue = 0;
-                if (bar.active)
+                Health += (long)(hpValue * (maxPercent - minPercent) / 100);
+                var behaviorValue = HPBarConsumed;
+                if (active)
                 {
                     activeFound = true;
-                    behaviorValue = 1;
-                    HpLeft += (int)(bar.hpValue * Math.Max(HpLeftPercent - bar.minPercent, 0.0) / 100);
+                    behaviorValue = HPBarActive;
+                    HpLeft += (int)(hpValue * Math.Max(HpLeftPercent - minPercent, 0.0) / 100);
                 } 
                 else if (activeFound)
                 {
-                    behaviorValue = 2;
-                    HpLeft += (int)(bar.hpValue * (bar.maxPercent - bar.minPercent) / 100);
+                    behaviorValue = HPBarUntouched;
+                    HpLeft += (int)(hpValue * (maxPercent - minPercent) / 100);
                 }
-                HpBars.Add([bar.minPercent, bar.maxPercent, bar.hpValue, behaviorValue]);
+                HpBars.Add([minPercent, maxPercent, hpValue, behaviorValue]);
             }
         } 
         else

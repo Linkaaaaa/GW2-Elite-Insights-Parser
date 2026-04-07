@@ -48,24 +48,24 @@ internal static class JsonNPCBuilder
             jsonNPC.TotalHealth = 0;
             var hpBars = new List<JsonNPC.JsonNPCHealthBar>(healthBars.Count);
             bool activeFound = false;
-            foreach (var bar in healthBars)
+            foreach (var (maxPercent, minPercent, hpValue, active) in healthBars)
             {
-                jsonNPC.TotalHealth += (int)(bar.hpValue * (bar.maxPercent - bar.minPercent) / 100);
-                if (bar.active)
+                jsonNPC.TotalHealth += (int)(hpValue * (maxPercent - minPercent) / 100);
+                if (active)
                 {
                     activeFound = true;
-                    jsonNPC.FinalHealth += (int)(bar.hpValue * Math.Max(hpLeftPercent - bar.minPercent, 0.0) / 100);
+                    jsonNPC.FinalHealth += (int)(hpValue * Math.Max(hpLeftPercent - minPercent, 0.0) / 100);
                 }
                 else if (activeFound)
                 {
-                    jsonNPC.FinalHealth += (int)(bar.hpValue * (bar.maxPercent - bar.minPercent) / 100);
+                    jsonNPC.FinalHealth += (int)(hpValue * (maxPercent - minPercent) / 100);
                 }
                 hpBars.Add(new JsonNPC.JsonNPCHealthBar()
                 {
-                    MinPercent = bar.minPercent,
-                    MaxPercent = bar.maxPercent,
-                    Active = bar.active,
-                    Health = bar.hpValue,
+                    MinPercent = minPercent,
+                    MaxPercent = maxPercent,
+                    Active = active,
+                    Health = hpValue,
                 });
             }
         } 
