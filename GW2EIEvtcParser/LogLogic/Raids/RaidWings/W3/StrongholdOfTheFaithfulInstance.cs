@@ -336,7 +336,7 @@ internal class StrongholdOfTheFaithfulInstance : StrongholdOfTheFaithful
         {
             if (target.IsSpecies(TargetID.Xera))
             {
-                Xera.SetManualHPForXera(target);
+                Xera.AdjustXeraHP(target, Xera.GetXera2Merge(target.AgentItem) != null);
             }
         }
     }

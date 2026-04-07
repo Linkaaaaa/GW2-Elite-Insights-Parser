@@ -84,9 +84,16 @@ public abstract partial class SingleActor : Actor
         return Health;
     }
 
-    internal abstract void SetManualHealth(int health, IReadOnlyList<(long hpValue, double percent)>? hpDistribution = null);
+    internal abstract void SetManualHealth(int health, IReadOnlyList<(int hpValue, double percent)>? hpDistribution = null);
 
-    public virtual IReadOnlyList<(long hpValue, double percent)>? GetHealthDistribution()
+    internal abstract void SetHealthBars(IReadOnlyList<(double maxPercent, double minPercent, int hpValue, bool active)> hpBars);
+
+    public virtual IReadOnlyList<(int hpValue, double percent)>? GetHealthDistribution()
+    {
+        return null;
+    }
+
+    public virtual IReadOnlyList<(double maxPercent, double minPercent, int hpValue, bool active)>? GetHealthBars()
     {
         return null;
     }
