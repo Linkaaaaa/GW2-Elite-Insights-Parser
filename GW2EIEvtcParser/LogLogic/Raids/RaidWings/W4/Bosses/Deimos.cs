@@ -552,7 +552,7 @@ internal class Deimos : BastionOfThePenitent
         }
     }
 
-    private static void AddBurstPhases(List<SubPhasePhaseData> phases, ParsedEvtcLog log, SingleActor mainTarget, List<PhaseData> parentPhases, EncounterPhaseData encounterPhase)
+    private static void AddBurstPhases(List<SubPhasePhaseData> phases, ParsedEvtcLog log, SingleActor mainTarget, List<PhaseData?> parentPhases, EncounterPhaseData encounterPhase)
     {
         var signets = mainTarget.GetBuffStatus(log, UnnaturalSignet).Where(x => x.Value > 0);
         int burstID = 1;

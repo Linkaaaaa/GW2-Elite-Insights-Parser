@@ -3,6 +3,7 @@ using GW2EIEvtcParser.EIData;
 using GW2EIEvtcParser.Exceptions;
 using GW2EIEvtcParser.Extensions;
 using GW2EIEvtcParser.ParserHelpers;
+using GW2EIGW2API;
 using Tracing;
 using static GW2EIEvtcParser.ArcDPSEnums;
 using static GW2EIEvtcParser.ParserHelper;
@@ -227,9 +228,9 @@ public partial class CombatData
         return res;
     }
 
-    private void EICastParse(IReadOnlyList<AgentItem> players, SkillData skillData, LogData logData, AgentData agentData)
+    private void EICastParse(IReadOnlyList<AgentItem> players, SkillData skillData, LogData logData, AgentData agentData, EvtcVersionEvent evtcVersion)
     {
-        List<CastEvent> toAdd = logData.Logic.SpecialCastEventProcess(this, agentData, skillData);
+        List<CastEvent> toAdd = logData.Logic.SpecialCastEventProcess(this, agentData, skillData, _animatedCastDataByID);
         ulong gw2Build = GetGW2BuildEvent().Build;
         // Redirections
         {
@@ -240,6 +241,9 @@ public partial class CombatData
         {
             switch (p.Spec)
             {
+                case Spec.Luminary:
+                    LuminaryHelper.FlagLuminaryRadiantForgeWeaponSwapEvents(GetAnimatedCastData(p), GetWeaponSwapData(p), evtcVersion);
+                    break;
                 case Spec.Willbender:
                     toAdd.AddRange(ProfHelper.ComputeEndWithBuffApplyCastEvents(p, this, skillData, FlowingResolveSkill, 440, 500, FlowingResolveBuff));
                     break;
@@ -436,7 +440,7 @@ public partial class CombatData
         operation.UpdateProgressWithCancellationCheck("Parsing: Creating Custom Damage Events");
         EIDamageParse(skillData, agentData, logData);
         operation.UpdateProgressWithCancellationCheck("Parsing: Creating Custom Cast Events");
-        EICastParse(players, skillData, logData, agentData);
+        EICastParse(players, skillData, logData, agentData, evtcVersion);
         operation.UpdateProgressWithCancellationCheck("Parsing: Creating Custom Status Events");
         EIMetaAndStatusParse(logData, agentData, evtcVersion);
     }
@@ -504,7 +508,7 @@ public partial class CombatData
         }
     }
 
-    internal CombatData(IReadOnlyList<CombatItem> allCombatItems, LogData logData, AgentData agentData, SkillData skillData, IReadOnlyList<Player> players, ParserController operation, IReadOnlyDictionary<uint, ExtensionHandler> extensions, EvtcVersionEvent evtcVersion, EvtcParserSettings settings)
+    internal CombatData(IReadOnlyList<CombatItem> allCombatItems, LogData logData, AgentData agentData, SkillData skillData, IReadOnlyList<Player> players, ParserController operation, IReadOnlyDictionary<uint, ExtensionHandler> extensions, EvtcVersionEvent evtcVersion, EvtcParserSettings settings, GW2APIController apiController)
     {
         using var _t = new AutoTrace("CombatData");
         _metaDataEvents.EvtcVersionEvent = evtcVersion;
@@ -528,7 +532,7 @@ public partial class CombatData
         {
             if (combatItem.IsEssentialMetadata)
             {
-                CombatEventFactory.AddStateChangeEvent(logData.EvtcLogOffset, combatItem, agentData, skillData, _metaDataEvents, _statusEvents, _rewardEvents, wepSwaps, buffEvents, evtcVersion, settings);
+                CombatEventFactory.AddStateChangeEvent(logData.EvtcLogOffset, combatItem, agentData, skillData, _metaDataEvents, _statusEvents, _rewardEvents, wepSwaps, buffEvents, evtcVersion, settings, apiController);
             }
         }
         foreach (CombatItem combatItem in combatEvents)
@@ -551,7 +555,7 @@ public partial class CombatData
                 else
                 {
                     insertToSkillIDs = combatItem.IsStateChange == StateChange.BuffInitial;
-                    CombatEventFactory.AddStateChangeEvent(logData.EvtcLogOffset, combatItem, agentData, skillData, _metaDataEvents, _statusEvents, _rewardEvents, wepSwaps, buffEvents, evtcVersion, settings);
+                    CombatEventFactory.AddStateChangeEvent(logData.EvtcLogOffset, combatItem, agentData, skillData, _metaDataEvents, _statusEvents, _rewardEvents, wepSwaps, buffEvents, evtcVersion, settings, apiController);
                 }
 
             }
@@ -609,7 +613,7 @@ public partial class CombatData
         _instantCastData = [];
         _instantCastDataByID = [];
         _animatedCastDataByID = animatedCastData.GroupBy(x => x.SkillID).ToDictionary(x => x.Key, x => x.ToList());
-        if (evtcVersion.Build >= ArcDPSBuilds.EmoteAndGadgetInteractionAdded && _animatedCastDataByID.TryGetValue(ArcDPSEmote, out var emoteCasts))
+        if (evtcVersion.Build >= ArcDPSBuilds.EmoteAndGadgetInteractionAdded && _animatedCastDataByID.TryGetValue(ArcDPSGenericEmote, out var emoteCasts))
         {
             operation.UpdateProgressWithCancellationCheck("Parsing: Creating Emote Events");
             var emotes = emoteCasts.OfType<EmoteEvent>().ToList();
@@ -622,7 +626,7 @@ public partial class CombatData
             _emoteCastData = [];
             _emoteCastDataByEmoteID = [];
         }
-        if (evtcVersion.Build >= ArcDPSBuilds.EmoteAndGadgetInteractionAdded && _animatedCastDataByID.TryGetValue(ArcDPSGadgetInteract, out var gadgetInteractCasts))
+        if (evtcVersion.Build >= ArcDPSBuilds.EmoteAndGadgetInteractionAdded && _animatedCastDataByID.TryGetValue(ArcDPSGenericGadgetInteract, out var gadgetInteractCasts))
         {
             operation.UpdateProgressWithCancellationCheck("Parsing: Creating Gadget Iteract Events");
             var gadgetInteracts = gadgetInteractCasts.OfType<GadgetInteractEvent>().ToList();

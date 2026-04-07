@@ -628,6 +628,16 @@ public class AgentItem
         }
         return EnglobedAgentItems.FirstOrDefault(x => x.InAwareTimes(time)) ?? this;
     }
+
+    public ParserHelper.Spec GetSpecAtTime(long time)
+    {
+        return FindEnglobedAgentItem(time).Spec;
+    }
+
+    public ParserHelper.Spec GetBaseSpecAtTime(long time)
+    {
+        return FindEnglobedAgentItem(time).BaseSpec;
+    }
 }
 
 public static partial class ListExt

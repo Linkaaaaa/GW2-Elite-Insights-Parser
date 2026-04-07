@@ -1,4 +1,5 @@
-﻿using Tracing;
+﻿using GW2EIGW2API;
+using Tracing;
 using static GW2EIEvtcParser.ArcDPSEnums;
 using static GW2EIEvtcParser.ParserHelper;
 
@@ -7,7 +8,7 @@ namespace GW2EIEvtcParser.ParsedData;
 internal static class CombatEventFactory
 {
 
-    public static void AddStateChangeEvent(long logStart, CombatItem stateChangeEvent, AgentData agentData, SkillData skillData, MetaEventsContainer metaDataEvents, StatusEventsContainer statusEvents, List<RewardEvent> rewardEvents, List<WeaponSwapEvent> wepSwaps, List<BuffEvent> buffEvents, EvtcVersionEvent evtcVersion, EvtcParserSettings settings)
+    public static void AddStateChangeEvent(long logStart, CombatItem stateChangeEvent, AgentData agentData, SkillData skillData, MetaEventsContainer metaDataEvents, StatusEventsContainer statusEvents, List<RewardEvent> rewardEvents, List<WeaponSwapEvent> wepSwaps, List<BuffEvent> buffEvents, EvtcVersionEvent evtcVersion, EvtcParserSettings settings, GW2APIController apiController)
     {
         switch (stateChangeEvent.IsStateChange)
         {
@@ -98,7 +99,7 @@ internal static class CombatEventFactory
                 metaDataEvents.GW2BuildEvent = new GW2BuildEvent(stateChangeEvent);
                 break;
             case StateChange.ShardID:
-                metaDataEvents.ShardEvents.Add(new ShardEvent(stateChangeEvent));
+                metaDataEvents.ShardEvents.Add(new ShardEvent(stateChangeEvent, metaDataEvents.MapIDEvents.FirstOrDefault(), apiController));
                 break;
             case StateChange.Reward:
 #if !NO_REWARDS
@@ -525,8 +526,8 @@ internal static class CombatEventFactory
         }
         return id switch
         {
-            SkillIDs.ArcDPSEmote => new EmoteEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd, emoteGUIDict),
-            SkillIDs.ArcDPSGadgetInteract => new GadgetInteractEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd),
+            SkillIDs.ArcDPSGenericEmote => new EmoteEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd, emoteGUIDict),
+            SkillIDs.ArcDPSGenericGadgetInteract => new GadgetInteractEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd),
             _ => new AnimatedCastEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd),
         };
     }

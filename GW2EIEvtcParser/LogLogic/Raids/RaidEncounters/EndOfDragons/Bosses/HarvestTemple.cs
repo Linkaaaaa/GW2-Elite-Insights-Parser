@@ -536,7 +536,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
         ];
     }
 
-    internal override List<CastEvent> SpecialCastEventProcess(CombatData combatData, AgentData agentData, SkillData skillData)
+    internal override List<CastEvent> SpecialCastEventProcess(CombatData combatData, AgentData agentData, SkillData skillData, Dictionary<long, List<AnimatedCastEvent>> animatedCastDataByID)
     {
         List<CastEvent> res = [];
         foreach (var target in Targets)
@@ -2844,7 +2844,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
             (int)TargetID.TheDragonVoidPrimordus,
             (int)TargetID.TheDragonVoidZhaitan,
         ];
-        if (Targets.Where(x => targetIDs.Contains(x.ID)).Any(x => x.GetHealth(combatData) > 16000000))
+        if (Targets.Where(x => targetIDs.Contains(x.ID)).Any(x => x.GetHealth(combatData) > 10000000))
         {
             return LogData.Mode.CM;
         }

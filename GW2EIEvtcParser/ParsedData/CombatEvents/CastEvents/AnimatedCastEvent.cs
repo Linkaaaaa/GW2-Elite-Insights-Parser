@@ -44,6 +44,7 @@ public class AnimatedCastEvent : CastEvent
                     Status = AnimationStatus.Full;
                     break;
                 case Activation.CancelFire:
+                case Activation.NoData:
                     int scaledExpectedDuration = (int)Math.Round(ExpectedDuration / nonScaledToScaledRatio);
                     SavedDuration = Math.Max(scaledExpectedDuration - ActualDuration, 0);
                     Status = AnimationStatus.Reduced;
@@ -156,6 +157,11 @@ public class AnimatedCastEvent : CastEvent
             return Math.Max(buffStatus.Value.Start, Time);
         }
         return EndTime;
+    }
+
+    public override bool IgnoreOnRotationRender()
+    {
+        return false;
     }
 
     public bool IntersectsExpectedCastWindow(long time, long threshold = ParserHelper.ServerDelayConstant)

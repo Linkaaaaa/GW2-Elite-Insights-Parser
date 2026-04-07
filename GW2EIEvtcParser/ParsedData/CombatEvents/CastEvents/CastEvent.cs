@@ -57,6 +57,8 @@ public abstract class CastEvent : TimeCombatEvent
     {
         Skill = skill;
     }
+
+    public abstract bool IgnoreOnRotationRender();
 }
 
 public static partial class ListExt
