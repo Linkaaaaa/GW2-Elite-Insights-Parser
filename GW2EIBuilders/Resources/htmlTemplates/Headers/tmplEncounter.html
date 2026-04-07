@@ -72,6 +72,17 @@
 </template>
 
 <script>
+
+    function hpBarIsConsumed(hpBar) {
+        return hpBar[3] === 0;
+    }
+    function hpBarIsActive(hpBar) {
+        return hpBar[3] === 1;
+    }
+    function hpBarIsUntouched(hpBar) {
+        return hpBar[3] === 2;
+    }
+
     Vue.component("encounter-component", {
         props: ["light", "encounters"],
         template: `${template}`,
@@ -145,11 +156,11 @@
                 const minPercent = hpBar ? hpBar[0] : 0;
                 const maxPercent = hpBar ? hpBar[1] : 100;
                 let hpLeftPercent = target.hpLeftPercent;
-                const barrierLeftPercent = hpBar && hpBar[3] === 1 ? target.barrierLeftPercent : 0;
+                const barrierLeftPercent = hpBar && hpBarIsActive(hpBar) ? target.barrierLeftPercent : 0;
                 if (hpBar) {
-                    if (hpBar[3] === 0) {
+                    if (hpBarIsConsumed(hpBar)) {
                         hpLeftPercent = minPercent;
-                    } else if (hpBar[3] === 2) {
+                    } else if (hpBarIsUntouched(hpBar)) {
                         hpLeftPercent = maxPercent;
                     }
                 }
@@ -203,13 +214,13 @@
                 const health = hpBar ? hpBar[2] : target.health;
                 let hpLeft = target.hpLeftPercent;
                 if (hpBar) {
-                    if (hpBar[3] === 0) {
+                    if (hpBarIsConsumed(hpBar)) {
                         hpLeft = minPercent;
-                    } else if (hpBar[3] === 2) {
+                    } else if (hpBarIsUntouched(hpBar)) {
                         hpLeft = maxPercent;
                     }
                 }
-                const barrierLeft = hpBar && hpBar[3] === 1 ? target.barrierLeftPercent : 0;
+                const barrierLeft = hpBar && hpBarIsActive(hpBar) ? target.barrierLeftPercent : 0;
                 if ((hpLeft > minPercent && barrierLeft > 0) || (hpLeft == minPercent && barrierLeft > 0)) { // If only barrier is left, show 0 + x.y barrier
                     return health + " HP (" + hpLeft + "% + " + barrierLeft + "%)";
                 }
