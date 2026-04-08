@@ -326,7 +326,7 @@ function checkImgurAccess() {
 window.onload = function () {
     Vue.config.devtools = true;
     checkImgurAccess().then(notBlocked => {
-        replaceImgur = true || !notBlocked;
+        replaceImgur = !notBlocked;
         // trick from
         const imgOfficialAPI = document.createElement("img");
         imgOfficialAPI.style.display = "none";
