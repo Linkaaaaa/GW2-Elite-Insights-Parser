@@ -26,7 +26,7 @@ internal static class GearDamageModifiers
             .WithBuilds(GW2Builds.June2023BalanceAndSOTOBetaAndSilentSurfNM, GW2Builds.SOTOReleaseAndBalance),
         new BuffOnActorDamageModifier(Mod_StrengthRune, Might, "Strength Rune", "5% under might", DamageSource.NoPets, 5.0, DamageType.Strike, DamageType.Strike, Source.Gear, ByPresence, ItemImages.SuperiorRuneOfStrength, DamageModifierMode.All)
             .WithBuilds(GW2Builds.StartOfLife, GW2Builds.SOTOReleaseAndBalance),
-        new BuffOnActorDamageModifier(Mod_FireRune, FireAura, "Fire Rune", "10% under fire aura", DamageSource.NoPets, 10.0, DamageType.Strike, DamageType.Strike, Source.Gear, ByPresence, ItemImages.SuperiorRuneOfFire, DamageModifierMode.All)
+        new BuffOnActorDamageModifier(Mod_FireRune, FireAura, "Fire Rune", "10% under fire aura", DamageSource.NoPets, 10.0, DamageType.Strike, DamageType.Strike, Source.Gear, ByPresence, ItemImages.SuperiorRuneOfTheFire, DamageModifierMode.All)
             .WithBuilds(GW2Builds.November2018Rune, GW2Builds.SOTOReleaseAndBalance),
         new BuffOnFoeDamageModifier(Mod_FlameLegionRune, Burning, "Flame Legion Rune", "7% on burning target", DamageSource.NoPets, 7.0, DamageType.Strike, DamageType.Strike, Source.Gear, ByPresence, ItemImages.SuperiorRuneOfTheFlameLegion, DamageModifierMode.All)
             .WithBuilds(GW2Builds.StartOfLife, GW2Builds.SOTOReleaseAndBalance),
