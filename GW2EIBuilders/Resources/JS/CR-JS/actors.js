@@ -21,7 +21,7 @@ class IconDrawable {
         this.start = params.start;
         this.end = params.end;
         this.img = new Image();
-        this.img.src = params.img;
+        this.img.src = _buildFallBackURL(params.img);
         this.img.onload = function () {
             animateCanvas(noUpdateTime);
         };
