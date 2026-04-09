@@ -1,4 +1,6 @@
-﻿namespace GW2EIEvtcParser.ParserHelpers;
+﻿using static System.Net.WebRequestMethods;
+
+namespace GW2EIEvtcParser.ParserHelpers;
 
 #pragma warning disable CA1823 // Unused field
 internal static class ItemImages
@@ -637,27 +639,27 @@ internal static class ItemImages
     public const string SnowDiamondOrnament = "https://render.guildwars2.com/file/DE210AD99255070E7638763C4EF9E8D162E42FB9/3734078.png";
     #endregion Utility
     #region Writ
-    public const string WritOfBasicStrength = "https://wiki.guildwars2.com/images/7/7e/Writ_of_Basic_Strength.png";
-    public const string WritOfStrength = "https://wiki.guildwars2.com/images/5/5e/Writ_of_Strength.png";
-    public const string WritOfStudiedStrength = "https://wiki.guildwars2.com/images/2/23/Writ_of_Studied_Strength.png";
-    public const string WritOfCalculatedStrength = "https://wiki.guildwars2.com/images/8/8d/Writ_of_Calculated_Strength.png";
-    public const string WritOfLearnedStrength = "https://wiki.guildwars2.com/images/8/8d/Writ_of_Calculated_Strength.png";
-    public const string WritOfMasterfulStrength = "https://wiki.guildwars2.com/images/2/2b/Writ_of_Masterful_Strength.png";
-    public const string WritOfBasicAccuracy = "https://wiki.guildwars2.com/images/8/82/Writ_of_Basic_Accuracy.png";
-    public const string WritOfAccuracy = "https://wiki.guildwars2.com/images/2/29/Writ_of_Accuracy.png";
-    public const string WritOfStudiedAccuracy = "https://wiki.guildwars2.com/images/a/ad/Writ_of_Studied_Accuracy.png";
-    public const string WritOfCalculatedAccuracy = "https://wiki.guildwars2.com/images/2/27/Writ_of_Calculated_Accuracy.png";
-    public const string WritOfLearnedAccuracy = "https://wiki.guildwars2.com/images/5/5a/Writ_of_Masterful_Accuracy.png";
-    public const string WritOfMasterfulAccuracy = "https://wiki.guildwars2.com/images/5/5a/Writ_of_Masterful_Accuracy.png";
-    public const string WritOfBasicMalice = "https://wiki.guildwars2.com/images/9/9e/Writ_of_Basic_Malice.png";
-    public const string WritOfMalice = "https://wiki.guildwars2.com/images/c/c4/Writ_of_Malice.png";
-    public const string WritOfStudiedMalice = "https://wiki.guildwars2.com/images/b/bd/Writ_of_Studied_Malice.png";
-    public const string WritOfCalculatedMalice = "https://wiki.guildwars2.com/images/7/75/Writ_of_Calculated_Malice.png";
-    public const string WritOfLearnedMalice = "https://wiki.guildwars2.com/images/9/9b/Writ_of_Learned_Malice.png";
-    public const string WritOfMasterfulMalice = "https://wiki.guildwars2.com/images/2/20/Writ_of_Masterful_Malice.png";
-    public const string WritOfBasicSpeed = "https://wiki.guildwars2.com/images/e/e6/Writ_of_Basic_Speed.png";
-    public const string WritOfStudiedSpeed = "https://wiki.guildwars2.com/images/d/d1/Recipe_sheet_fine_boots.png";
-    public const string WritOfMasterfulSpeed = "https://wiki.guildwars2.com/images/8/8e/Recipe_sheet_masterwork_boots.png";
+    public const string WritOfBasicStrength = "https://render.guildwars2.com/file/CAF306FED00FDB05BA5C4E55D5D17E4D07C1CB75/1201921.png";
+    public const string WritOfStrength = "https://render.guildwars2.com/file/A9155FA853042110D0AB4DA51FF41377ADAD3208/1201922.png";
+    public const string WritOfStudiedStrength = "https://render.guildwars2.com/file/05D61A61F037420BD92EA8509C7959796C432B6C/1201923.png";
+    public const string WritOfCalculatedStrength = "https://render.guildwars2.com/file/0320737B09C607CE5511C2B5550CCF056EA8BBFA/1201924.png";
+    public const string WritOfLearnedStrength = "https://render.guildwars2.com/file/0320737B09C607CE5511C2B5550CCF056EA8BBFA/1201924.png";
+    public const string WritOfMasterfulStrength = "https://render.guildwars2.com/file/01B49D4EFF3BB71D27A7B0649F0FF3E277E4D6C7/1201925.png";
+    public const string WritOfBasicAccuracy = "https://render.guildwars2.com/file/AD27EA42ADD8A907F2FF6D2DA57F0EA722969509/1201926.png";
+    public const string WritOfAccuracy = "https://render.guildwars2.com/file/01BB37100CE8259252E33DEEA2A97755B0793C67/1201927.png";
+    public const string WritOfStudiedAccuracy = "https://render.guildwars2.com/file/DE3FD325E6BE28256A55260F3000BD0656D218AC/1201928.png";
+    public const string WritOfCalculatedAccuracy = "https://render.guildwars2.com/file/4BE71562B538E50C75DBAE0892F9224524DD7C0C/1201929.png";
+    public const string WritOfLearnedAccuracy = "https://render.guildwars2.com/file/F3E8DD457CEB324B1D9FF0D512F73EE127EFE612/1201930.png";
+    public const string WritOfMasterfulAccuracy = "https://render.guildwars2.com/file/F3E8DD457CEB324B1D9FF0D512F73EE127EFE612/1201930.png";
+    public const string WritOfBasicMalice = "https://render.guildwars2.com/file/9BCA2930B6DB7C0D9C3F093026FFBD0C9BC00A78/1201883.png";
+    public const string WritOfMalice = "https://render.guildwars2.com/file/02AA4C4607E9D5C403912CF0954ACE1B239BEDCC/1201884.png";
+    public const string WritOfStudiedMalice = "https://render.guildwars2.com/file/FDF306F505E01B49F5189D739551111392E4721E/1201885.png";
+    public const string WritOfCalculatedMalice = "https://render.guildwars2.com/file/1CC57807AA08CC0CCFBF70B4B8D39A7EC9A577B1/1201886.png";
+    public const string WritOfLearnedMalice = "https://render.guildwars2.com/file/0163036D47217E57CF54467DFA550DFF58D6AB30/1201887.png";
+    public const string WritOfMasterfulMalice = "https://render.guildwars2.com/file/0B09BA2F77DD6B686D7DD2F700975E4B0CAF4C1D/1201888.png";
+    public const string WritOfBasicSpeed = "https://render.guildwars2.com/file/9031FCDE2A1C01FC087E72FEF60B4C0690A3AAB0/1201546.png";
+    public const string WritOfStudiedSpeed = "https://render.guildwars2.com/file/A1B0316CD1241FB666E7C57A1F3247B1DAF8554D/1201547.png";
+    public const string WritOfMasterfulSpeed = "https://render.guildwars2.com/file/63DCC07A5CF811B86300D74479B408C43C08F82A/849353.png";
     #endregion Writ
     #region Potion
     public const string MinorPotionOfBrandedSlaying = "https://wiki.guildwars2.com/images/8/81/Minor_Potion_of_Branded_Slaying.png";
