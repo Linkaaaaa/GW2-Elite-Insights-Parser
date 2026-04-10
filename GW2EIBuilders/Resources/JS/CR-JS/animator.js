@@ -12,22 +12,18 @@ function compileCRTemplates() {
 const noUpdateTime = -1;
 const updateText = -2;
 const deadIcon = new Image();
-deadIcon.crossOrigin = "Anonymous";
 deadIcon.onload = function () {
     animateCanvas(noUpdateTime);
 };
 const downEnemyIcon = new Image();
-downEnemyIcon.crossOrigin = "Anonymous";
 downEnemyIcon.onload = function () {
     animateCanvas(noUpdateTime);
 };
 const downAllyIcon = new Image();
-downAllyIcon.crossOrigin = "Anonymous";
 downAllyIcon.onload = function () {
     animateCanvas(noUpdateTime);
 };
 const dcIcon = new Image();
-dcIcon.crossOrigin = "Anonymous";
 dcIcon.onload = function () {
     animateCanvas(noUpdateTime);
 };
@@ -307,6 +303,12 @@ class Animator {
             }
             if (options.actors) {
                 this._initActors(options.actors, options.decorationRenderings, options.decorationMetadata);
+            }
+            if (!replaceImgur) {
+                downEnemyIcon.crossOrigin = "Anonymous";
+                downAllyIcon.crossOrigin = "Anonymous";
+                dcIcon.crossOrigin = "Anonymous";
+                deadIcon.crossOrigin = "Anonymous";
             }
             downEnemyIcon.src = UIIcons.DownedEnemy;
             downAllyIcon.src = UIIcons.DownedAlly;

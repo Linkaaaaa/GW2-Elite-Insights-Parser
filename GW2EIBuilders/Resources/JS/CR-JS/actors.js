@@ -264,7 +264,6 @@ class PlayerIconDrawable extends IconDrawable {
     constructor(params, pixelSize) {
         super(params, pixelSize);
         this.group = params.group;
-        this.img.crossOrigin = "Anonymous";
     }
 
     inSelectedGroup() {
@@ -332,7 +331,10 @@ function adjustImageColor(image, colorAdjuster) {
 class NonSquadPlayerDrawable extends NonSquadIconDrawable {  
     constructor(params, pixelSize) {
         super(params, pixelSize);
-        this.img.crossOrigin = "Anonymous";
+        this.adjustableImg = !(replaceImgur && this.img.src.includes("imgur"));
+        if (this.adjustableImg) {
+            this.img.crossOrigin = "Anonymous";
+        }
         this.adjustedImg = null;
         this.colorAdjuster = null;
     }
@@ -354,6 +356,9 @@ class NonSquadPlayerDrawable extends NonSquadIconDrawable {
         }
         if (this.disconnected()) {
             return dcIcon;
+        }
+        if (!this.adjustableImg) {
+            return this.img;
         }
         if (!this.adjustedImg && this.img.complete) {
             this.adjustedImg = adjustImageColor(this.img, this.colorAdjuster)
@@ -380,6 +385,9 @@ class EnemyPlayerDrawable extends NonSquadPlayerDrawable {
     }
 
     _getDeadIcon() {
+        if (replaceImgur) {
+            return deadIcon;
+        }
         if (!adjustedEnemyDeadIcon && deadIcon.complete) {
             adjustedEnemyDeadIcon = adjustImageColor(deadIcon, this.colorAdjuster);
         }
@@ -400,13 +408,19 @@ class FriendlyPlayerDrawable extends NonSquadPlayerDrawable {
             };
         }
     }
-    _getDownIcon() {
+    _getDownIcon() {  
+        if (replaceImgur) {
+            return downAllyIcon;
+        }
         if (!adjustedFriendlyDownIcon && downAllyIcon.complete) {
             adjustedFriendlyDownIcon = adjustImageColor(downAllyIcon, this.colorAdjuster);
         }
         return adjustedFriendlyDownIcon;
     }
     _getDeadIcon() {
+        if (replaceImgur) {
+            return deadIcon;
+        }
         if (!adjustedFriendlyDeadIcon && deadIcon.complete) {
             adjustedFriendlyDeadIcon = adjustImageColor(deadIcon, this.colorAdjuster);
         }

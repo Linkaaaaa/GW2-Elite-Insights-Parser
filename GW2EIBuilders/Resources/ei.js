@@ -295,6 +295,7 @@ function checkImgurAccess() {
     let resolved = false;
     return new Promise((resolve) => {
         const img = new Image();     
+        // Avoid caching
         img.src = "https://imgur.com/favicon.ico?" + new Date().getTime(); 
         img.onload = () => {
             if (resolved) {
@@ -316,6 +317,7 @@ function checkImgurAccess() {
             if (resolved) {
                 return;
             }
+            console.warn("Imgur is blocked or unreachable.");
             img.src = "";
             resolve(false);
             resolved = true;
