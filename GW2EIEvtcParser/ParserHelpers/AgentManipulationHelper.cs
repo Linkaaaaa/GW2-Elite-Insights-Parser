@@ -1,10 +1,8 @@
 ﻿using GW2EIEvtcParser.EIData;
 using GW2EIEvtcParser.Extensions;
 using GW2EIEvtcParser.ParsedData;
-using GW2EIEvtcParser.ParserHelpers;
 using static GW2EIEvtcParser.ArcDPSEnums;
 using static GW2EIEvtcParser.ParserHelper;
-using static GW2EIEvtcParser.SpeciesIDs;
 
 namespace GW2EIEvtcParser;
 
@@ -313,38 +311,94 @@ public static class AgentManipulationHelper
             .Select(x => x.Time));
         squadCombatStartCombatEnds.Add(long.MaxValue);
         var combatDataDict = combatItems.Where(x => x.SrcIsAgent(extensions) || x.DstIsAgent(extensions)).ToList();
+        var positionEvents = combatDataDict
+                .Where(x => x.IsStateChange == StateChange.Position)
+                .GroupBy(x => agentData.GetAgent(x.SrcAgent, x.Time))
+                .ToDictionary(x => x.Key, x => x.Select(x => MovementEvent.GetPoint3D(x)).LastOrDefault());
+        var pov = combatDataDict.FirstOrDefault(x => x.IsStateChange == StateChange.PointOfView);
+        AgentItem? povAgent = null;
+        var povPositions = new List<ParametricPoint3D>();
+        if (pov != null)
+        {
+            povAgent = agentData.GetAgent(pov.SrcAgent, pov.Time);
+            povPositions = combatDataDict
+                .Where(x => x.SrcMatchesAgent(povAgent) && x.IsStateChange == StateChange.Position)
+                .Select(x => new ParametricPoint3D(MovementEvent.GetPoint3D(x), x.Time)).ToList();
+        }
         var srcCombatDataDict = combatDataDict.Where(x => x.SrcIsAgent(extensions)).GroupBy(x => agentData.GetAgent(x.SrcAgent, x.Time)).ToDictionary(x => x.Key, x => x.ToList());
         var dstCombatDataDict = combatDataDict.Where(x => x.DstIsAgent(extensions)).GroupBy(x => agentData.GetAgent(x.DstAgent, x.Time)).ToDictionary(x => x.Key, x => x.ToList());
         // NPCs
         {
             var npcsByInstIDs = agentData.GetAgentByType(AgentItem.AgentType.NPC).GroupBy(x => x.InstID).ToDictionary(x => x.Key, x => x.ToList());
-            foreach (var npcsByInstdID in npcsByInstIDs)
+            if (povAgent == null || povPositions.Count == 0)
             {
-                var agentToRegroup = new List<AgentItem>(5);
-                var previousAgent = npcsByInstdID.Value[0];
-                var previousStateTime = squadCombatStartCombatEnds[0];
-                foreach (var curAgent in npcsByInstdID.Value)
+                foreach (var npcsByInstdID in npcsByInstIDs)
                 {
-                    var curStateTime = squadCombatStartCombatEnds.Last(x => x <= curAgent.HalfAware);
-                    // Ignore minions of players
-                    if (curAgent.CouldBeEqual(previousAgent) && curStateTime == previousStateTime && curAgent.GetFinalMaster().IsPlayer)
+                    var agentToRegroup = new List<AgentItem>(5);
+                    var previousAgent = npcsByInstdID.Value[0];
+                    var previousStateTime = squadCombatStartCombatEnds[0];
+                    foreach (var curAgent in npcsByInstdID.Value)
                     {
-                        agentToRegroup.Add(curAgent);
-                    } 
-                    else
-                    {
-                        if (agentToRegroup.Count > 1)
+                        var curStateTime = squadCombatStartCombatEnds.Last(x => x <= curAgent.HalfAware);
+                        if (curAgent.CouldBeEqual(previousAgent) && curStateTime == previousStateTime && !curAgent.GetFinalMaster().IsPlayer)
                         {
-                            RegroupAgents(agentData, agentToRegroup, srcCombatDataDict, dstCombatDataDict, toAdd, toRemove);
+                            agentToRegroup.Add(curAgent);
+                        } 
+                        else
+                        {
+                            if (agentToRegroup.Count > 1)
+                            {
+                                RegroupAgents(agentData, agentToRegroup, srcCombatDataDict, dstCombatDataDict, toAdd, toRemove);
+                            }
+                            agentToRegroup = new List<AgentItem>(5) { curAgent };
+                            previousStateTime = curStateTime;
                         }
-                        agentToRegroup = new List<AgentItem>(5) { curAgent };
                         previousAgent = curAgent;
-                        previousStateTime = curStateTime;
+                    }
+                    if (agentToRegroup.Count > 1)
+                    {
+                        RegroupAgents(agentData, agentToRegroup, srcCombatDataDict, dstCombatDataDict, toAdd, toRemove);
                     }
                 }
-                if (agentToRegroup.Count > 1)
+            } 
+            else
+            {
+                foreach (var npcsByInstdID in npcsByInstIDs)
                 {
-                    RegroupAgents(agentData, agentToRegroup, srcCombatDataDict, dstCombatDataDict, toAdd, toRemove);
+                    var agentToRegroup = new List<AgentItem>(5);
+                    var previousAgent = npcsByInstdID.Value[0];
+                    var previousStateTime = squadCombatStartCombatEnds[0];
+                    foreach (var curAgent in npcsByInstdID.Value)
+                    {
+                        var curStateTime = squadCombatStartCombatEnds.Last(x => x <= curAgent.HalfAware);
+                        bool goNext = true;
+                        if (curAgent.CouldBeEqual(previousAgent) && curStateTime == previousStateTime)
+                        {
+                            if (positionEvents.TryGetValue(previousAgent, out var agentPosition))
+                            {
+                                var nextPovPosition = povPositions.FirstOrNull((in ParametricPoint3D x) => x.Time > previousAgent.LastAware);
+                                if (nextPovPosition != null && (nextPovPosition.Value.XYZ - agentPosition).Length() > 5000)
+                                {
+                                    goNext = false;
+                                    agentToRegroup.Add(curAgent);
+                                }
+                            }
+                        }
+                        if (goNext)
+                        {
+                            if (agentToRegroup.Count > 1)
+                            {
+                                RegroupAgents(agentData, agentToRegroup, srcCombatDataDict, dstCombatDataDict, toAdd, toRemove);
+                            }
+                            agentToRegroup = new List<AgentItem>(5) { curAgent };
+                            previousStateTime = curStateTime;
+                        }
+                        previousAgent = curAgent;
+                    }
+                    if (agentToRegroup.Count > 1)
+                    {
+                        RegroupAgents(agentData, agentToRegroup, srcCombatDataDict, dstCombatDataDict, toAdd, toRemove);
+                    }
                 }
             }
         }
