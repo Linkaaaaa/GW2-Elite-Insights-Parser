@@ -289,7 +289,7 @@
                         nameNoMode: phase == logData.phases[0] ? logData.logName : phase.nameNoMode,
                         name: phase == logData.phases[0] ? logData.logName : phase.name,
                         success: phase.success,
-                        icon: phase.icon,
+                        icon: _buildFallBackURL(phase.icon),
                         duration: phase.encounterDuration,
                         targets: targets,
                         targetCount: targetCount,
