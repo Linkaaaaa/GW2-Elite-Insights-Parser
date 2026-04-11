@@ -605,7 +605,7 @@ public abstract partial class SingleActor : Actor
     private CachingCollectionWithTarget<DamageStatistics>? _dpsStats;
     public DamageStatistics GetDamageStats(SingleActor? target, ParsedEvtcLog log, long start, long end)
     {
-        _dpsStats ??= new CachingCollectionWithTarget<DamageStatistics>(log);
+        _dpsStats ??= new (AgentItem, log);
 
         if (!_dpsStats.TryGetValue(start, end, target, out var value))
         {
@@ -625,7 +625,7 @@ public abstract partial class SingleActor : Actor
     private CachingCollectionWithTarget<DefensePerTargetStatistics>? _defenseStats;
     public DefensePerTargetStatistics GetDefenseStats(SingleActor? target, ParsedEvtcLog log, long start, long end)
     {
-        _defenseStats ??= new CachingCollectionWithTarget<DefensePerTargetStatistics>(log);
+        _defenseStats ??= new (AgentItem, log);
 
         if (!_defenseStats.TryGetValue(start, end, target, out var value))
         {
@@ -658,7 +658,7 @@ public abstract partial class SingleActor : Actor
     private CachingCollectionWithTarget<OffensiveStatistics>? _offensiveStats;
     public OffensiveStatistics GetOffensiveStats(SingleActor? target, ParsedEvtcLog log, long start, long end)
     {
-        _offensiveStats ??= new CachingCollectionWithTarget<OffensiveStatistics>(log);
+        _offensiveStats ??= new (AgentItem, log);
 
         if (!_offensiveStats.TryGetValue(start, end, target, out OffensiveStatistics? value))
         {
@@ -677,7 +677,7 @@ public abstract partial class SingleActor : Actor
     private CachingCollectionWithTarget<SupportPerAllyStatistics>? _supportStats;
     public SupportPerAllyStatistics GetSupportStats(SingleActor? target, ParsedEvtcLog log, long start, long end)
     {
-        _supportStats ??= new CachingCollectionWithTarget<SupportPerAllyStatistics>(log);
+        _supportStats ??= new (AgentItem, log);
 
         if (!_supportStats.TryGetValue(start, end, target, out SupportPerAllyStatistics? value))
         {
@@ -722,7 +722,7 @@ public abstract partial class SingleActor : Actor
     private CachingCollectionWithTarget<List<HealthDamageEvent>>? _justActorDamageCache;
     public IReadOnlyList<HealthDamageEvent> GetJustActorDamageEvents(SingleActor? target, ParsedEvtcLog log, long start, long end)
     {
-        _justActorDamageCache ??= new(log);
+        _justActorDamageCache ??= new(AgentItem, log);
         if (!_justActorDamageCache.TryGetValue(start, end, target, out var damageEvents))
         {
             damageEvents = GetDamageEvents(target, log, start, end).Where(x => x.From.Is(AgentItem)).ToList();
@@ -753,7 +753,7 @@ public abstract partial class SingleActor : Actor
     {
         if (!_typedSelfHitDamageEvents.TryGetValue(damageType, out var hitDamageEventsPerPhasePerTarget))
         {
-            hitDamageEventsPerPhasePerTarget = new CachingCollectionWithTarget<List<HealthDamageEvent>>(log);
+            hitDamageEventsPerPhasePerTarget = new (AgentItem, log);
             _typedSelfHitDamageEvents[damageType] = hitDamageEventsPerPhasePerTarget;
         }
         if (!hitDamageEventsPerPhasePerTarget.TryGetValue(start, end, target, out List<HealthDamageEvent>? dls))
@@ -769,7 +769,7 @@ public abstract partial class SingleActor : Actor
     {
         if (!_typedMinionsHitDamageEvents.TryGetValue(damageType, out var hitDamageEventsPerPhasePerTarget))
         {
-            hitDamageEventsPerPhasePerTarget = new CachingCollectionWithTarget<List<HealthDamageEvent>>(log);
+            hitDamageEventsPerPhasePerTarget = new (AgentItem, log);
             _typedMinionsHitDamageEvents[damageType] = hitDamageEventsPerPhasePerTarget;
         }
         if (!hitDamageEventsPerPhasePerTarget.TryGetValue(start, end, target, out List<HealthDamageEvent>? dls))
@@ -786,7 +786,7 @@ public abstract partial class SingleActor : Actor
     private CachingCollectionWithTarget<List<BreakbarDamageEvent>>? _justActorBreakbarDamageCache;
     public IReadOnlyList<BreakbarDamageEvent> GetJustActorBreakbarDamageEvents(SingleActor? target, ParsedEvtcLog log, long start, long end)
     {
-        _justActorBreakbarDamageCache ??= new(log);
+        _justActorBreakbarDamageCache ??= new(AgentItem, log);
         if (!_justActorBreakbarDamageCache.TryGetValue(start, end, target, out var damageEvents))
         {
             damageEvents = GetBreakbarDamageEvents(target, log, start, end).Where(x => x.From.Is(AgentItem)).ToList();
@@ -827,7 +827,7 @@ public abstract partial class SingleActor : Actor
     private CachingCollectionWithTarget<List<CrowdControlEvent>>? _justActorCrowdControlCache;
     public IReadOnlyList<CrowdControlEvent> GetJustOutgoingActorCrowdControlEvents(SingleActor? target, ParsedEvtcLog log, long start, long end)
     {
-        _justActorCrowdControlCache ??= new(log);
+        _justActorCrowdControlCache ??= new(AgentItem, log);
         if (!_justActorCrowdControlCache.TryGetValue(start, end, target, out var ccEvents))
         {
             ccEvents = GetOutgoingCrowdControlEvents(target, log, start, end).Where(x => x.From.Is(AgentItem)).ToList();

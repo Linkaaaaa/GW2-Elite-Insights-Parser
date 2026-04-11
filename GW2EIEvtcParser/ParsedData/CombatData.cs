@@ -20,7 +20,6 @@ public partial class CombatData
     //private List<CombatItem> _healingReceivedData;
     private readonly StatusEventsContainer _statusEvents = new();
     private readonly MetaEventsContainer _metaDataEvents = new();
-    private readonly HashSet<long> _skillIDs;
 
     private readonly Dictionary<long, List<BuffEvent>> _buffData;
     private readonly Dictionary<AgentItem, List<BuffEvent>> _buffDataByDst;
@@ -517,7 +516,6 @@ public partial class CombatData
         combatEvents.SortByTime();
 
         //TODO_PERF(Rennorb): find average complexity
-        _skillIDs = new HashSet<long>(combatEvents.Count / 2);
         var castCombatEvents = new Dictionary<ulong, List<CombatItem>>(combatEvents.Count / 5);
         var buffEvents = new List<BuffEvent>(combatEvents.Count / 2);
         var wepSwaps = new List<WeaponSwapEvent>(combatEvents.Count / 50);
@@ -537,7 +535,6 @@ public partial class CombatData
         }
         foreach (CombatItem combatItem in combatEvents)
         {
-            bool insertToSkillIDs = false;
             if (combatItem.IsStateChange != StateChange.None)
             {
                 if (combatItem.IsEssentialMetadata)
@@ -548,30 +545,25 @@ public partial class CombatData
                 {
                     if (extensions.TryGetValue(combatItem.Pad, out var handler))
                     {
-                        insertToSkillIDs = handler.IsSkillID(combatItem);
                         handler.InsertEIExtensionEvent(combatItem, agentData, skillData);
                     }
                 }
                 else
                 {
-                    insertToSkillIDs = combatItem.IsStateChange == StateChange.BuffInitial;
                     CombatEventFactory.AddStateChangeEvent(logData.EvtcLogOffset, combatItem, agentData, skillData, _metaDataEvents, _statusEvents, _rewardEvents, wepSwaps, buffEvents, evtcVersion, settings, apiController);
                 }
 
             }
             else if (combatItem.IsActivation != Activation.None)
             {
-                insertToSkillIDs = true;
                 castCombatEvents.AddToList(combatItem.SrcAgent, combatItem);
             }
             else if (combatItem.IsBuffRemove != BuffRemove.None)
             {
-                insertToSkillIDs = true;
                 CombatEventFactory.AddBuffRemoveEvent(combatItem, buffEvents, agentData, skillData);
             }
             else
             {
-                insertToSkillIDs = true;
                 if (combatItem.IsBuff != 0 && combatItem.BuffDmg == 0 && combatItem.Value > 0)
                 {
                     CombatEventFactory.AddBuffApplyEvent(combatItem, buffEvents, agentData, skillData, evtcVersion);
@@ -584,11 +576,6 @@ public partial class CombatData
                 {
                     CombatEventFactory.AddIndirectDamageEvent(combatItem, damageData, agentData, skillData);
                 }
-            }
-
-            if (insertToSkillIDs)
-            {
-                _skillIDs.Add(combatItem.SkillID);
             }
         }
 
