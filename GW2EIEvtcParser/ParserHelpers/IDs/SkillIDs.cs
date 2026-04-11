@@ -485,7 +485,7 @@ public static class SkillIDs
     public const long BowlOfYamSoup = 9802;
     public const long BowlOfPumpkinBisque = 9803;
     public const long BowlOfPotatoAndLeekSoup = 9804;
-    public const long BowlOfFancyPotatoeAndLeekSoup = 9805;
+    public const long BowlOfFancyPotatoAndLeekSoup = 9805;
     public const long BowlOfKaleSoup = 9806;
     public const long BowlOfChickpeaSoup = 9807;
     public const long BowlOfArtichokeSoup = 9808;

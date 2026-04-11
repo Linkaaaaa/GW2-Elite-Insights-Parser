@@ -13,7 +13,7 @@ internal static class FoodBuffs
         new Buff("Plate of Truffle Steak", PlateOfTruffleSteak, Source.Item, BuffClassification.Nourishment, ItemImages.PlateOfTruffleSteak),
         new Buff("Bowl of Sweet and Spicy Butternut Squash Soup", BowlOfSweetAndSpicyButternutSquashSoup, Source.Item, BuffClassification.Nourishment, ItemImages.BowlOfSweetAndSpicyButternutSquashSoup),
         new Buff("Bowl of Curry Butternut Squash Soup", BowlOfCurryButternutSquashSoup, Source.Item, BuffClassification.Nourishment, ItemImages.BowlOfCurryButternutSquashSoup),
-        new Buff("Bowl of Fancy Potatoe and Leek Soup", BowlOfFancyPotatoeAndLeekSoup, Source.Item, BuffClassification.Nourishment, ItemImages.BowlOfFancyPotatoAndLeekSoup),
+        new Buff("Bowl of Fancy Potatoe and Leek Soup", BowlOfFancyPotatoAndLeekSoup, Source.Item, BuffClassification.Nourishment, ItemImages.BowlOfFancyPotatoAndLeekSoup),
         new Buff("Red-Lentil Saobosa", RedLentilSaobosa, Source.Item, BuffClassification.Nourishment, ItemImages.RedLentilSaobosa),
         new Buff("Super Veggie Pizza", SuperVeggiePizza, Source.Item, BuffClassification.Nourishment, ItemImages.SuperVeggiePizza),
         new Buff("Rare Veggie Pizza", RareVeggiePizza, Source.Item, BuffClassification.Nourishment, ItemImages.RareVeggiePizza),
