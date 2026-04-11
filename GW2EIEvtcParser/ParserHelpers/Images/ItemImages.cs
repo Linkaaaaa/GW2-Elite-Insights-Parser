@@ -844,6 +844,11 @@ internal static class ItemImages
     // Primers
     public const string UtilityPrimer = "https://render.guildwars2.com/file/DB411DA470FE9643D6C63A5C6EAD13BF19B9C3BD/849447.png";
     public const string MetabolicPrimer = "https://render.guildwars2.com/file/F9090B7DF4CA3DDDE5616B74F29C91E805FAE408/643282.png";
+    // Infusions (Fractal Augmentations)
+    public const string Malign9Infusion = "https://render.guildwars2.com/file/22931193A9D4044C0407BC039902AA0FE0EB0F0A/1465588.png";
+    public const string Mighty9Infusion = "https://render.guildwars2.com/file/139A310703925D3B176BD4EA16B8E511D87A752E/1465589.png";
+    public const string Precise9Infusion = "https://render.guildwars2.com/file/DFFB7C1B1627FBC1B1675BD1F54F0D930BED5B66/1465590.png";
+    public const string Healing9Infusion = "https://render.guildwars2.com/file/4F62FCB59814EF5F4DFDFBE7C4B6253F31BC587F/1465587.png";
     // Other Consumables
     public const string NourishmentBirthdayBlaster = "https://wiki.guildwars2.com/images/e/ec/Nourishment_%28Birthday_Blaster%29.png";
     public const string ReinforcedArmor = "https://wiki.guildwars2.com/images/8/83/Reinforced_Armor.png";
