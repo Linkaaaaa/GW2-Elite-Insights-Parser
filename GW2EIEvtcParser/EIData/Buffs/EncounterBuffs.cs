@@ -782,7 +782,7 @@ internal static class EncounterBuffs
             //Open World Soo-Won
             new Buff("Jade Tech Offensive Overcharge", JadeTechOffensiveOvercharge, Source.EncounterSpecific, BuffStackType.Queue, 9, BuffClassification.Offensive, BuffImages.JadeTechOffensive),
             new Buff("Jade Tech Defensive Overcharge", JadeTechDefensiveOvercharge, Source.EncounterSpecific, BuffStackType.Queue, 9, BuffClassification.Defensive, BuffImages.JadeTechDefensive),
-            new Buff("Enhancement (+5% Damage vs. Dragonvoid)", EnhancementDragonsEnd, Source.EncounterSpecific, BuffClassification.Offensive, ItemImages.NourishmentUtility),
+            new Buff("Enhancement (+5% Damage vs. Dragonvoid)", EnhancementDragonsEnd, Source.EncounterSpecific, BuffClassification.Offensive, ItemImages.EnhancementEffect),
             new Buff("Soul Reunited", SoulReunited, Source.EncounterSpecific, BuffClassification.Offensive, BuffImages.AllysAidPoweredUp),
             new Buff("Wisp Form", WispForm, Source.EncounterSpecific, BuffClassification.Other, BuffImages.FracturedSpirit),
             new Buff("Void Corruption", VoidCorruption, Source.EncounterSpecific, BuffStackType.Stacking, 10, BuffClassification.Debuff, BuffImages.VoidCorruption),
