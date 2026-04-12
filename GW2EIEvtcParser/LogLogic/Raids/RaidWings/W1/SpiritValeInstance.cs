@@ -220,7 +220,8 @@ internal class SpiritValeInstance : SpiritVale
     protected override HashSet<int> IgnoreForAutoNumericalRenaming()
     {
         return [
-            (int)TargetID.ChargedSoul
+            (int)TargetID.ChargedSoul,
+            (int)TargetID.Cannon
         ];
     }
 

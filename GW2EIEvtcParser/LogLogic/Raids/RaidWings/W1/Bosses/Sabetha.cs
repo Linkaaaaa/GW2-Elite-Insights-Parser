@@ -156,6 +156,13 @@ internal class Sabetha : SpiritVale
         ];
     }
 
+    protected override HashSet<int> IgnoreForAutoNumericalRenaming()
+    {
+        return [
+            (int)TargetID.Cannon
+        ];
+    }
+
     internal override Dictionary<TargetID, int> GetTargetsSortIDs()
     {
         return new Dictionary<TargetID, int>()
