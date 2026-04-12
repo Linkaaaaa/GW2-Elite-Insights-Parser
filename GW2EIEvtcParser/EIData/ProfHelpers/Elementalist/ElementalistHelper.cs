@@ -33,7 +33,8 @@ internal static class ElementalistHelper
         new BuffGiveCastFinder(ArcanePower_ArcaneEcho_Skill, ArcanePowerBuff)
             .WithBuilds(GW2Builds.StartOfLife, GW2Builds.June2025Balance),
         new BuffGainCastFinder(ArcaneShieldSkill, ArcaneShieldBuff),
-        new BuffGainCastFinder(ArcanePower_ArcaneEcho_Skill, ArcaneEchoBuff),
+        new BuffGainCastFinder(ArcanePower_ArcaneEcho_Skill, ArcaneEchoBuff)
+            .WithBuilds(GW2Builds.June2025Balance),
         new DamageCastFinder(ArcaneWave, ArcaneWave),
         // Cantrips
         new EffectCastFinderByDst(CleansingFire, EffectGUIDs.ElementalistCleansingFire1)
