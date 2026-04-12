@@ -9,10 +9,6 @@ namespace GW2EIEvtcParser.ParsedData;
 
 partial class CombatData
 {
-    public IReadOnlyCollection<long> GetSkills()
-    {
-        return _skillIDs;
-    }
 
     internal static IReadOnlyList<T> GetValueOrEmpty<T>(Dictionary<AgentItem, List<T>> dict, AgentItem agent) where T : MetaDataEvent
     {
