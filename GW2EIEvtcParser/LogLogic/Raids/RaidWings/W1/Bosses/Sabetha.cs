@@ -62,28 +62,37 @@ internal class Sabetha : SpiritVale
         return crMap;
     }
 
-    internal static void FindCannonsAndHeavyBombs(AgentData agentData, List<CombatItem> combatData)
+    internal static void FindArenaGadgets(AgentData agentData, List<CombatItem> combatData)
     {
+        var maxHPUpdateEvents = combatData.Where(x => x.IsStateChange == StateChange.MaxHealthUpdate).ToList();
         // Cannons
-        var cannons = combatData.Where(x => MaxHealthUpdateEvent.GetMaxHealth(x) == 74700 && x.IsStateChange == StateChange.MaxHealthUpdate).Select(x => agentData.GetAgent(x.SrcAgent, x.Time)).Where(x => x.Type == AgentItem.AgentType.Gadget);
+        var cannons = maxHPUpdateEvents.Where(x => MaxHealthUpdateEvent.GetMaxHealth(x) == 74700).Select(x => agentData.GetAgent(x.SrcAgent, x.Time)).Where(x => x.Type == AgentItem.AgentType.Gadget);
         foreach (AgentItem cannon in cannons)
         {
             cannon.OverrideType(AgentItem.AgentType.NPC, agentData);
             cannon.OverrideID(TargetID.Cannon, agentData);
         }
-
+        var genericGadgetMaxHPUpdates = maxHPUpdateEvents.Where(x => MaxHealthUpdateEvent.GetMaxHealth(x) == 14940);
+        var genericGadgetMaxHPUpdatesAgents = genericGadgetMaxHPUpdates.Select(x => agentData.GetAgent(x.SrcAgent, x.Time)).ToList();
         // Heavy Bombs
-        var heavyBombs = combatData.Where(x => MaxHealthUpdateEvent.GetMaxHealth(x) == 14940 && x.IsStateChange == StateChange.MaxHealthUpdate).Select(x => agentData.GetAgent(x.SrcAgent, x.Time)).Where(x => x.Type == AgentItem.AgentType.Gadget && x.HitboxHeight == 300 && x.HitboxWidth == 2);
+        var heavyBombs = genericGadgetMaxHPUpdatesAgents.Where(x => x.Type == AgentItem.AgentType.Gadget && x.HitboxHeight == 300 && x.HitboxWidth == 2);
         foreach (AgentItem bomb in heavyBombs)
         {
             bomb.OverrideType(AgentItem.AgentType.NPC, agentData);
             bomb.OverrideID(TargetID.HeavyBomb, agentData);
         }
+        // Plateforms
+        var platforms = genericGadgetMaxHPUpdatesAgents.Where(x => x.Type == AgentItem.AgentType.Gadget && x.HitboxHeight == 300 && x.HitboxWidth == 3556);
+        foreach (AgentItem platform in platforms)
+        {
+            platform.OverrideType(AgentItem.AgentType.NPC, agentData);
+            platform.OverrideID(TargetID.SabethaPlatform, agentData);
+        }
     }
 
     internal override void EIEvtcParse(ulong gw2Build, EvtcVersionEvent evtcVersion, LogData logData, AgentData agentData, List<CombatItem> combatData, IReadOnlyDictionary<uint, ExtensionHandler> extensions)
     {
-        FindCannonsAndHeavyBombs(agentData, combatData);
+        FindArenaGadgets(agentData, combatData);
         base.EIEvtcParse(gw2Build, evtcVersion, logData, agentData, combatData, extensions);
     }
 
@@ -302,6 +311,7 @@ internal class Sabetha : SpiritVale
             TargetID.BanditThug,
             TargetID.BanditArsonist,
             TargetID.HeavyBomb,
+            TargetID.SabethaPlatform,
         ];
     }
 

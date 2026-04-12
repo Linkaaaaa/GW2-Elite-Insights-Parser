@@ -48,6 +48,7 @@ public static class SpeciesIDs
         BanditArsonist = 15421,
         Cannon = SpeciesIDs.Cannon,
         HeavyBomb = SpeciesIDs.HeavyBomb,
+        SabethaPlatform = SpeciesIDs.HeavyBomb,
         // - Wing 2
         // - Slothasor
         Slothasor = 16123,
@@ -1255,6 +1256,7 @@ public static class SpeciesIDs
     private const int GrandRaidKelaChest = -122;
     private const int InsectSwarms = -123;
     private const int EtherealSeal = -124;
+    private const int SabethaPlatform = -125;
 
     public const int IgnoredSpecies = int.MinValue;
     public const int NonIdentifiedSpecies = 0;
