@@ -249,7 +249,7 @@ public static class SkillIDs
     public const long WaterArrow = 5595;
     public const long Whirlpool = 5601;
     public const long VaporForm = 5620;
-    public const long ArcanePowerSkill = 5635;
+    public const long ArcanePower_ArcaneEcho_Skill = 5635;
     public const long ArmorOfEarth = 5639;
     public const long ArcaneShieldBuff = 5640;
     public const long ArcaneShieldSkill = 5641;
@@ -5096,6 +5096,7 @@ public static class SkillIDs
     public const long AchievementEligibilityUndyingLight = 76501;
     public const long VowOfTheUntamedBiorythm = 76502;
     public const long PhantomPain = 76505;
+    public const long ArcaneEchoBuff = 76507;
     public const long HailstormWhisperingShadow = 76510;
     public const long GrandEntrance = 76519;
     public const long GutteringLightCM = 76535;

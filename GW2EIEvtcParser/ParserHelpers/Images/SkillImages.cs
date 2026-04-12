@@ -32,6 +32,7 @@ internal static class SkillImages
     public const string WhirlingAssault = "https://wiki.guildwars2.com/images/8/8b/Whirling_Assault.png";
     // Charr
     public const string Charrzooka = "https://render.guildwars2.com/file/AC98B4ECED0D0638751B4939CC3B021991CECDAB/103934.png";
+    public const string BattleRoar = "https://render.guildwars2.com/file/2B27E234B91FF71C4F20ED925CD9DBBA235771E6/103930.png";
     #endregion
     #region Elementalist
     public const string FireShield = "https://render.guildwars2.com/file/2AE8672D7A08BB4129B6F0F40C2BC10642D55C28/102884.png";
@@ -97,7 +98,7 @@ internal static class SkillImages
     public const string Tornado = "https://render.guildwars2.com/file/22EDF7A7D620040CE1520552F45DE962AA625DA6/103281.png";
     public const string Whirlpool = "https://render.guildwars2.com/file/D30CCEBC5B2A61039AFF0D691F46665B7E4F6B76/347235.png";
     public const string ChainLightning = "https://render.guildwars2.com/file/01D310FE65DBA378CBAFD13B2BFEDE59939C5153/102964.png";
-    public const string ArcanePower = "https://render.guildwars2.com/file/AD24BD1B231424D2A8F223A6F899AC34D6AAAB26/103356.png";
+    public const string ArcanePower_ArcaneEcho = "https://render.guildwars2.com/file/AD24BD1B231424D2A8F223A6F899AC34D6AAAB26/103356.png";
     public const string ArcaneShield = "https://render.guildwars2.com/file/A20219EB6F5FC52A0E537163B4A9051606C11B52/65735.png";
     public const string RockBarrier = "https://render.guildwars2.com/file/C5CB69247473AE2DEB35DB5F952A0C3832CC14F2/102858.png";
     public const string MagneticWave = "https://render.guildwars2.com/file/BBF16D6BF9CDA755420759F7D5F8D3FF6B2065DA/103343.png";
@@ -143,6 +144,9 @@ internal static class SkillImages
     public const string Elutriate = "https://render.guildwars2.com/file/1EF742E5936B0D160F3869511D2EBEC6745EEA18/3379108.png";
     public const string SoothingBurst = "https://render.guildwars2.com/file/110F9A310F3A6D0E999B36DAB4F5390F70727DEB/3379109.png";
     public const string ShaleStorm = "https://render.guildwars2.com/file/53AD3D92123744A13D0D2434661EFA3608213D06/3379110.png";
+    public const string InvokeLightning = "https://render.guildwars2.com/file/F513D2445AB3499CCC4B6E28044571583291A66D/103141.png";
+    public const string MagmaOrb = "https://render.guildwars2.com/file/F0A8380340E1E64FAFAAE87053422136664528CC/103205.png";
+    public const string FrozenBurst = "https://render.guildwars2.com/file/C13AA7EC94200C0E7E24C4E47164183991107EA4/103243.png";
     // Evoker
     // - Fox
     public const string Ignite = "https://render.guildwars2.com/file/3C20D2FF75DA624828651AD5CEB463AC90A01207/3680117.png";
@@ -307,6 +311,7 @@ internal static class SkillImages
     public const string SpearOfLight = "https://render.guildwars2.com/file/77931F01AE91A00998BD286BA2930DCE1A354318/103677.png";
     public const string HuntersWard = "https://render.guildwars2.com/file/BA2C3116B20CF142F70D18394E377A043D3E0E96/1012873.png";
     public const string HammerOfWisdom = "https://render.guildwars2.com/file/99430A49F97BA45EF101E611A69193D57BF70A7D/103655.png";
+    public const string Brilliance = "https://render.guildwars2.com/file/0C2632BDBBEC0648A0F97196EF9A5106101FD339/103679.png";
     // Luminary
     public const string ResoluteStance = "https://render.guildwars2.com/file/C0267DCD064328C6C4CF33CF08714FB1DC1171BC/3680141.png";
     public const string StalwartStance = "https://render.guildwars2.com/file/4770DFB6241311A7969E587B0B02BD672875F934/3680153.png";
