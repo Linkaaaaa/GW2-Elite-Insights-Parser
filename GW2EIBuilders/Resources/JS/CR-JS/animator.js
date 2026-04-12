@@ -519,9 +519,6 @@ class Animator {
                         }
                         DecorationClass = TextDrawable;
                         break;
-                    case Types.TextOverhead:
-                        this.overheadActorData.add(new TextOverheadDrawable(decorationRendering));
-                        continue;
                     case Types.Circle:
                         DecorationClass = CircleMechanicDrawable;
                         break;
@@ -546,6 +543,10 @@ class Animator {
                     case Types.Icon:
                         DecorationClass = IconMechanicDrawable;
                         break;
+                    // Special cases
+                    case Types.TextOverhead:
+                        this.overheadActorData.add(new TextOverheadDrawable(decorationRendering));
+                        continue;
                     case Types.IconOverhead:
                         this.overheadActorData.add(new IconOverheadMechanicDrawable(decorationRendering));
                         continue;

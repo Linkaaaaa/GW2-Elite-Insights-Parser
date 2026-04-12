@@ -1,11 +1,12 @@
-﻿using GW2EIEvtcParser.EIData;
+﻿using System.Numerics;
+using GW2EIEvtcParser.EIData;
 using GW2EIEvtcParser.Exceptions;
 using GW2EIEvtcParser.Extensions;
 using GW2EIEvtcParser.ParsedData;
 using GW2EIEvtcParser.ParserHelpers;
 using static GW2EIEvtcParser.ArcDPSEnums;
-using static GW2EIEvtcParser.LogLogic.LogLogicUtils;
 using static GW2EIEvtcParser.LogLogic.LogLogicPhaseUtils;
+using static GW2EIEvtcParser.LogLogic.LogLogicUtils;
 using static GW2EIEvtcParser.ParserHelpers.LogImages;
 using static GW2EIEvtcParser.SkillIDs;
 using static GW2EIEvtcParser.SpeciesIDs;
@@ -196,6 +197,24 @@ internal class Sabetha : SpiritVale
         switch (target.ID)
         {
             case (int)TargetID.Sabetha:
+                var activePlateform = log.AgentData.GetNPCsByID(TargetID.SabethaPlatform).FirstOrDefault(x => target.InAwareTimes(x));
+                if (activePlateform != null)
+                {
+                    var activeEncounter = log.LogData.GetEncounterPhases(log).FirstOrDefault(x => x.ID == LogID && x.Targets.ContainsKey(target));
+                    if (activeEncounter != null)
+                    {
+                        // Add the hp indicator
+                        var hpUpdates = log.CombatData.GetHealthUpdateEvents(activePlateform);
+                        for (var i = 0; i < hpUpdates.Count; i++)
+                        {
+                            var hpUpdate = hpUpdates[i];
+                            long hpUpdateStart = Math.Max(hpUpdate.Time, activeEncounter.Start);
+                            long hpUpdateEnd = Math.Min(i < hpUpdates.Count - 1 ? hpUpdates[i + 1].Time : activeEncounter.End, activeEncounter.End);
+                            replay.Decorations.Add(new TextDecoration((hpUpdateStart, hpUpdateEnd), "Plateform Health: " + string.Format("{0:0.00}", hpUpdate.HealthPercent) + "%",
+                                15, Colors.Red, 1.0, new ScreenSpaceConnector(new Vector2(100, 125))));
+                        }
+                    }
+                }
                 foreach (CastEvent cast in target.GetAnimatedCastEvents(log))
                 {
                     switch (cast.SkillID)
@@ -311,7 +330,6 @@ internal class Sabetha : SpiritVale
             TargetID.BanditThug,
             TargetID.BanditArsonist,
             TargetID.HeavyBomb,
-            TargetID.SabethaPlatform,
         ];
     }
 
