@@ -48,7 +48,7 @@ public static class SpeciesIDs
         BanditArsonist = 15421,
         Cannon = SpeciesIDs.Cannon,
         HeavyBomb = SpeciesIDs.HeavyBomb,
-        SabethaPlatform = SpeciesIDs.HeavyBomb,
+        SabethaPlatform = SpeciesIDs.SabethaPlatform,
         // - Wing 2
         // - Slothasor
         Slothasor = 16123,
