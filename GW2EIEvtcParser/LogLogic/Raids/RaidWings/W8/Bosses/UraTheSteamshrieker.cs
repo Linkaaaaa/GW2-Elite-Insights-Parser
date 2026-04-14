@@ -301,7 +301,7 @@ internal class UraTheSteamshrieker : MountBalrior
             }
         }
     }
-    internal static void AdjustUraHP(SingleActor ura, int health, bool phased)
+    internal static void AdjustUraHP(SingleActor ura, int health, bool phased, ulong gw2build)
     {
         if (health > 70e6)
         {
@@ -309,7 +309,7 @@ internal class UraTheSteamshrieker : MountBalrior
             {
                 ura.SetHealthBars([
                    (100, 1, health, !phased),
-                    (31, 0, health, phased),
+                    (gw2build >= GW2Builds.June2025Balance ? 31 : 41, 0, health, phased),
                 ]);
             }
             else
@@ -742,7 +742,7 @@ internal class UraTheSteamshrieker : MountBalrior
         var uraHP = target.GetHealth(combatData);
         if (uraHP > 70e6)
         {
-            AdjustUraHP(target, uraHP, GetHealedPhaseStartEvent(combatData, target, logData.LogStart, logData.LogEnd) != null);
+            AdjustUraHP(target, uraHP, GetHealedPhaseStartEvent(combatData, target, logData.LogStart, logData.LogEnd) != null, combatData.GetGW2BuildEvent().Build);
             target.OverrideName("Godscream Ura");
             return uraHP > 90e6 ? LogData.Mode.LegendaryCM : LogData.Mode.CMNoName;
         }

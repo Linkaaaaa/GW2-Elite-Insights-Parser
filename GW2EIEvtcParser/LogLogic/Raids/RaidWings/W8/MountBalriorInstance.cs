@@ -386,7 +386,8 @@ internal class MountBalriorInstance : MountBalrior
     {
         foreach (var ura in Targets.Where(x => x.IsSpecies(TargetID.Ura)))
         {
-            UraTheSteamshrieker.AdjustUraHP(ura, ura.GetHealth(combatData), UraTheSteamshrieker.GetHealedPhaseStartEvent(combatData, ura, logData.LogStart, logData.LogEnd) != null);
+            UraTheSteamshrieker.AdjustUraHP(ura, ura.GetHealth(combatData), 
+                UraTheSteamshrieker.GetHealedPhaseStartEvent(combatData, ura, logData.LogStart, logData.LogEnd) != null, combatData.GetGW2BuildEvent().Build);
         }
         return base.GetLogMode(combatData, agentData, logData);
     }
