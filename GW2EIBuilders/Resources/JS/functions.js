@@ -33,7 +33,7 @@ function computeSliderGradient(color, fillColor, startPercent, endPercent) {
 const duckify = url => 'https://external-content.duckduckgo.com/iu/?u=' + encodeURIComponent(url);
 
 function _buildFallBackURL(url) {
-    if (replaceImgur && url.includes("imgur")) {
+    if (replaceImgur && url.startsWith("https://i.imgur.com")) {
         return duckify(url);
     }
     if (!url.includes("render") || apiRenderServiceOkay) {
