@@ -154,6 +154,7 @@ public static class ArcDPSEnums
         Any = 18,
         AnyViaReset = 19,
         ManualExpiry = 20,
+        Despawn = 21,
 
         Unknown
     };
