@@ -744,7 +744,7 @@ internal class UraTheSteamshrieker : MountBalrior
         {
             AdjustUraHP(target, uraHP, GetHealedPhaseStartEvent(combatData, target, logData.LogStart, logData.LogEnd) != null);
             target.OverrideName("Godscream Ura");
-            return uraHP > 100e6 ? LogData.Mode.LegendaryCM : LogData.Mode.CMNoName;
+            return uraHP > 90e6 ? LogData.Mode.LegendaryCM : LogData.Mode.CMNoName;
         }
         target.OverrideName("Ura, the Steamshrieker");
         return LogData.Mode.Normal;
