@@ -227,7 +227,8 @@ internal static class LogLogicPhaseUtils
     #region INSTANCE ENCOUNTER
     internal static EncounterPhaseData? AddInstanceEncounterPhase(ParsedEvtcLog log, List<PhaseData> phases, List<EncounterPhaseData> encounterPhases, IEnumerable<SingleActor?> targets, IEnumerable<SingleActor?> blockingBosses, IEnumerable<SingleActor?> nonBlockingBosses, PhaseData instancePhase, string phaseName, long start, long end, bool success, string icon, long encounterID, LogData.Mode logMode, LogData.StartStatus logStartStatus)
     {
-        if (!success && (end - start < log.ParserSettings.TooShortLimit || log.ParserSettings.SkipFailedTries))
+        if ((!success && (end - start < log.ParserSettings.TooShortLimit || log.ParserSettings.SkipFailedTries)) ||
+            (end - start) < ParserHelper.PhaseTimeLimit)
         {
             return null;
         }
