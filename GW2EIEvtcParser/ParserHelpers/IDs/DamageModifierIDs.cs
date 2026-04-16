@@ -423,4 +423,11 @@ public static class DamageModifierIDs
     public const int Mod_TargetedDestruction_NuminousGift = 410;
     public const int Mod_LoveSong = 411;
     public const int Mod_ShreddedArmor = 412;
+    public const int Mod_StoneHeart = 413;
+    public const int Mod_TranscendentTempestStrike = 414;
+    public const int Mod_TranscendentTempestCondition = 415;
+    public const int Mod_ElementsOfRageStrike = 416;
+    public const int Mod_ElementsOfRageCondition = 417;
+    public const int Mod_MindStab = 418;
+    public const int Mod_DaringAdvance = 419;
 }
