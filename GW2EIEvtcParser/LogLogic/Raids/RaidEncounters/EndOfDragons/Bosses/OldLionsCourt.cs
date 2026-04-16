@@ -507,7 +507,7 @@ internal class OldLionsCourt : EndOfDragonsRaidEncounter
                         var rotation = new AngleConnector(effect.Rotation.Z + 90); // Position incorrect, get Arsenite's position
                         if (target.TryGetCurrentPosition(log, effect.Time, out var position))
                         {
-                            var pie = (PieDecoration)new PieDecoration(3000, 180, lifespan, Colors.LightOrange, 0.2, new PositionConnector(position)).UsingRotationConnector(rotation);
+                            var pie = (PieDecoration)new PieDecoration(3000, 180, lifespan, Colors.LightOrange, 0.2, new PositionConnector(position.Value)).UsingRotationConnector(rotation);
                             replay.Decorations.Add(pie);
                         }
                     }
@@ -604,7 +604,7 @@ internal class OldLionsCourt : EndOfDragonsRaidEncounter
                         {
                             var flipped = previousIndicator.GUIDEvent.GUID == EffectGUIDs.OldLionsCourtThunderingUltimatumFlipCone;
                             var rotationOffset = flipped ? 180 : 0;
-                            var rotation = new AngleConnector(currentRotation.GetRoundedZRotationDeg() + rotationOffset);
+                            var rotation = new AngleConnector(currentRotation.Value.GetRoundedZRotationDeg() + rotationOffset);
                             var openingAngle = flipped ? 120 : 240;
                             var pie = (PieDecoration)new PieDecoration(3000, openingAngle, lifespan, Colors.CobaltBlue, 0.2, new PositionConnector(effect.Position)).UsingRotationConnector(rotation);
                             replay.Decorations.Add(pie);

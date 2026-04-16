@@ -215,7 +215,7 @@ internal class WhisperingShadow : Kinfall
                     if (target.TryGetCurrentFacingDirection(log, effect.Time, out var facing, 300))
                     {
                         var position = new PositionConnector(effect.Position);
-                        var rotation = new AngleConnector(facing);
+                        var rotation = new AngleConnector(facing.Value);
                         var decoration = (FormDecoration)new PieDecoration(1200, 190f, lifespan, Colors.LightOrange, 0.2, position).UsingRotationConnector(rotation);
                         replay.Decorations.AddWithGrowing(decoration, lifespan.end);
                     }

@@ -230,8 +230,8 @@ internal class Sabetha : SpiritVale
                             if (target.TryGetCurrentFacingDirection(log, cast.Time, out var facingFirestorm))
                             {
                                 var positionConnector = (AgentConnector)new AgentConnector(target).WithOffset(new(width / 2, 0, 0), true);
-                                replay.Decorations.Add(new RectangleDecoration(width, height, lifespan, Colors.Orange, 0.2, positionConnector).UsingRotationConnector(new AngleConnector(facingFirestorm)));
-                                replay.Decorations.Add(new RectangleDecoration(width, height, lifespanWall, Colors.Red, 0.5, positionConnector).UsingRotationConnector(new SpinningConnector(facingFirestorm, 360)));
+                                replay.Decorations.Add(new RectangleDecoration(width, height, lifespan, Colors.Orange, 0.2, positionConnector).UsingRotationConnector(new AngleConnector(facingFirestorm.Value)));
+                                replay.Decorations.Add(new RectangleDecoration(width, height, lifespanWall, Colors.Red, 0.5, positionConnector).UsingRotationConnector(new SpinningConnector(facingFirestorm.Value, 360)));
                             }
                             break;
                         default:
@@ -253,7 +253,7 @@ internal class Sabetha : SpiritVale
                             if (target.TryGetCurrentFacingDirection(log, cast.Time, out var facingBulletHail))
                             {
                                 var connector = new AgentConnector(target);
-                                var rotationConnector = new AngleConnector(facingBulletHail);
+                                var rotationConnector = new AngleConnector(facingBulletHail.Value);
                                 replay.Decorations.Add(new PieDecoration(radius, 28, firstCone, Colors.LightOrange, 0.2, connector).UsingRotationConnector(rotationConnector));
                                 replay.Decorations.Add(new PieDecoration(radius, 54, secondCone, Colors.LightOrange, 0.2, connector).UsingRotationConnector(rotationConnector));
                                 replay.Decorations.Add(new PieDecoration(radius, 81, thirdCone, Colors.LightOrange, 0.2, connector).UsingRotationConnector(rotationConnector));
@@ -292,7 +292,7 @@ internal class Sabetha : SpiritVale
                             lifespan = (cast.Time, cast.Time + castDuration);
                             if (target.TryGetCurrentFacingDirection(log, lifespan.start, out var facingFlameBlast))
                             {
-                                replay.Decorations.Add(new PieDecoration(600, 60, lifespan, Colors.Yellow, 0.5, new AgentConnector(target)).UsingRotationConnector(new AngleConnector(facingFlameBlast)));
+                                replay.Decorations.Add(new PieDecoration(600, 60, lifespan, Colors.Yellow, 0.5, new AgentConnector(target)).UsingRotationConnector(new AngleConnector(facingFlameBlast.Value)));
                             }
                             break;
                         default:

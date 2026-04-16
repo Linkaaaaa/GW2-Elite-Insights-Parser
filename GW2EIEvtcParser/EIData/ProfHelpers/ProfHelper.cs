@@ -1009,7 +1009,7 @@ internal static class ProfHelper
     {
         if (x.From.TryGetCurrentPosition(log, x.Time, out var currentPosition) && x.To.TryGetCurrentPosition(log, x.Time, out var currentTargetPosition))
         {
-            var distance = (currentPosition - currentTargetPosition).Length();
+            var distance = (currentPosition.Value - currentTargetPosition.Value).Length();
             return includeRange ? distance <= range : distance < range;
         }
         return false;
@@ -1023,7 +1023,7 @@ internal static class ProfHelper
     {
         if (x.From.TryGetCurrentPosition(log, x.Time, out var currentPosition) && x.To.TryGetCurrentPosition(log, x.Time, out var currentTargetPosition))
         {
-            var distance = (currentPosition - currentTargetPosition).Length();
+            var distance = (currentPosition.Value - currentTargetPosition.Value).Length();
             return includeRange ? distance >= range : distance > range;
         }
         return false;

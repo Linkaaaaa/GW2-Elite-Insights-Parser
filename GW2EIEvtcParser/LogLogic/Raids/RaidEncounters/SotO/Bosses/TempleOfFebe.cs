@@ -742,7 +742,7 @@ internal class TempleOfFebe : SecretOfTheObscureRaidEncounter
                 lifespanIndicator = ComputeMechanicLifespanWithCancellationTime(target.AgentItem, log, lifespanIndicator);
 
                 // Frontal indicator
-                var rotation = new AngleConnector(facing);
+                var rotation = new AngleConnector(facing.Value);
                 var agentConnector = (AgentConnector)new AgentConnector(target).WithOffset(new(width / 2, 0, 0), true);
                 var rectangle = (RectangleDecoration)new RectangleDecoration(width, 100, lifespanIndicator, Colors.LightOrange, 0.2, agentConnector).UsingRotationConnector(rotation);
                 replay.Decorations.AddWithGrowing(rectangle, growing);
@@ -784,7 +784,7 @@ internal class TempleOfFebe : SecretOfTheObscureRaidEncounter
                 lifespanDamageCancelled = ComputeMechanicLifespanWithCancellationTime(target.AgentItem, log, lifespanDamage);
                 double millisecondsPerDegree = (double)(lifespanDamage.end - lifespanDamage.start) / 360;
                 double degreesRotated = (lifespanDamageCancelled.end - lifespanDamageCancelled.start) / millisecondsPerDegree;
-                var rotation2 = new SpinningConnector(facing, (float)degreesRotated);
+                var rotation2 = new SpinningConnector(facing.Value, (float)degreesRotated);
                 var rectangle2 = (RectangleDecoration)new RectangleDecoration(width, 100, lifespanDamageCancelled, Colors.Red, 0.2, agentConnector).UsingRotationConnector(rotation2);
                 replay.Decorations.Add(rectangle2);
                 if (isEmpowered)
@@ -800,7 +800,7 @@ internal class TempleOfFebe : SecretOfTheObscureRaidEncounter
                     }
                     double millisecondsPerDegreeOpposite = (double)(lifespanDamageOpposite.end - lifespanDamageOpposite.start) / 360;
                     double degreedRotatedOpposite = (lifespanDamageOppositeCancelled.end - lifespanDamageOppositeCancelled.start) / millisecondsPerDegreeOpposite;
-                    var rotation3 = new SpinningConnector(facing, (float)degreedRotatedOpposite);
+                    var rotation3 = new SpinningConnector(facing.Value, (float)degreedRotatedOpposite);
                     
                     // The bug makes the beam continue while the embodiment has despawned, so we use the agent position for a PositionConnector instead of AgentConnector.
                     ParametricPoint3D? position = target.GetCombatReplayActivePolledPositions(log).FirstOrDefault(x => x!= null && x.Value.Time > lifespanDamage.start && x.Value.Time <= lifespanDamage.end);

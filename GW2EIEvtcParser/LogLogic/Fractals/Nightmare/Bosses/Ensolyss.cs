@@ -401,7 +401,7 @@ internal class Ensolyss : Nightmare
                             castDuration = 1000;
                             if (target.TryGetCurrentFacingDirection(log, cast.Time + castDuration, out var facingLunge))
                             {
-                                var rotation = new AngleConnector(facingLunge);
+                                var rotation = new AngleConnector(facingLunge.Value);
                                 lifespan = (cast.Time, cast.Time + castDuration);
                                 replay.Decorations.Add(new RectangleDecoration(1700, target.HitboxWidth, lifespan, Colors.LightOrange, 0.2, new AgentConnector(target).WithOffset(new Vector3(850, 0, 0), true)).UsingRotationConnector(rotation));
                             }
@@ -454,7 +454,7 @@ internal class Ensolyss : Nightmare
                             castDuration = 1000;
                             if (target.TryGetCurrentFacingDirection(log, cast.Time + castDuration, out var facingLunge))
                             {
-                                var rotation = new AngleConnector(facingLunge);
+                                var rotation = new AngleConnector(facingLunge.Value);
                                 lifespan = (cast.Time, cast.Time + castDuration);
                                 replay.Decorations.Add(new RectangleDecoration(1700, target.HitboxWidth, lifespan, Colors.LightOrange, 0.2, new AgentConnector(target).WithOffset(new(850, 0, 0), true)).UsingRotationConnector(rotation));
                             }

@@ -631,7 +631,7 @@ internal class Deimos : BastionOfThePenitent
                             int duration = 120;
                             if (target.TryGetCurrentFacingDirection(log, start, out var facing))
                             {
-                                float initialAngle = facing.GetRoundedZRotationDeg();
+                                float initialAngle = facing.Value.GetRoundedZRotationDeg();
                                 var connector = new AgentConnector(target);
                                 for (int i = 0; i < 6; i++)
                                 {

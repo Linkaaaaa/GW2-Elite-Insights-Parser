@@ -673,7 +673,7 @@ internal class KainengOverlook : EndOfDragonsRaidEncounter
     {
         if (target.TryGetCurrentFacingDirection(log, lifespan.start + 100, out var facingDirection, duration))
         {
-            var pie = (PieDecoration)new PieDecoration(480, angle, lifespan, Colors.Orange, 0.2, new AgentConnector(target)).UsingRotationConnector(new AngleConnector(facingDirection));
+            var pie = (PieDecoration)new PieDecoration(480, angle, lifespan, Colors.Orange, 0.2, new AgentConnector(target)).UsingRotationConnector(new AngleConnector(facingDirection.Value));
             replay.Decorations.AddWithGrowing(pie, lifespan.end);
             replay.Decorations.Add(pie.GetBorderDecoration());
         }
@@ -684,7 +684,7 @@ internal class KainengOverlook : EndOfDragonsRaidEncounter
     {
         if (target.TryGetCurrentFacingDirection(log, lifespan.start + 100, out var facingDirection, duration))
         {
-            var pie = (PieDecoration)new PieDecoration(1200, 160, lifespan, Colors.Orange, 0.2, new AgentConnector(target)).UsingRotationConnector(new AngleConnector(facingDirection));
+            var pie = (PieDecoration)new PieDecoration(1200, 160, lifespan, Colors.Orange, 0.2, new AgentConnector(target)).UsingRotationConnector(new AngleConnector(facingDirection.Value));
             replay.Decorations.AddWithGrowing(pie, lifespan.end);
         }
 
