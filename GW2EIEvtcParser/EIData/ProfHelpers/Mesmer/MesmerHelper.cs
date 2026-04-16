@@ -189,11 +189,21 @@ internal static class MesmerHelper
         
         // Illusions
         // - Compounding Power
-        new BuffOnActorDamageModifier(Mod_CompoundingPower, CompoundingPower, "Compounding Power", "2% per stack after creating an illusion", DamageSource.NoPets, 2.0, DamageType.Strike, DamageType.All, Source.Mesmer, ByStack, TraitImages.CompoundingPower, DamageModifierMode.PvE)
-            .WithBuilds(GW2Builds.StartOfLife, GW2Builds.November2023Balance),
-        new BuffOnActorDamageModifier(Mod_CompoundingPower, CompoundingPower, "Compounding Power", "2% per stack after creating an illusion", DamageSource.NoPets, 2.0, DamageType.StrikeAndCondition, DamageType.All, Source.Mesmer, ByStack, TraitImages.CompoundingPower, DamageModifierMode.PvE)
+        new BuffOnActorDamageModifier(Mod_CompoundingPowerStrike, CompoundingPower, "Compounding Power", "3% per stack after creating an illusion", DamageSource.NoPets, 3.0, DamageType.Strike, DamageType.All, Source.Mesmer, ByStack, TraitImages.CompoundingPower, DamageModifierMode.All)
+            .WithBuilds(GW2Builds.February2018Balance, GW2Builds.March2018Balance),
+        new BuffOnActorDamageModifier(Mod_CompoundingPowerStrike, CompoundingPower, "Compounding Power", "3% per stack after creating an illusion", DamageSource.NoPets, 3.0, DamageType.Strike, DamageType.All, Source.Mesmer, ByStack, TraitImages.CompoundingPower, DamageModifierMode.PvE)
+            .WithBuilds(GW2Builds.March2018Balance, GW2Builds.May2018Balance),
+        new BuffOnActorDamageModifier(Mod_CompoundingPowerStrike, CompoundingPower, "Compounding Power", "2% per stack after creating an illusion", DamageSource.NoPets, 2.0, DamageType.Strike, DamageType.All, Source.Mesmer, ByStack, TraitImages.CompoundingPower, DamageModifierMode.sPvPWvW)
+            .WithBuilds(GW2Builds.March2018Balance, GW2Builds.May2018Balance),
+        new BuffOnActorDamageModifier(Mod_CompoundingPowerStrike, CompoundingPower, "Compounding Power", "2% per stack after creating an illusion", DamageSource.NoPets, 2.0, DamageType.Strike, DamageType.All, Source.Mesmer, ByStack, TraitImages.CompoundingPower, DamageModifierMode.All)
+            .WithBuilds(GW2Builds.May2018Balance, GW2Builds.November2023Balance),
+        new BuffOnActorDamageModifier(Mod_CompoundingPower, CompoundingPower, "Compounding Power", "2% per stack after creating an illusion", DamageSource.NoPets, 2.0, DamageType.StrikeAndCondition, DamageType.All, Source.Mesmer, ByStack, TraitImages.CompoundingPower, DamageModifierMode.All)
             .WithBuilds(GW2Builds.November2023Balance, GW2Builds.April2026Balancepocalypse),
-        new BuffOnActorDamageModifier(Mod_CompoundingPower, CompoundingPower, "Compounding Power", "2% per stack after creating an illusion", DamageSource.NoPets, 1.0, DamageType.StrikeAndCondition, DamageType.All, Source.Mesmer, ByStack, TraitImages.CompoundingPower, DamageModifierMode.PvE)
+        new BuffOnActorDamageModifier(Mod_CompoundingPower, CompoundingPower, "Compounding Power", "2% per stack after creating an illusion", DamageSource.NoPets, 2.0, DamageType.StrikeAndCondition, DamageType.All, Source.Mesmer, ByStack, TraitImages.CompoundingPower, DamageModifierMode.sPvPWvW)
+            .WithBuilds(GW2Builds.April2026Balancepocalypse),
+        new BuffOnActorDamageModifier(Mod_CompoundingPowerStrike, CompoundingPower, "Compounding Power", "2% per stack after creating an illusion", DamageSource.NoPets, 2.0, DamageType.Strike, DamageType.All, Source.Mesmer, ByStack, TraitImages.CompoundingPower, DamageModifierMode.PvE)
+            .WithBuilds(GW2Builds.April2026Balancepocalypse),
+        new BuffOnActorDamageModifier(Mod_CompoundingPowerCondition, CompoundingPower, "Compounding Power", "1% per stack after creating an illusion", DamageSource.NoPets, 1.0, DamageType.Condition, DamageType.All, Source.Mesmer, ByStack, TraitImages.CompoundingPower, DamageModifierMode.PvE)
             .WithBuilds(GW2Builds.April2026Balancepocalypse),
         // - Phantasmal Force
         new BuffOnActorDamageModifier(Mod_PhantasmalForce, PhantasmalForce, "Phantasmal Force", "1% per stack of might when creating an illusion", DamageSource.PetsOnly, 1.0, DamageType.Strike, DamageType.All, Source.Mesmer, ByStack, TraitImages.PhantasmalForce_Mistrust, DamageModifierMode.PvE)

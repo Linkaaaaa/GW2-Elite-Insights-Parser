@@ -37,6 +37,9 @@ public static class GW2Builds
     // https://wiki.guildwars2.com/wiki/Game_updates/2018-02-06
     public const ulong February2018Balance = 86181;
 
+    // https://wiki.guildwars2.com/wiki/Game_updates/2018-03-27
+    public const ulong March2018Balance = 87476;
+
     // https://wiki.guildwars2.com/wiki/Game_updates/2018-05-08
     public const ulong May2018Balance = 88541;
 
