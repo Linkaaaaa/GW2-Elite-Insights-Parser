@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Metrics;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Metrics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using GW2EIEvtcParser.EIData;
@@ -519,16 +520,16 @@ public class AgentItem
         return log.FindActor(this).GetCurrentBreakbarState(log, time);
     }
     #endregion STATE
-    public bool TryGetCurrentPosition(ParsedEvtcLog log, long time, out Vector3 position, long forwardWindow = 0)
+    public bool TryGetCurrentPosition(ParsedEvtcLog log, long time, [NotNullWhen(true)] out Vector3? position, long forwardWindow = 0)
     {
         return log.FindActor(this).TryGetCurrentPosition(log, time, out position, forwardWindow);
     }
-    public bool TryGetCurrentInterpolatedPosition(ParsedEvtcLog log, long time, out Vector3 position)
+    public bool TryGetCurrentInterpolatedPosition(ParsedEvtcLog log, long time, [NotNullWhen(true)] out Vector3? position)
     {
         return log.FindActor(this).TryGetCurrentInterpolatedPosition(log, time, out position);
     }
 
-    public bool TryGetCurrentFacingDirection(ParsedEvtcLog log, long time, out Vector3 facing, long forwardWindow = 0)
+    public bool TryGetCurrentFacingDirection(ParsedEvtcLog log, long time, [NotNullWhen(true)] out Vector3? facing, long forwardWindow = 0)
     {
         return log.FindActor(this).TryGetCurrentFacingDirection(log, time, out facing, forwardWindow);
     }

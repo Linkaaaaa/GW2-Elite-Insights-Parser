@@ -308,13 +308,13 @@ internal class XunlaiJadeJunkyard : EndOfDragonsRaidEncounter
                         {
                             uint radius = 500; // Zone 1
                                                // Zone 2
-                            if (ankkaPosition.X > 0 && ankkaPosition.X < 4000)
+                            if (ankkaPosition.Value.X > 0 && ankkaPosition.Value.X < 4000)
                             {
                                 radius = 340;
                             }
 
                             // Zone 3
-                            if (ankkaPosition.Y > 4000 && ankkaPosition.Y < 6000)
+                            if (ankkaPosition.Value.Y > 4000 && ankkaPosition.Value.Y < 6000)
                             {
                                 radius = 380;
                             }
@@ -330,13 +330,13 @@ internal class XunlaiJadeJunkyard : EndOfDragonsRaidEncounter
                             // logs without effects
                             int delay = 1833 * 2;
                             // Zone 1
-                            if (ankkaPosition.X > -6000 && ankkaPosition.X < -2500 && ankkaPosition.Y < 1000 && ankkaPosition.Y > -1000)
+                            if (ankkaPosition.Value.X > -6000 && ankkaPosition.Value.X < -2500 && ankkaPosition.Value.Y < 1000 && ankkaPosition.Value.Y > -1000)
                             {
                                 AddDeathEmbraceDecoration(replay, cast.Time, castDuration, 500, delay, new(-3941.78f, 66.76819f, -3611.2f)); // CENTER
                             }
 
                             // Zone 2
-                            if (ankkaPosition.X > 0 && ankkaPosition.X < 4000)
+                            if (ankkaPosition.Value.X > 0 && ankkaPosition.Value.X < 4000)
                             {
                                 AddDeathEmbraceDecoration(replay, cast.Time, castDuration, 340, delay, new(1663.69f, 1739.87f, -4639.695f)); // NW
                                 AddDeathEmbraceDecoration(replay, cast.Time, castDuration, 340, delay, new(2563.689f, 1739.87f, -4664.611f)); // NE
@@ -345,7 +345,7 @@ internal class XunlaiJadeJunkyard : EndOfDragonsRaidEncounter
                             }
 
                             // Zone 3
-                            if (ankkaPosition.Y > 4000 && ankkaPosition.Y < 6000)
+                            if (ankkaPosition.Value.Y > 4000 && ankkaPosition.Value.Y < 6000)
                             {
                                 AddDeathEmbraceDecoration(replay, cast.Time, castDuration, 380, delay, new(-2547.61f, 5466.439f, -6257.504f)); // NW
                                 AddDeathEmbraceDecoration(replay, cast.Time, castDuration, 380, delay, new(-1647.61f, 5466.439f, -6256.795f)); // NE
@@ -525,7 +525,7 @@ internal class XunlaiJadeJunkyard : EndOfDragonsRaidEncounter
                     {
                         if (p.TryGetCurrentPosition(log, segment.End, out var playerPosition))
                         {
-                            AddDeathsHandDecoration(replay, playerPosition, segment.End, 3000, deathsHandRadius, deathsHandDuration);
+                            AddDeathsHandDecoration(replay, playerPosition.Value, segment.End, 3000, deathsHandRadius, deathsHandDuration);
                         }
                     }
                 }

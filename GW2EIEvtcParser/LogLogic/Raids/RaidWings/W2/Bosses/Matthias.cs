@@ -325,7 +325,7 @@ internal class Matthias : SalvationPass
                             if (!log.CombatData.HasMissileData && target.TryGetCurrentFacingDirection(log, lifespan.start + 1000, out var facingOppressiveGaze))
                             {
                                 var positionConnector = (AgentConnector)new AgentConnector(target).WithOffset(new(width / 2, 0, 0), true);
-                                var rotationConnextor = new AngleConnector(facingOppressiveGaze);
+                                var rotationConnextor = new AngleConnector(facingOppressiveGaze.Value);
                                 replay.Decorations.Add(new RectangleDecoration(width, height, lifespan, Colors.Red, 0.1, positionConnector).UsingRotationConnector(rotationConnextor));
                                 replay.Decorations.Add(new RectangleDecoration(width, height, lifespanHit, Colors.Red, 0.7, positionConnector).UsingRotationConnector(rotationConnextor));
                             }
@@ -425,7 +425,7 @@ internal class Matthias : SalvationPass
 
                         for (int i = 0; i < WellsPositions.Count; i++)
                         {
-                            float distance = Vector3.Distance(position, WellsPositions[i]);
+                            float distance = Vector3.Distance(position.Value, WellsPositions[i]);
                             if (distance < curDistance)
                             {
                                 curDistance = distance;
@@ -455,7 +455,7 @@ internal class Matthias : SalvationPass
                 if (p.TryGetCurrentInterpolatedPosition(log, seg.End, out var position))
                 {
                     lifespan = (seg.End, seg.End + 90000);
-                    replay.Decorations.Add(new CircleDecoration(300, lifespan, Colors.Red, 0.4, new PositionConnector(position)));
+                    replay.Decorations.Add(new CircleDecoration(300, lifespan, Colors.Red, 0.4, new PositionConnector(position.Value)));
                 }
             }
             replay.Decorations.AddOverheadIcon(seg, p, ParserIcons.VolatilePoisonOverhead);
