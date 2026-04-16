@@ -33,15 +33,23 @@ internal static class AntiquaryHelper
     internal static readonly IReadOnlyList<DamageModifierDescriptor> OutgoingDamageModifiers = 
     [
         // Exhilarating Ephemera
-        new BuffOnActorDamageModifier(Mod_ExhilaratingEphemera, ExhilaratingEphemera, "Exhilarating Ephemera", "15%", DamageSource.NoPets, 15.0, DamageType.Strike, DamageType.All, Source.Antiquary, ByPresence, TraitImages.ExhilaratingEphemera, DamageModifierMode.PvE),
-        new BuffOnActorDamageModifier(Mod_ExhilaratingEphemera, ExhilaratingEphemera, "Exhilarating Ephemera", "10%", DamageSource.NoPets, 10.0, DamageType.Strike, DamageType.All, Source.Antiquary, ByPresence, TraitImages.ExhilaratingEphemera, DamageModifierMode.sPvPWvW),
+        new BuffOnActorDamageModifier(Mod_ExhilaratingEphemera, ExhilaratingEphemera, "Exhilarating Ephemera", "15%", DamageSource.NoPets, 15.0, DamageType.Strike, DamageType.All, Source.Antiquary, ByPresence, TraitImages.ExhilaratingEphemera, DamageModifierMode.PvE)
+            .WithBuilds(GW2Builds.August2025VoEBeta, GW2Builds.April2026Balancepocalypse),
+        new BuffOnActorDamageModifier(Mod_ExhilaratingEphemera, ExhilaratingEphemera, "Exhilarating Ephemera", "10%", DamageSource.NoPets, 10.0, DamageType.Strike, DamageType.All, Source.Antiquary, ByPresence, TraitImages.ExhilaratingEphemera, DamageModifierMode.sPvPWvW)
+            .WithBuilds(GW2Builds.August2025VoEBeta, GW2Builds.April2026Balancepocalypse),
+        new BuffOnActorDamageModifier(Mod_ExhilaratingEphemera, ExhilaratingEphemera, "Exhilarating Ephemera", "10%", DamageSource.NoPets, 10.0, DamageType.Strike, DamageType.All, Source.Antiquary, ByPresence, TraitImages.ExhilaratingEphemera, DamageModifierMode.All)
+            .WithBuilds(GW2Builds.April2026Balancepocalypse),
         // Combat High
         new BuffOnActorDamageModifier(Mod_CombatHigh, CombatHigh, "Combat High", "3%", DamageSource.NoPets, 3.0, DamageType.StrikeAndCondition, DamageType.All, Source.Antiquary, ByStack, TraitImages.CombatHigh, DamageModifierMode.PvE)
-            .WithBuilds(GW2Builds.StartOfLife, GW2Builds.December2025Balance),
+            .WithBuilds(GW2Builds.August2025VoEBeta, GW2Builds.December2025Balance),
         new BuffOnActorDamageModifier(Mod_CombatHigh, CombatHigh, "Combat High", "2%", DamageSource.NoPets, 2.0, DamageType.StrikeAndCondition, DamageType.All, Source.Antiquary, ByStack, TraitImages.CombatHigh, DamageModifierMode.sPvPWvW)
-            .WithBuilds(GW2Builds.StartOfLife, GW2Builds.December2025Balance),
+            .WithBuilds(GW2Builds.August2025VoEBeta, GW2Builds.December2025Balance),
         new BuffOnActorDamageModifier(Mod_CombatHigh, CombatHigh, "Combat High", "2%", DamageSource.NoPets, 2.0, DamageType.StrikeAndCondition, DamageType.All, Source.Antiquary, ByStack, TraitImages.CombatHigh, DamageModifierMode.All)
-            .WithBuilds(GW2Builds.December2025Balance),
+            .WithBuilds(GW2Builds.December2025Balance, GW2Builds.April2026Balancepocalypse),
+        new BuffOnActorDamageModifier(Mod_CombatHigh, CombatHigh, "Combat High", "3%", DamageSource.NoPets, 3.0, DamageType.StrikeAndCondition, DamageType.All, Source.Antiquary, ByStack, TraitImages.CombatHigh, DamageModifierMode.PvE)
+            .WithBuilds(GW2Builds.April2026Balancepocalypse),
+        new BuffOnActorDamageModifier(Mod_CombatHigh, CombatHigh, "Combat High", "2%", DamageSource.NoPets, 2.0, DamageType.StrikeAndCondition, DamageType.All, Source.Antiquary, ByStack, TraitImages.CombatHigh, DamageModifierMode.sPvPWvW)
+            .WithBuilds(GW2Builds.April2026Balancepocalypse),
         // Summon Kriptis Turret
         new BuffOnFoeDamageModifier(Mod_SummonKryptisTurret, SummonKryptisTurretTargetBuff, "Kryptis Turret", "15%", DamageSource.NoPets, 15.0, DamageType.Strike, DamageType.All, Source.Antiquary, ByPresence, SkillImages.SummonKryptisTurret, DamageModifierMode.All)
             .UsingActorCheckerByPresence(SummonKryptisTurretPlayerBuff)

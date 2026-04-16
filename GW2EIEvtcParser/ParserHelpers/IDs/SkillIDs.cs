@@ -1630,6 +1630,7 @@ public static class SkillIDs
     public const long LifeFromDeath = 29901;
     public const long ShieldOfCourageActive = 29906;
     public const long WeakeningCharge = 29911;
+    public const long ChronophantasmaBuff = 29913; // Buff on the first phantasm summoned
     public const long InfusingTerrorSkill = 29958;
     public const long HealingPrism = 29997;
     public const long ImpairingDaggersHit3 = 30017;
@@ -1681,6 +1682,7 @@ public static class SkillIDs
     public const long SoulSpiralHeal = 30591;
     public const long Vault = 30597;
     public const long HuntersWard = 30628;
+    public const long ChronophantasmaResummonBuff = 30644; // Buff on the phantasm resummoned, damage modifier
     public const long FeelTheBurn = 30662;
     public const long Suffer = 30670;
     public const long LightOnYourFeet = 30673;
@@ -5582,6 +5584,7 @@ public static class SkillIDs
     public const long AchievementEligibilitySeeYouLaterAlligator = 79542;
     public const long DefenderMoralBoost = 79544;
     public const long AchievementEligibilitySurefooted = 79546;
+    public const long SuperSharpeningPolygon = 79575;
     #endregion
 
 }

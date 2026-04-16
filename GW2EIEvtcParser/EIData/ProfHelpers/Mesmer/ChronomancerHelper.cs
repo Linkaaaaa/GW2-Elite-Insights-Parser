@@ -46,7 +46,17 @@ internal static class ChronomancerHelper
             .UsingChecker((x, log) => x.HasCrit)
             .UsingChecker(MesmerHelper.IllusionsWithMesmerChecker)
             .UsingActorFetchIsAlwaysMaster()
-            .WithBuilds(GW2Builds.January2026Balance),
+            .WithBuilds(GW2Builds.January2026Balance, GW2Builds.April2026Balancepocalypse),
+        new BuffOnActorDamageModifier(Mod_DangerTime, DangerTime, "Danger Time", "10%", DamageSource.All, 10.0, DamageType.Strike, DamageType.All, Source.Chronomancer, ByPresence, TraitImages.DangerTime, DamageModifierMode.sPvPWvW)
+            .UsingChecker((x, log) => x.HasCrit)
+            .UsingChecker(MesmerHelper.IllusionsWithMesmerChecker)
+            .UsingActorFetchIsAlwaysMaster()
+            .WithBuilds(GW2Builds.April2026Balancepocalypse),
+        new BuffOnActorDamageModifier(Mod_DangerTime, DangerTime, "Danger Time", "5%", DamageSource.All, 5.0, DamageType.Strike, DamageType.All, Source.Chronomancer, ByPresence, TraitImages.DangerTime, DamageModifierMode.PvE)
+            .UsingChecker((x, log) => x.HasCrit)
+            .UsingChecker(MesmerHelper.IllusionsWithMesmerChecker)
+            .UsingActorFetchIsAlwaysMaster()
+            .WithBuilds(GW2Builds.April2026Balancepocalypse),
         // Time Bomb
         new BuffOnFoeDamageModifier(Mod_TimeBomb, TimeBombBuff, "Time Bomb", "15%", DamageSource.All, 15.0, DamageType.Strike, DamageType.All, Source.Chronomancer, ByPresence, TraitImages.TimeBomb, DamageModifierMode.All)
             .WithBuffOnFoeFromActor()
@@ -69,6 +79,8 @@ internal static class ChronomancerHelper
         new Buff("Danger Time", DangerTime, Source.Chronomancer, BuffClassification.Other, TraitImages.DangerTime),
         new Buff("Time Bomb", TimeBombBuff, Source.Chronomancer, BuffStackType.StackingConditionalLoss, 25, BuffClassification.Other, TraitImages.TimeBomb),
         new Buff("Temporal Stasis", TemporalStasis, Source.Chronomancer, BuffClassification.Other, BuffImages.Stun),
+        new Buff("Chronophantasma", ChronophantasmaBuff, Source.Chronomancer, BuffClassification.Other, TraitImages.Chronophantasma),
+        new Buff("Chronophantasma Resummon", ChronophantasmaResummonBuff, Source.Chronomancer, BuffStackType.StackingConditionalLoss, 25, BuffClassification.Other, TraitImages.Chronophantasma),
     ];
 
     private static readonly HashSet<int> NonCloneMinions = [];
