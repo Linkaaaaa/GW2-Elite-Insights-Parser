@@ -431,4 +431,5 @@ public static class DamageModifierIDs
     public const int Mod_DaringAdvance = 418;
     public const int Mod_CompoundingPowerStrike = 419;
     public const int Mod_CompoundingPowerCondition = 420;
+    public const int Mod_Chronophantasma = 421;
 }
