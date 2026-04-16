@@ -318,7 +318,7 @@ internal static class RangerHelper
     }
     private static bool TargetAbove600Range(DamageEvent x, ParsedEvtcLog log)
     {
-        return x.Skill.IsWeaponSkill && !TargetWithinRangeChecker(x, log, 600);
+        return x.Skill.IsWeaponSkill && TargetOutsideRangeChecker(x, log, 600);
     }
 
     internal static readonly IReadOnlyList<DamageModifierDescriptor> OutgoingDamageModifiers =
