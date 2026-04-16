@@ -79,6 +79,8 @@ internal static class ChronomancerHelper
         new Buff("Danger Time", DangerTime, Source.Chronomancer, BuffClassification.Other, TraitImages.DangerTime),
         new Buff("Time Bomb", TimeBombBuff, Source.Chronomancer, BuffStackType.StackingConditionalLoss, 25, BuffClassification.Other, TraitImages.TimeBomb),
         new Buff("Temporal Stasis", TemporalStasis, Source.Chronomancer, BuffClassification.Other, BuffImages.Stun),
+        new Buff("Chronophantasma", ChronophantasmaBuff, Source.Chronomancer, BuffClassification.Other, TraitImages.Chronophantasma),
+        new Buff("Chronophantasma Resummon", ChronophantasmaResummonBuff, Source.Chronomancer, BuffStackType.StackingConditionalLoss, 25, BuffClassification.Other, TraitImages.Chronophantasma),
     ];
 
     private static readonly HashSet<int> NonCloneMinions = [];
