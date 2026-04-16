@@ -43,7 +43,10 @@ internal static class VirtuosoHelper
         // Mental Focus
         new DamageLogDamageModifier(Mod_MentalFocus, "Mental Focus", "10% to foes within 600 range", DamageSource.NoPets, 10.0, DamageType.Strike, DamageType.All, Source.Virtuoso, TraitImages.MentalFocus, (x, log) => TargetWithinRangeChecker(x, log, 600), DamageModifierMode.PvE)
             .UsingApproximate()
-            .WithBuilds(GW2Builds.EODBeta4, GW2Builds.April2026Balancepocalypse),
+            .WithBuilds(GW2Builds.EODBeta1, GW2Builds.April2026Balancepocalypse),
+        new DamageLogDamageModifier(Mod_MentalFocus, "Mental Focus", "7% to foes within 600 range", DamageSource.NoPets, 7.0, DamageType.Strike, DamageType.All, Source.Virtuoso, TraitImages.MentalFocus, (x, log) => TargetWithinRangeChecker(x, log, 600), DamageModifierMode.sPvPWvW)
+            .UsingApproximate()
+            .WithBuilds(GW2Builds.EODBeta1),
         new DamageLogDamageModifier(Mod_MentalFocus, "Mental Focus", "5% to foes within 600 range", DamageSource.NoPets, 5.0, DamageType.Strike, DamageType.All, Source.Virtuoso, TraitImages.MentalFocus, (x, log) => TargetWithinRangeChecker(x, log, 600), DamageModifierMode.PvE)
             .UsingApproximate()
             .WithBuilds(GW2Builds.April2026Balancepocalypse),
