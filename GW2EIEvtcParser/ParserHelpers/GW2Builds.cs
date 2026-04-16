@@ -10,6 +10,9 @@ public static class GW2Builds
     // https://wiki.guildwars2.com/wiki/Game_updates/2015-10-23
     public const ulong HoTRelease = 54485;
 
+    // https://wiki.guildwars2.com/wiki/Game_updates/2016-01-26
+    public const ulong January2016Balance = 57306;
+
     // https://wiki.guildwars2.com/wiki/Game_updates/2016-11-21
     public const ulong November2016NightmareRelease = 69591;
 
