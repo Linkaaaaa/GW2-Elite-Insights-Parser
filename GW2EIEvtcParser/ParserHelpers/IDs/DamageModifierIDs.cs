@@ -429,6 +429,7 @@ public static class DamageModifierIDs
     public const int Mod_ElementsOfRageStrike = 416;
     public const int Mod_ElementsOfRageCondition = 417;
     public const int Mod_MindStab = 418;
-    public const int Mod_CompoundingPowerStrike = 419;
-    public const int Mod_CompoundingPowerCondition = 420;
+    public const int Mod_DaringAdvance = 419;
+    public const int Mod_CompoundingPowerStrike = 420;
+    public const int Mod_CompoundingPowerCondition = 421;
 }

@@ -1007,10 +1007,25 @@ internal static class ProfHelper
     /// <param name="includeRange">Wether the range value should be included in the distance.</param>
     internal static bool TargetWithinRangeChecker(DamageEvent x, ParsedEvtcLog log, long range, bool includeRange = true)
     {
-        x.From.TryGetCurrentPosition(log, x.Time, out var currentPosition);
-        x.To.TryGetCurrentPosition(log, x.Time, out var currentTargetPosition);
-        var distance = (currentPosition - currentTargetPosition).Length();
+        if (x.From.TryGetCurrentPosition(log, x.Time, out var currentPosition) && x.To.TryGetCurrentPosition(log, x.Time, out var currentTargetPosition))
+        {
+            var distance = (currentPosition - currentTargetPosition).Length();
+            return includeRange ? distance <= range : distance < range;
+        }
+        return false;
+    }
 
-        return includeRange ? distance <= range : distance < range;
+    /// <summary>
+    /// Checks the distance between Src and Dst to be less than <paramref name="range"/>.
+    /// </summary>
+    /// <param name="includeRange">Wether the range value should be included in the distance.</param>
+    internal static bool TargetOutsideRangeChecker(DamageEvent x, ParsedEvtcLog log, long range, bool includeRange = false)
+    {
+        if (x.From.TryGetCurrentPosition(log, x.Time, out var currentPosition) && x.To.TryGetCurrentPosition(log, x.Time, out var currentTargetPosition))
+        {
+            var distance = (currentPosition - currentTargetPosition).Length();
+            return includeRange ? distance >= range : distance > range;
+        }
+        return false;
     }
 }

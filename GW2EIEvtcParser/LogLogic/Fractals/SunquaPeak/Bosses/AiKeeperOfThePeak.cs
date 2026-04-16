@@ -660,9 +660,8 @@ internal class AiKeeperOfThePeak : SunquaPeak
                 var position = new AgentConnector(effect.Dst);
                 environmentDecorations.Add(new CircleDecoration(600, (start, end), Colors.Orange, 0.3, position).UsingFilled(false));
                 environmentDecorations.Add(new CircleDecoration(600, (start, end), Colors.Orange, 0.15, position).UsingGrowingEnd(end));
-                if (hasDetonates)
+                if (hasDetonates && effect.Dst.TryGetCurrentPosition(log, end, out var endPos))
                 {
-                    effect.Dst.TryGetCurrentPosition(log, end, out var endPos);
                     EffectEvent? detonate = detonates.FirstOrDefault(x => Math.Abs(x.Time - end) < ServerDelayConstant && (x.Position - endPos).XY().Length() < maxDist);
                     if (detonate != null)
                     {
@@ -800,9 +799,8 @@ internal class AiKeeperOfThePeak : SunquaPeak
             long end = effect.Time;
 
             AgentItem? ai = GetAiAgentAt(log.LogData.Logic.Targets, effect.Time);
-            if (ai != null)
+            if (ai != null && ai.TryGetCurrentPosition(log, start, out var aiPos))
             {
-                ai.TryGetCurrentPosition(log, start, out var aiPos);
                 float dist = (aiPos - effect.Position).XY().Length();
 
                 // actual distances are 400, 670, 1080, 1630
