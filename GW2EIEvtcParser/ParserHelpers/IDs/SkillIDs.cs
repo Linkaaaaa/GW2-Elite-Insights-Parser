@@ -5395,6 +5395,7 @@ public static class SkillIDs
     public const long FamiliarsFocus = 77256; // POV trait buff but also healing in statistics
     public const long ResilientWeaponSkill = 77259;
     public const long FamiliarsProwessFox = 77261;
+    public const long EnterprisingAristocratBarrier = 77260;
     public const long RapaciousStrain2 = 77262;
     public const long PiercingGales = 77264;
     public const long EffulgentStanceStackDamageBuff = 77265;
@@ -5445,7 +5446,7 @@ public static class SkillIDs
     public const long QuickplayBoost = 77676;
     public const long SnowDiamondOrnament = 77727;
     public const long BagOfPoppedCandyCorn = 77728;
-    public const long ExaltedHammerSkill2 = 77746;
+    public const long ExaltedHammerSkillHealing = 77746;
     public const long ForgedSurferDashBuff = 77749;
     public const long RadiantJusticeBuff = 77821;
     public const long ExaltedHammerBuff = 77830;

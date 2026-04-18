@@ -59,7 +59,7 @@ internal static class AntiquaryHelper
 
     internal static readonly IReadOnlyList<DamageModifierDescriptor> IncomingDamageModifiers = 
     [
-        new DamageLogDamageModifier(Mod_EnterprisingAristocrat, "Enterprising Aristocrat", "-10% under barrier", DamageSource.Incoming, -10.0, DamageType.StrikeAndCondition, DamageType.All, Source.Antiquary, TraitImages.EnterprisingAristocrate, (x, log) => x.ShieldDamage > 0, DamageModifierMode.All)
+        new DamageLogDamageModifier(Mod_EnterprisingAristocrat, "Enterprising Aristocrat", "-10% under barrier", DamageSource.Incoming, -10.0, DamageType.StrikeAndCondition, DamageType.All, Source.Antiquary, TraitImages.EnterprisingAristocrat, (x, log) => x.ShieldDamage > 0, DamageModifierMode.All)
             .WithBuilds(GW2Builds.January2026Balance),
     ];
 
