@@ -232,7 +232,7 @@ internal abstract class FractalLogic : LogLogic
                         continue;
                     }
 
-                    var distance = (effectEvent.Position - agentPos).Length();
+                    var distance = (effectEvent.Position - agentPos.Value).Length();
                     if (distance < distanceThreshold)
                     {
                         lifespan.end = effectEvent.Time + onDistanceSuccessDuration;

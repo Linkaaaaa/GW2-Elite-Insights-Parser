@@ -485,7 +485,7 @@ internal class ConjuredAmalgamate : MythwrightGambit
             (long start, long end) lifespan = (c.Time, c.Time + duration);
             if (p.TryGetCurrentInterpolatedPosition(log, lifespan.start, out var position))
             {
-                var circle = new CircleDecoration(radius, lifespan, Colors.Magenta, 0.2, new PositionConnector(position));
+                var circle = new CircleDecoration(radius, lifespan, Colors.Magenta, 0.2, new PositionConnector(position.Value));
                 replay.Decorations.AddWithBorder(circle);
             }
         }

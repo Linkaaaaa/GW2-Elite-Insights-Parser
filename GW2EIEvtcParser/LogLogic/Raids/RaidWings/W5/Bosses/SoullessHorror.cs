@@ -258,9 +258,9 @@ internal class SoullessHorror : HallOfChains
                             (long start, long end) lifespanDoughnut = (lifespan.end, lifespan.end + doughnutDuration);
                             if (target.TryGetCurrentInterpolatedPosition(log, lifespan.start, out var position))
                             {
-                                var innerCircle = new CircleDecoration(380, lifespan, Colors.LightOrange, 0.2, new PositionConnector(position));
+                                var innerCircle = new CircleDecoration(380, lifespan, Colors.LightOrange, 0.2, new PositionConnector(position.Value));
                                 replay.Decorations.AddWithFilledWithGrowing(innerCircle, true, lifespan.end);
-                                var outerDoughnut = new DoughnutDecoration(380, 760, lifespanDoughnut, Colors.LightOrange, 0.2, new PositionConnector(position));
+                                var outerDoughnut = new DoughnutDecoration(380, 760, lifespanDoughnut, Colors.LightOrange, 0.2, new PositionConnector(position.Value));
                                 replay.Decorations.AddWithFilledWithGrowing(outerDoughnut, true, lifespanDoughnut.end);
                             }
                             break;
@@ -269,7 +269,7 @@ internal class SoullessHorror : HallOfChains
                                 lifespan = (cast.Time, cast.EndTime);
                                 if (target.TryGetCurrentFacingDirection(log, lifespan.start + 500, out var facing))
                                 {
-                                    float initialAngle = facing.GetRoundedZRotationDeg();
+                                    float initialAngle = facing.Value.GetRoundedZRotationDeg();
                                     var connector = new AgentConnector(target);
                                     for (int i = 0; i < 8; i++)
                                     {
@@ -284,7 +284,7 @@ internal class SoullessHorror : HallOfChains
                                 lifespan = (cast.Time, cast.EndTime);
                                 if (target.TryGetCurrentFacingDirection(log, lifespan.start + 500, out var facing))
                                 {
-                                    float initialAngle = facing.GetRoundedZRotationDeg();
+                                    float initialAngle = facing.Value.GetRoundedZRotationDeg();
                                     var connector = new AgentConnector(target);
                                     for (int i = 0; i < 4; i++)
                                     {
@@ -299,7 +299,7 @@ internal class SoullessHorror : HallOfChains
                                 lifespan = (cast.Time, cast.EndTime);
                                 if (target.TryGetCurrentFacingDirection(log, lifespan.start + 500, out var facing))
                                 {
-                                    float initialAngle = facing.GetRoundedZRotationDeg();
+                                    float initialAngle = facing.Value.GetRoundedZRotationDeg();
                                     var connector = new AgentConnector(target);
                                     for (int i = 0; i < 4; i++)
                                     {

@@ -438,7 +438,7 @@ internal class UraTheSteamshrieker : MountBalrior
                             if (target.TryGetCurrentFacingDirection(log, cast.Time + 1000, out var facing))
                             {
                                 var offset = new Vector3(250, 0, 0);
-                                var rotation = new AngleConnector(facing);
+                                var rotation = new AngleConnector(facing.Value);
                                 replay.Decorations.Add(new RectangleDecoration(500, 70, lifespan, Colors.LightOrange, 0.2, new AgentConnector(target).WithOffset(offset, true)).UsingRotationConnector(rotation));
                             }
                             break;
@@ -465,7 +465,7 @@ internal class UraTheSteamshrieker : MountBalrior
                         lifespan.end = Math.Min(lifespan.end, ComputeEndCastTimeByBuffApplication(log, target, Stun, effect.Time, duration));
                         if (target.TryGetCurrentFacingDirection(log, effect.Time, out var facingDirection, duration))
                         {
-                            var pie = (PieDecoration)new PieDecoration(1000, 60, lifespan, Colors.LightOrange, 0.2, new AgentConnector(target)).UsingRotationConnector(new AngleConnector(facingDirection));
+                            var pie = (PieDecoration)new PieDecoration(1000, 60, lifespan, Colors.LightOrange, 0.2, new AgentConnector(target)).UsingRotationConnector(new AngleConnector(facingDirection.Value));
                             replay.Decorations.AddWithGrowing(pie, growing);
                         }
                     }
@@ -576,9 +576,11 @@ internal class UraTheSteamshrieker : MountBalrior
                         case StoneSlamConeKnockback:
                             lifespan = (cast.Time, cast.GetInterruptedByStunTime(log));
                             growing = cast.Time + 2000; // 2000 Cast Duration
-                            target.TryGetCurrentFacingDirection(log, cast.Time, out var rotation, 300);
-                            var cone = (PieDecoration)new PieDecoration(350, 90, lifespan, Colors.LightOrange, 0.2, new AgentConnector(target)).UsingRotationConnector(new AngleConnector(rotation));
-                            replay.Decorations.AddWithGrowing(cone, growing);
+                            if (target.TryGetCurrentFacingDirection(log, cast.Time, out var rotation, 300))
+                            {
+                                var cone = (PieDecoration)new PieDecoration(350, 90, lifespan, Colors.LightOrange, 0.2, new AgentConnector(target)).UsingRotationConnector(new AngleConnector(rotation.Value));
+                                replay.Decorations.AddWithGrowing(cone, growing);
+                            }
                             break;
                         default:
                             break;

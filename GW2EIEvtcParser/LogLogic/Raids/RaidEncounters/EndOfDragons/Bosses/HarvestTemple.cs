@@ -1633,7 +1633,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         replay.Decorations.AddWithGrowing(circle, lifespan.end);
                         if (!log.CombatData.HasMissileData && target.TryGetCurrentPosition(log, lifespan.start, out var primordusPos))
                         {
-                            replay.Decorations.AddProjectile(primordusPos, effect.Position, lifespan, Colors.Yellow, 0.2);
+                            replay.Decorations.AddProjectile(primordusPos.Value, effect.Position, lifespan, Colors.Yellow, 0.2);
                         }
                     }
                 }
@@ -2334,7 +2334,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                                     // Projectile decoration
                                     if (!log.CombatData.HasMissileData)
                                     {
-                                        replay.Decorations.AddProjectile(brandbomberPosition, brandedArtilleryAoE.Position, lifespan, Colors.DarkPurple);
+                                        replay.Decorations.AddProjectile(brandbomberPosition.Value, brandedArtilleryAoE.Position, lifespan, Colors.DarkPurple);
                                     }
                                 }
                             }
@@ -2577,7 +2577,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                                 {
                                     lifespan = (cast.Time, actualEndCast);
                                     var agentConnector = (AgentConnector)new AgentConnector(target).WithOffset(new(length / 2, 0, 0), true);
-                                    var rectangle = (RectangleDecoration)new RectangleDecoration(length, width, lifespan, Colors.Orange, 0.2, agentConnector).UsingRotationConnector(new AngleConnector(facing));
+                                    var rectangle = (RectangleDecoration)new RectangleDecoration(length, width, lifespan, Colors.Orange, 0.2, agentConnector).UsingRotationConnector(new AngleConnector(facing.Value));
                                     replay.Decorations.AddWithGrowing(rectangle, supposedEndCast);
                                 }
                             }
@@ -2594,8 +2594,8 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                                 {
                                     lifespan = (cast.Time, actualEndCast);
                                     var agentConnector = new AgentConnector(target);
-                                    var rotation = new AngleConnector(facing);
-                                    var warningCone = (PieDecoration)new PieDecoration(radius, openingAngle, lifespan, Colors.Orange, 0.2, agentConnector).UsingRotationConnector(new AngleConnector(facing));
+                                    var rotation = new AngleConnector(facing.Value);
+                                    var warningCone = (PieDecoration)new PieDecoration(radius, openingAngle, lifespan, Colors.Orange, 0.2, agentConnector).UsingRotationConnector(new AngleConnector(facing.Value));
                                     replay.Decorations.AddWithGrowing(warningCone, supposedEndCast);
                                     // Manually adding a fire decoration for old logs
                                     if (!log.CombatData.HasEffectData)
@@ -2622,7 +2622,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                                         {
                                             long animationDuration = bombAoE.Time - cast.Time;
                                             lifespan = (cast.Time, cast.Time + animationDuration);
-                                            replay.Decorations.AddProjectile(obliteratorPosition, bombAoE.Position, lifespan, Colors.Red);
+                                            replay.Decorations.AddProjectile(obliteratorPosition.Value, bombAoE.Position, lifespan, Colors.Red);
                                         }
 
                                         // Landed Firebomb
