@@ -803,7 +803,9 @@ internal static class ProfHelper
         {
             AddOffensiveBoonsDecorations(minion, master, log, replay);
             var phantasmalForceStatus = minion.GetBuffStatus(log, PhantasmalForce).Where(x => x.Value > 0);
-            replay.Decorations.AddRotatedOverheadIconsWithValueAsText(phantasmalForceStatus, minion, TraitImages.PhantasmalForce_Mistrust, 90, 15);
+            replay.Decorations.AddRotatedOverheadIconsWithValueAsText(phantasmalForceStatus, minion, TraitImages.PhantasmalForce_Mistrust, 60, 15);
+            var chronoPhantasmaResummon = minion.GetBuffStatus(log, ChronophantasmaResummonBuff).Where(x => x.Value > 0);
+            replay.Decorations.AddRotatedOverheadIconsWithValueAsText(chronoPhantasmaResummon, minion, TraitImages.Chronophantasma, 120, 15);
         }
         if (NecromancerHelper.IsUndeadMinion(minion.AgentItem) || RitualistHelper.IsSpiritMinion(minion.AgentItem))
         {
