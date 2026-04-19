@@ -83,11 +83,11 @@
                         {{row.player.acc}}
                     </td>
                     <td v-if="!showHealing" v-for="(value, index) in row.hps" :class="getBodyClass('Data', index)"
-                        :data-original-title="getPlayerTooltip(value, index, row, tableData.sums, false)">
+                        :data-original-title="getPlayerTooltip(value, index, row, tableData.sums, index === 6 || index === 1, index === 7 || index === 2)">
                         {{round(value/phase.durationS)}}
                     </td>
                     <td v-if="showHealing" v-for="(value, index) in row.hps" :class="getBodyClass('Data', index)"
-                        :data-original-title="getPlayerTooltip(value, index, row, tableData.sums, true)">
+                        :data-original-title="getPlayerTooltip(value, index, row, tableData.sums, index === 6 || index === 1, index === 7 || index === 2)">
                         {{value}}
                     </td>
                 </tr>
@@ -175,32 +175,21 @@
                     }
                 }
                 return this.round2(row[index] * 100 / sums[sumId].hps[index]) + '% of group';
-            },
-            computeTargetStatsSpread: function (index, row) {
-                const playerTotal = row.hps[0] || 1; // If total == 0 divide by 1, 0/1 = 0%;
+            },          
+            computeSelfContribution: function (index, totalIndex, row) {
+                const playerTotal = row.hps[totalIndex] || 1; // If total == 0 divide by 1, 0/1 = 0%;
 
-                var healingPower = this.round2(row.hps[1] * 100 / playerTotal) + '% healing power';
-                var conversion = this.round2(row.hps[2] * 100 / playerTotal) + '% conversion';
-
-                switch (index) {
-                    case 0:
-                        return healingPower + ' | ' + conversion;
-                    case 1:
-                        return healingPower;
-                    case 2:
-                        return conversion;
-                    default:
-                        return '';
-                }
+                var selfContrib = this.round2(row.hps[index] * 100 / playerTotal) + '% of self';
+                return selfContrib;
             },
-            getPlayerTooltip: function (value, index, row, sums, showHealing) {
-                var base = showHealing ? this.round(value / this.phase.durationS) + ' per second' : value + ' total';
+            getPlayerTooltip: function (value, index, row, sums, showHealingPowerContribution = false, showConversionContribution = false) {
+                var base = this.showHealing ? this.round(value / this.phase.durationS) + ' per second' : value + ' total';
                 var total = this.computeTotalContribution(index, row.hps, sums);
                 var group = this.computeGroupContribution(row.player.group, index, row.hps, sums);
 
-                if (index < 3) {
+                if (showHealingPowerContribution || showConversionContribution) {
                     return base +
-                        '<br>' + this.computeTargetStatsSpread(index, row) +
+                        '<br>' + this.computeSelfContribution(index, showHealingPowerContribution ? index - 1 : index - 2, row) +
                         '<br>' + total +
                         '<br>' + group;
                 } else {

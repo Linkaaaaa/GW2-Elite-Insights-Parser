@@ -54,10 +54,10 @@
                         :data-original-title="getPlayerTooltip(0, row, tableData.sums)">
                         {{getPlayerCell(0, row)}}</td>
                     <td v-if="!targetless" :class="getBodyClass('Data', 1)"
-                        :data-original-title="getPlayerTooltip(1, row, tableData.sums)">
+                        :data-original-title="getPlayerTooltip(1, row, tableData.sums, false, true)">
                         {{getPlayerCell(1, row)}}</td>
                     <td v-if="!targetless" :class="getBodyClass('Data', 2)"
-                        :data-original-title="getPlayerTooltip(2, row, tableData.sums)">
+                        :data-original-title="getPlayerTooltip(2, row, tableData.sums, true, false)">
                         {{getPlayerCell(2, row)}}</td>
                     <td v-if="!targetless && hasBreakbarDamage" :class="getBodyClass('Data', 3)"
                         :data-original-title="computeTotalContribution(3, row.dps,tableData.sums)+ '<br>'+ computeGroupContribution(row.player.group, 3, row.dps,tableData.sums)">
@@ -67,10 +67,10 @@
                         :data-original-title="getPlayerTooltip(4, row, tableData.sums)">
                         {{getPlayerCell(4, row)}}</td>
                     <td :class="getBodyClass('Data', 5)"
-                        :data-original-title="getPlayerTooltip(5, row, tableData.sums)">
+                        :data-original-title="getPlayerTooltip(5, row, tableData.sums, false, true)">
                         {{getPlayerCell(5, row)}}</td>
                     <td :class="getBodyClass('Data', 6)"
-                        :data-original-title="getPlayerTooltip(6, row, tableData.sums)">
+                        :data-original-title="getPlayerTooltip(6, row, tableData.sums, true, false)">
                         {{getPlayerCell(6, row)}}</td>
 
                     <td v-if="hasBreakbarDamage" :class="getBodyClass('Data', 7)"
@@ -175,31 +175,20 @@
                 }
                 return this.round2(row[index] * 100 / sums[sumId].dps[index]) + '% of group';
             },
-            computeTargetStatsSpread: function (index, row, sums) {
-                const playerTotal = row.dps[0] || 1; // If total == 0 divide by 1, 0/1 = 0%;
+            computeSelfContribution: function (index, totalIndex, row) {
+                const playerTotal = row.dps[totalIndex] || 1; // If total == 0 divide by 1, 0/1 = 0%;
 
-                var power = this.round2(row.dps[1] * 100 / playerTotal) + '% power';
-                var condi = this.round2(row.dps[2] * 100 / playerTotal) + '% condition';
-
-                switch (index) {
-                    case 0:
-                        return power + ' | ' + condi;
-                    case 1:
-                        return power;
-                    case 2:
-                        return condi;
-                    default:
-                        return '';
-                }
+                var selfContrib = this.round2(row.dps[index] * 100 / playerTotal) + '% of self';
+                return selfContrib;
             },
-            getPlayerTooltip: function (index, row, sums) {
+            getPlayerTooltip: function (index, row, sums, showConditionContribution = false, showPowerContribution = false) {
                 var damage = (!this.showDamage ? row.dps[index] : this.round(row.dps[index] / this.phase.durationS));
                 var total = this.computeTotalContribution(index, row.dps, sums);
                 var group = this.computeGroupContribution(row.player.group, index, row.dps, sums);
 
-                if (index < 3) {
+                if (showConditionContribution || showPowerContribution) {
                     return damage + ' damage' +
-                        '<br>' + this.computeTargetStatsSpread(index, row, sums) +
+                        '<br>' + this.computeSelfContribution(index, showConditionContribution ? index - 2 : index - 1, row) +
                         '<br>' + total +
                         '<br>' + group;
                 } else {
