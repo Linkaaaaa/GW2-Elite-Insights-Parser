@@ -127,35 +127,35 @@
             };
         },
         methods: {
-            sortBy: function(key, index) {
+            sortBy: function (key, index) {
                 this.sortByBase(this.sortdata, key, index);
             },
-            getHeaderClass: function(key, index) {
+            getHeaderClass: function (key, index) {
                 return this.getHeaderClassBase(this.sortdata, key, index);
             },
-            getBodyClass: function(key, index, approximate) {
+            getBodyClass: function (key, index, approximate) {
                 var classes = this.getBodyClassBase(this.sortdata, key, index);
                 classes.approximate = !!approximate;
                 return classes;
             },
-            sortData: function(rows) {
+            sortData: function (rows) {
                 var order = this.sortdata.order === "asc" ? 1 : -1;
                 switch (this.sortdata.key) {
                     case "Sub":
-                        rows.sort((x,y) => order * (x.player.group - y.player.group) || this.sortByPlayerName(x, y));
+                        rows.sort((x, y) => order * (x.player.group - y.player.group) || this.sortByPlayerName(x, y));
                         break;
                     case "Prof":
-                        rows.sort((x,y) => order * this.sortByPlayerProfession(x, y) || this.sortByPlayerName(x, y));
+                        rows.sort((x, y) => order * this.sortByPlayerProfession(x, y) || this.sortByPlayerName(x, y));
                         break;
                     case "Name":
-                        rows.sort((x,y) => order * this.sortByPlayerName(x, y));
+                        rows.sort((x, y) => order * this.sortByPlayerName(x, y));
                         break;
                     case "Account":
-                        rows.sort((x,y) => order * this.sortByPlayerAccount(x, y));
+                        rows.sort((x, y) => order * this.sortByPlayerAccount(x, y));
                         break;
                     case "Data":
                         var index = this.sortdata.index;
-                        rows.sort((x,y) => order * (x.dps[index] - y.dps[index]) || this.sortByPlayerName(x, y));
+                        rows.sort((x, y) => order * (x.dps[index] - y.dps[index]) || this.sortByPlayerName(x, y));
                         break;
                     default:
                         return null;
@@ -175,23 +175,51 @@
                 }
                 return this.round2(row[index] * 100 / sums[sumId].dps[index]) + '% of group';
             },
-            getPlayerTooltip: function(index, row, sums) {
-                return (!this.showDamage ? row.dps[index] : this.round(row.dps[index]/this.phase.durationS)) + ' damage'+
-                 '<br>' + this.computeTotalContribution(index, row.dps, sums) +
-                 '<br>'+ this.computeGroupContribution(row.player.group, index, row.dps, sums);
+            computeTargetStatsSpread: function (index, row, sums) {
+                const playerTotal = row.dps[0] || 1; // If total == 0 divide by 1, 0/1 = 0%;
+
+                var power = this.round2(row.dps[1] * 100 / playerTotal) + '% power';
+                var condi = this.round2(row.dps[2] * 100 / playerTotal) + '% condition';
+
+                switch (index) {
+                    case 0:
+                        return power + ' | ' + condi;
+                    case 1:
+                        return power;
+                    case 2:
+                        return condi;
+                    default:
+                        return '';
+                }
             },
-            getPlayerCell: function(index, row) {
-                return this.showDamage ? row.dps[index] : this.round(row.dps[index]/this.phase.durationS)
+            getPlayerTooltip: function (index, row, sums) {
+                var damage = (!this.showDamage ? row.dps[index] : this.round(row.dps[index] / this.phase.durationS));
+                var total = this.computeTotalContribution(index, row.dps, sums);
+                var group = this.computeGroupContribution(row.player.group, index, row.dps, sums);
+
+                if (index < 3) {
+                    return damage + ' damage' +
+                        '<br>' + this.computeTargetStatsSpread(index, row, sums) +
+                        '<br>' + total +
+                        '<br>' + group;
+                } else {
+                    return damage + ' damage' +
+                        '<br>' + total +
+                        '<br>' + group;
+                }
             },
-            getSumTooltip: function(index, row) {
-                return (!this.showDamage ? row.dps[index] : this.round(row.dps[index]/this.phase.durationS)) + ' damage';
+            getPlayerCell: function (index, row) {
+                return this.showDamage ? row.dps[index] : this.round(row.dps[index] / this.phase.durationS)
             },
-            getSumCell: function(index, row) {
-                return this.showDamage ? row.dps[index] : this.round(row.dps[index]/this.phase.durationS)
+            getSumTooltip: function (index, row) {
+                return (!this.showDamage ? row.dps[index] : this.round(row.dps[index] / this.phase.durationS)) + ' damage';
+            },
+            getSumCell: function (index, row) {
+                return this.showDamage ? row.dps[index] : this.round(row.dps[index] / this.phase.durationS)
             }
         },
         computed: {
-            tableid: function() {
+            tableid: function () {
                 return "dps-table";
             },
             phase: function () {
@@ -257,7 +285,7 @@
                 this.cacheTarget.set(cacheID, res);
                 return res;
             },
-            UIIcons: function() {
+            UIIcons: function () {
                 return UIIcons;
             }
         }
