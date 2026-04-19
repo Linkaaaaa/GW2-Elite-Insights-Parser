@@ -19,6 +19,10 @@ namespace GW2EIEvtcParser.LogLogic;
 
 internal class UraTheSteamshrieker : MountBalrior
 {
+
+    private const double CMThreshold = 70e6;
+    private const double LCMThreshold = 90e6;
+
     internal readonly MechanicGroup Mechanics = new([
             // Sulfuric Geysers
             new MechanicGroup([
@@ -303,9 +307,9 @@ internal class UraTheSteamshrieker : MountBalrior
     }
     internal static void AdjustUraHP(SingleActor ura, int health, bool phased, ulong gw2build)
     {
-        if (health > 70e6)
+        if (health > CMThreshold)
         {
-            if (health > 100e6)
+            if (health > LCMThreshold)
             {
                 ura.SetHealthBars([
                    (100, 1, health, !phased),
@@ -742,11 +746,11 @@ internal class UraTheSteamshrieker : MountBalrior
     {
         SingleActor target = Targets.FirstOrDefault(x => x.IsSpecies(TargetID.Ura)) ?? throw new MissingKeyActorsException("Ura not found");
         var uraHP = target.GetHealth(combatData);
-        if (uraHP > 70e6)
+        if (uraHP > CMThreshold)
         {
             AdjustUraHP(target, uraHP, GetHealedPhaseStartEvent(combatData, target, logData.LogStart, logData.LogEnd) != null, combatData.GetGW2BuildEvent().Build);
             target.OverrideName("Godscream Ura");
-            return uraHP > 90e6 ? LogData.Mode.LegendaryCM : LogData.Mode.CMNoName;
+            return uraHP > LCMThreshold ? LogData.Mode.LegendaryCM : LogData.Mode.CMNoName;
         }
         target.OverrideName("Ura, the Steamshrieker");
         return LogData.Mode.Normal;
