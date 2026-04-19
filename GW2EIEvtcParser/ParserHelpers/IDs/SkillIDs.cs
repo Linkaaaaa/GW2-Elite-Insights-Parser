@@ -4253,7 +4253,7 @@ public static class SkillIDs
     public const long DualOrbitFireAndWater = 69184;
     public const long DreadVisageAspectSkill = 69185;
     public const long FlareSilentSurf = 69189;
-    public const long RestorativeStrikesAndBiorythm = 69193;
+    public const long RestorativeStrikesAndBiorhythm = 69193;
     public const long FrighteningSpeedWindup = 69194;
     public const long RendingStormAxeTargetBuff1 = 69195;
     public const long HarrowshotDeath = 69199; // harrowshot is the boon steal attack
@@ -5096,7 +5096,7 @@ public static class SkillIDs
     public const long WintryOrb = 76482;
     public const long PowerBlockBuff = 76483;
     public const long AchievementEligibilityUndyingLight = 76501;
-    public const long VowOfTheUntamedBiorythm = 76502;
+    public const long VowOfTheUntamedBiorhythm = 76502;
     public const long PhantomPain = 76505;
     public const long ArcaneEchoBuff = 76507;
     public const long HailstormWhisperingShadow = 76510;
