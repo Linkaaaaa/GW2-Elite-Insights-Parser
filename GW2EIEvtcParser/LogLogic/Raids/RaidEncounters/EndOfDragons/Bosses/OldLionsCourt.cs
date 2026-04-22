@@ -323,7 +323,7 @@ internal class OldLionsCourt : EndOfDragonsRaidEncounter
         }
         if (log.CombatData.GetBuffData(AchievementEligibilityFearNotThisKnight).Any())
         {
-            var encounterPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID);
+            var encounterPhases = log.LogData.GetEncounterPhases(log, LogID);
             foreach (var encounterPhase in encounterPhases)
             {
                 if (encounterPhase.Success)
@@ -677,7 +677,6 @@ internal class OldLionsCourt : EndOfDragonsRaidEncounter
                 environmentDecorations.Add(circle.Copy().UsingFilled(true).UsingGrowingEnd(lifespan.end));
             }
         }
-        var olcPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && x.IsCM).ToList();
         // Boiling Aether - Expanding AoE
         if (log.CombatData.TryGetEffectEventsByGUID(EffectGUIDs.OldLionsCourtBoilingAetherExpanding, out var boilingAetherExpanding))
         {
@@ -692,7 +691,7 @@ internal class OldLionsCourt : EndOfDragonsRaidEncounter
 
             foreach (EffectEvent effect in boilingAetherExpanding)
             {
-                uint radiusIncreasePerInterval = (uint)(olcPhases.Any(x => x.InInterval(effect.Time)) ? 15 : 11);
+                uint radiusIncreasePerInterval = (uint)(log.LogData.EncounterIsCM(log, LogID, effect.Time) ? 15 : 11);
                 uint currentRadius = initialRadius;
                 long totalIntervals = effect.Duration / timeInterval;
                 (long start, long end) lifespan = (effect.Time, effect.Time + timeInterval);
@@ -716,7 +715,7 @@ internal class OldLionsCourt : EndOfDragonsRaidEncounter
             {
                 // Maximum Radius: 320 (Normal Mode)
                 // Maximum Radius: 400 (Challenge Mode)
-                uint radius = (uint)(olcPhases.Any(x => x.InInterval(effect.Time)) ? 400 : 320);
+                uint radius = (uint)(log.LogData.EncounterIsCM(log, LogID, effect.Time) ? 400 : 320);
                 (long start, long end) lifespan = effect.ComputeDynamicLifespan(log, 590000);
                 var circle = new CircleDecoration(radius, lifespan, Colors.Red, 0.3, new PositionConnector(effect.Position));
                 environmentDecorations.Add(circle);
@@ -757,7 +756,7 @@ internal class OldLionsCourt : EndOfDragonsRaidEncounter
         }
         {
             var aetherAversionEligibilityEvents = new List<AchievementEligibilityEvent>();
-            var olcPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
+            var olcPhases = log.LogData.GetEncounterPhases(log, LogID).Where(x =>x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
             List<HealthDamageEvent> damageData = [
                 ..log.CombatData.GetDamageData(BoilingAetherRedBlueNM),
                 ..log.CombatData.GetDamageData(BoilingAetherRedBlueCM),

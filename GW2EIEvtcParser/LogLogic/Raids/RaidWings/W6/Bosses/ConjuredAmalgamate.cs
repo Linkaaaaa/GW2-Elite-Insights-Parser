@@ -247,8 +247,7 @@ internal class ConjuredAmalgamate : MythwrightGambit
         {
             base.ComputeNPCCombatReplayActors(target, log, replay);
         }
-        var caEncounters = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID).ToList();
-        var finalCAEncounter = caEncounters.LastOrDefault();
+        var finalCAEncounter = log.LogData.GetEncounterPhases(log, LogID).LastOrDefault();
         switch (target.ID)
         {
             case (int)TargetID.ConjuredAmalgamate:

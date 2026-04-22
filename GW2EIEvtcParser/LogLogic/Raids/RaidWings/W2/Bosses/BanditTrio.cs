@@ -403,7 +403,7 @@ internal class BanditTrio : SalvationPass
         }
         if (log.CombatData.GetBuffData(EnvironmentallyFriendly).Any())
         {
-            var encounterPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID);
+            var encounterPhases = log.LogData.GetEncounterPhases(log, LogID);
             foreach (var encounterPhase in encounterPhases)
             {
                 if (encounterPhase.Success)

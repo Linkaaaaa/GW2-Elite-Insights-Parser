@@ -407,14 +407,12 @@ internal class AetherbladeHideout : EndOfDragonsRaidEncounter
                 environmentDecorations.Add(growingCircle);
             }
         }
-
-        var aetherPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && x.IsCM).ToList();
         // Ley Breach - Red Puddles
         if (log.CombatData.TryGetEffectEventsByGUID(EffectGUIDs.AetherbladeHideoutLeyBreachRedPuddle, out var leyBreachPuddle))
         {
             foreach (EffectEvent effect in leyBreachPuddle)
             {
-                long duration = aetherPhases.Any(x => x.InInterval(effect.Time)) ? 30000 : 15000;
+                long duration = log.LogData.EncounterIsCM(log, LogID, effect.Time) ? 30000 : 15000;
                 (long start, long end) lifespan = effect.ComputeLifespan(log, duration);
                 var circle = new CircleDecoration(240, lifespan, Colors.Red, 0.3, new PositionConnector(effect.Position));
                 environmentDecorations.Add(circle);
@@ -1077,7 +1075,7 @@ internal class AetherbladeHideout : EndOfDragonsRaidEncounter
             base.SetInstanceBuffs(log, instanceBuffs);
         }
 
-        var encounterPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID);
+        var encounterPhases = log.LogData.GetEncounterPhases(log, LogID);
 
         foreach (var encounterPhase in encounterPhases)
         {

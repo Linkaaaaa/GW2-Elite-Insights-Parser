@@ -1483,7 +1483,7 @@ internal class Qadim : MythwrightGambit
             base.SetInstanceBuffs(log, instanceBuffs);
         }
 
-        var encounterPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID);
+        var encounterPhases = log.LogData.GetEncounterPhases(log, LogID);
         foreach (var encounterPhase in encounterPhases)
         {
             if (encounterPhase.Success)
@@ -1613,7 +1613,7 @@ internal class Qadim : MythwrightGambit
         }
         {
             var takingTurnsEligibilityEvents = new List<AchievementEligibilityEvent>();
-            var qadimPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
+            var qadimPhases = log.LogData.GetEncounterPhases(log, LogID).Where(x => x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
             var deaths = log.CombatData.GetDeadEvents(p.AgentItem);
             foreach (var death in deaths)
             {

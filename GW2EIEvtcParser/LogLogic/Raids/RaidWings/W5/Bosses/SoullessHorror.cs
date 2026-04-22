@@ -201,7 +201,7 @@ internal class SoullessHorror : HallOfChains
         {
             case (int)TargetID.SoullessHorror:
                 // arena reduction
-                var encounterPhase = log.LogData.GetEncounterPhases(log).FirstOrDefault(x => x.Targets.ContainsKey(target));     
+                var encounterPhase = log.LogData.GetEncounterPhases(log, LogID).FirstOrDefault(x => x.Targets.ContainsKey(target));     
                 if (encounterPhase != null)
                 {
                     var center = new Vector3(-10581, 825, -817);
@@ -446,7 +446,7 @@ internal class SoullessHorror : HallOfChains
         }
         {
             var necroDancerEligibilityEvents = new List<AchievementEligibilityEvent>();
-            var shPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
+            var shPhases = log.LogData.GetEncounterPhases(log, LogID).Where(x => x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
             List<HealthDamageEvent> damageData = [
                 ..log.CombatData.GetDamageData(InnerVortexSlash),
                 ..log.CombatData.GetDamageData(OuterVortexSlash)

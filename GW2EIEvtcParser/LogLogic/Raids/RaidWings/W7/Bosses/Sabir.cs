@@ -264,7 +264,7 @@ internal class Sabir : TheKeyOfAhdashim
                         }
                     }
                 }
-                var successSabirPhase = log.LogData.GetEncounterPhases(log).LastOrDefault(x => x.ID == LogID && x.Success);
+                var successSabirPhase = log.LogData.GetEncounterPhases(log, LogID).LastOrDefault(x => x.Success);
                 if (successSabirPhase != null)
                 {
                     mainPlateformOpacities.Add(new(1, successSabirPhase.End));
@@ -394,7 +394,7 @@ internal class Sabir : TheKeyOfAhdashim
         }
         {
             var chargedWindsEligibilityEvents = new List<AchievementEligibilityEvent>();
-            var sabirPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
+            var sabirPhases = log.LogData.GetEncounterPhases(log, LogID).Where(x => x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
             var damageData = log.CombatData.GetDamageData(Electrospark);
             foreach (var evt in damageData)
             {

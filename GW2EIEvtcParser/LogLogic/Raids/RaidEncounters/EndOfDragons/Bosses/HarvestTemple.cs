@@ -1928,14 +1928,13 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
             case (int)TargetID.VoidAmalgamate:
                 if (log.CombatData.TryGetEffectEventsBySrcWithGUID(target.AgentItem, EffectGUIDs.HarvestTempleInfluenceOfTheVoidPool, out var poolEffects))
                 {
-                    var htPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && x.IsCM).ToList();
                     if (poolEffects.Count != 0)
                     {
                         // To be safe
                         poolEffects = poolEffects.OrderBy(x => x.Time).ToList();
                         int offset = 0;
                         double initialRadius = 100.0;
-                        double radiusIncrement = htPhases.Any(x => x.InInterval(poolEffects[0].Time)) ? 35.0 : 35.0 / 2;
+                        double radiusIncrement = log.LogData.EncounterIsCM(log, LogID, poolEffects[0].Time) ? 35.0 : 35.0 / 2;
                         // To handle same amalgamate handling multiple phases
                         while (offset < poolEffects.Count)
                         {
@@ -2881,7 +2880,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
             base.SetInstanceBuffs(log, instanceBuffs);
         }
 
-        var encounterPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID);
+        var encounterPhases = log.LogData.GetEncounterPhases(log, LogID);
 
         foreach (var encounterPhase in encounterPhases)
         {
@@ -2924,7 +2923,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
         }
         {
             var nopeRopesEligibilityEvents = new List<AchievementEligibilityEvent>();
-            var harvestTemplePhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
+            var harvestTemplePhases = log.LogData.GetEncounterPhases(log, LogID).Where(x => x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
             List<HealthDamageEvent> damageData = [
                 ..log.CombatData.GetDamageData(MordremothShockwave),
                 ..log.CombatData.GetDamageData(TsunamiSlamClawOrb),

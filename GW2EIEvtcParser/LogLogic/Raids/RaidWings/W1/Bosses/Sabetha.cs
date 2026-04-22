@@ -200,7 +200,7 @@ internal class Sabetha : SpiritVale
                 var activePlateform = log.AgentData.GetNPCsByID(TargetID.SabethaPlatform).FirstOrDefault(x => target.InAwareTimes(x));
                 if (activePlateform != null)
                 {
-                    var activeEncounter = log.LogData.GetEncounterPhases(log).FirstOrDefault(x => x.ID == LogID && x.Targets.ContainsKey(target));
+                    var activeEncounter = log.LogData.GetEncounterPhases(log, LogID).FirstOrDefault(x => x.Targets.ContainsKey(target));
                     if (activeEncounter != null)
                     {
                         // Add the hp indicator
@@ -313,7 +313,7 @@ internal class Sabetha : SpiritVale
                     }
                     replay.Hidden.Add(new Segment(hideStart, target.LastAware));
                 }
-                var sabethaPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID).ToList();
+                var sabethaPhases = log.LogData.GetEncounterPhases(log, LogID);
                 replay.AddHideByEncounterPhases(sabethaPhases, log);
                 replay.Hidden.Sort((x, y) => x.Start.CompareTo(y.Start));
                 break;

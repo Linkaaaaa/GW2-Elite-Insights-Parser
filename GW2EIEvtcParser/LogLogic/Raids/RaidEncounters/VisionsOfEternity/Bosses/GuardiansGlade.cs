@@ -378,7 +378,7 @@ internal class GuardiansGlade : VisionsOfEternityRaidEncounter
             base.ComputePlayerCombatReplayActors(p, log, replay);
         }
         // Fixated
-        var kelaPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID).ToList();
+        var kelaPhases = log.LogData.GetEncounterPhases(log, LogID);
         var fixateds = p.GetBuffStatus(log, FixatedKela).Where(x => x.Value > 0);
         foreach (Segment seg in fixateds)
         {
@@ -603,7 +603,7 @@ internal class GuardiansGlade : VisionsOfEternityRaidEncounter
         }
 
         var surefooted = new List<AchievementEligibilityEvent>();
-        var kelaPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && x.IsCM && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
+        var kelaPhases = log.LogData.GetEncounterPhases(log, LogID).Where(x => x.IsCM && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
         var sandApplications = log.CombatData.GetBuffApplyDataByIDByDst(LooseSand, p.AgentItem);
 
         foreach (AbstractBuffApplyEvent apply in sandApplications)
@@ -628,7 +628,7 @@ internal class GuardiansGlade : VisionsOfEternityRaidEncounter
             base.SetInstanceBuffs(log, instanceBuffs);
         }
 
-        var encounterPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID);
+        var encounterPhases = log.LogData.GetEncounterPhases(log, LogID);
         var tackleCasts = log.CombatData.GetAnimatedCastData(CrocodilianRazortoothTackle)
                 .Where(x => x.Caster.IsAnySpecies([TargetID.VeteranCrocodilianRazortooth, TargetID.EliteCrocodilianRazortooth]) && !x.IsInterrupted).ToList();
 

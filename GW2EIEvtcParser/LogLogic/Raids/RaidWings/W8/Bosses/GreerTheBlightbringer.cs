@@ -817,7 +817,7 @@ internal class GreerTheBlightbringer : MountBalrior
             base.SetInstanceBuffs(log, instanceBuffs);
         }
 
-        var encounterPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID);
+        var encounterPhases = log.LogData.GetEncounterPhases(log, LogID);
         foreach (var encounterPhase in encounterPhases)
         {
             if (encounterPhase.Success && encounterPhase.IsCM)
@@ -841,7 +841,7 @@ internal class GreerTheBlightbringer : MountBalrior
         }
         {
             var unplaguedEligibilityEvents = new List<AchievementEligibilityEvent>();
-            var greerPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && x.IsCM && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
+            var greerPhases = log.LogData.GetEncounterPhases(log, LogID).Where(x => x.IsCM && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
             var buffData = log.CombatData.GetBuffApplyDataByIDByDst(PlagueRot, p.AgentItem);
             foreach (var evt in buffData)
             {
