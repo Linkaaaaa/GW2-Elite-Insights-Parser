@@ -44,9 +44,9 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                 ]),
                 new MechanicGroup([
                     new PlayerDstHealthDamageHitMechanic([VoidExplosion120Radius, VoidExplosion180Radius], new MechanicPlotlySetting(Symbols.StarSquareOpenDot, Colors.Yellow), "VoidExp.H", "Hit by Void Explosion (Last Laugh)", "Void Explosion", 0)
-                        .UsingChecker((hde, log) => hde.SkillID == VoidExplosion120Radius || log.LogData.GetEncounterPhases(log).Any(x => x.ID == LogID && x.IsCM && x.InInterval(hde.Time))),
+                        .UsingChecker((hde, log) => hde.SkillID == VoidExplosion120Radius || log.LogData.EncounterIsCM(log, LogID, hde.Time)),
                     new PlayerDstHealthDamageHitMechanic([VoidExplosion180Radius, VoidExplosion240Radius], new MechanicPlotlySetting(Symbols.StarSquareOpen, Colors.Yellow), "VoidExp.Champ.H", "Hit by Void Explosion (Last Laugh, Champion)", "Void Explosion Champion", 0)
-                        .UsingChecker((hde, log) => hde.SkillID == VoidExplosion240Radius || log.LogData.GetEncounterPhases(log).Any(x => x.ID == LogID && !x.IsCM && x.InInterval(hde.Time))),
+                        .UsingChecker((hde, log) => hde.SkillID == VoidExplosion240Radius || log.LogData.EncounterIsNM(log, LogID, hde.Time)),
                 ]),
                 new PlayerDstHealthDamageHitMechanic(MagicDischarge, new MechanicPlotlySetting(Symbols.Octagon, Colors.Grey), "MagicDisc.H", "Hit by Magic Discharge (Orb Explosion Wave)", "Magic Discharge", 0),
                 new MechanicGroup([
@@ -2922,11 +2922,10 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
     {
         if (log.CombatData.TryGetEffectEventsBySrcWithGUID(target.AgentItem, EffectGUIDs.HarvestTempleVoidExplosion, out var voidExplosions))
         {
-            var htPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID);
             uint radius = radiuses.nm;
             foreach (EffectEvent effect in voidExplosions)
             {
-                if (htPhases.Any(x => x.InInterval(effect.Time) && x.IsCM))
+                if (log.LogData.EncounterIsCM(log, LogID, effect.Time))
                 {
                     radius = radiuses.cm;
                 }
