@@ -197,7 +197,7 @@ internal class GreerTheBlightbringer : MountBalrior
         }
         var phases = new List<SubPhasePhaseData>(encounterPhase.IsCM ? 14 : 11);
         // In shield bubble phases
-        phases.AddRange(GetSubPhasesByCast(log, InvulnerableBarrier, greer, true, true, encounterPhase.Start, encounterPhase.End, true));
+        phases.AddRange(GetSubPhasesByCast(log, InvulnerableBarrier, greer, true, true, encounterPhase.Start, encounterPhase.End, 3000));
         var mainPhases = new List<SubPhasePhaseData>(3);
         for (int i = 0; i < phases.Count; i++)
         {

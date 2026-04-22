@@ -140,7 +140,7 @@ internal static class LogLogicPhaseUtils
     }
 
 
-    internal static IReadOnlyList<SubPhasePhaseData> GetSubPhasesByCast(ParsedEvtcLog log, IEnumerable<long> skillIDs, SingleActor mainTarget, bool addSkipPhases, bool mainBetweenCasts, long start, long end, bool mergeSuccessiveCasts = false, bool filterSmallPhases = true)
+    internal static IReadOnlyList<SubPhasePhaseData> GetSubPhasesByCast(ParsedEvtcLog log, IEnumerable<long> skillIDs, SingleActor mainTarget, bool addSkipPhases, bool mainBetweenCasts, long start, long end, long successiveMergeThreshold = 0, bool filterSmallPhases = true)
     {
         long last = start;
         var casts = mainTarget.GetAnimatedCastEvents(log, start, end);
@@ -148,9 +148,7 @@ internal static class LogLogicPhaseUtils
             .Where(x => skillIDs.Contains(x.SkillID))
             .ToList();
         invuls.SortByTime(); // Sort in case there were multiple skillIDs
-
-        var successiveMergeThreshold = mergeSuccessiveCasts ? 3000 : 0;
-
+        var mergeSuccessiveCasts = successiveMergeThreshold > 0;
         var phases = new List<SubPhasePhaseData>(invuls.Count);
         bool nextToAddIsSkipPhase = !mainBetweenCasts;
         for (var i = 0; i < invuls.Count; i++)
@@ -205,9 +203,9 @@ internal static class LogLogicPhaseUtils
         return phases.Where(x => x.DurationInMS > filterThreshold).ToList(); // only filter unrealistically short phases, otherwise it may mess with phase names
     }
 
-    internal static IReadOnlyList<SubPhasePhaseData> GetSubPhasesByCast(ParsedEvtcLog log, long skillID, SingleActor mainTarget, bool addSkipPhases, bool mainBetweenCast, long start, long end, bool mergeSuccessiveCasts = false, bool filterSmallPhases = true)
+    internal static IReadOnlyList<SubPhasePhaseData> GetSubPhasesByCast(ParsedEvtcLog log, long skillID, SingleActor mainTarget, bool addSkipPhases, bool mainBetweenCast, long start, long end, long successiveMergeThreshold = 0, bool filterSmallPhases = true)
     {
-        return GetSubPhasesByCast(log, [skillID], mainTarget, addSkipPhases, mainBetweenCast, start, end, mergeSuccessiveCasts, filterSmallPhases);
+        return GetSubPhasesByCast(log, [skillID], mainTarget, addSkipPhases, mainBetweenCast, start, end, successiveMergeThreshold, filterSmallPhases);
     }
 
     internal static List<PhaseData> GetInitialPhase(ParsedEvtcLog log)
