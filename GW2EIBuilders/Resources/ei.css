@@ -80,7 +80,7 @@
 }
 
 .buff-display {
-    width: 250px;
+    width: 210px;
 }
 
 .buff-container {
@@ -103,19 +103,27 @@
 }
 
 .scale85 {
-    transform: scale(0.85,0.85) !important;
+    font-size: 85%;
+}
+
+.scale85 input {
+    transform: scale(0.85, 0.85);
 }
 
 .scale75 {
-    transform: scale(0.75,0.75) !important;
+    font-size: 75%;
+}
+
+.scale75 input {
+    transform: scale(0.75, 0.75);
 }
 
 .scale65 {
-    transform: scale(0.65,0.65) !important;
+    font-size: 65%;
 }
 
-.player-status-rotation {
-    height: 48px;
+.scale65 input {
+    transform: scale(0.65, 0.65);
 }
 
 .player-status {
@@ -133,7 +141,7 @@
 
 .target-status {
     color: #DDDDDD;
-    width: 210px;
+    width: 170px;
     height: 35px;
     cursor: pointer;
     user-select: none;
@@ -187,7 +195,7 @@
 }
 
 .cr-barrier-display-target {
-    left: 77%;
+    left: 68%;
 }
 
 h6.actor-shorten-cr {
@@ -202,7 +210,7 @@ h6.actor-shorten-cr {
 }
 
 .squad-details {
-    width: 450px;
+    width: 500px;
 }
 
 .range-btn {
@@ -667,7 +675,7 @@ canvas {
 }
 
 .combat-actor-status-container {
-    height: 700px;
+    height: 900px;
 }
 
 .theme-yeti #combat-replay-mechanics-list-container > table > thead > tr > th {
