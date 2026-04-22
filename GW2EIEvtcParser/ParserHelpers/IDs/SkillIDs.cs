@@ -3869,13 +3869,13 @@ public static class SkillIDs
     public const long InfluenceOfTheVoidBuff = 64524;
     public const long ZhaitansReachGroundSlamHT = 64526;
     public const long NourishmentBonusPowerFerocity100 = 64528;
-    public const long VoidExplosion = 64557;
+    public const long VoidExplosion180Radius = 64557;
     public const long SoulReunited = 64559;
     public const long PlateOfCrispyFishPancakes = 64562;
     public const long MeatyAsparagusSkewer = 64568;
     public const long PoisonRoar = 64576;
     public const long MagicHail = 64582;
-    public const long VoidExplosion3 = 64585;
+    public const long VoidExplosion240Radius = 64585;
     public const long DragonSlashRushNM2 = 64619;
     public const long DragonsEndContributor8 = 64623;
     public const long WaveOfTormentNM = 64669;
@@ -3962,7 +3962,7 @@ public static class SkillIDs
     public const long VoidRepulsion2 = 65577;
     public const long VoidPoolNM = 65578;
     public const long VoidCorruption = 65590;
-    public const long VoidExplosion2 = 65595;
+    public const long VoidExplosion120Radius = 65595;
     public const long PowerOfTheVoid = 65601;
     public const long EnforcerRushingJusticeNM = 65608;
     public const long YellowfishSushi = 65613;
