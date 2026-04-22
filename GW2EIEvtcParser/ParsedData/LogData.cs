@@ -498,6 +498,16 @@ public class LogData
         return Mode.NotApplicable;
     }
 
+    public bool EncounterIsNM(ParsedEvtcLog log, long logID, long time)
+    {
+        var encounterPhase = GetEncounterPhases(log, logID).FirstOrDefault(x => x.InInterval(time));
+        if (encounterPhase != null)
+        {
+            return !encounterPhase.IsCM && !encounterPhase.IsLegendaryCM;
+        }
+        return false;
+    }
+
     public bool EncounterIsCM(ParsedEvtcLog log, long logID, long time)
     {
         var encounterPhase = GetEncounterPhases(log, logID).FirstOrDefault(x => x.InInterval(time));
