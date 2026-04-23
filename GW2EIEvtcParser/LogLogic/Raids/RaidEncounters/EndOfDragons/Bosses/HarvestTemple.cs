@@ -42,7 +42,12 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                     new AchievementEligibilityMechanic(Ach_NopeRopes, new MechanicPlotlySetting(Symbols.CircleOpenDot, Colors.Yellow), "NopeRopes.Achiv.K", "Achievement Eligibility: Jumping the Nope Ropes Kept", "Achiv Jumping Nope Ropes Kept", 0)
                         .UsingChecker((evt, log) => !evt.Lost)
                 ]),
-                new PlayerDstHealthDamageHitMechanic([VoidExplosion, VoidExplosion2, VoidExplosion3], new MechanicPlotlySetting(Symbols.StarSquareOpenDot, Colors.Yellow), "VoidExp.H", "Hit by Void Explosion (Last Laugh)", "Void Explosion", 0),
+                new MechanicGroup([
+                    new PlayerDstHealthDamageHitMechanic([VoidExplosion120Radius, VoidExplosion180Radius], new MechanicPlotlySetting(Symbols.StarSquareOpenDot, Colors.Yellow), "VoidExp.H", "Hit by Void Explosion (Last Laugh)", "Void Explosion", 0)
+                        .UsingChecker((hde, log) => hde.SkillID == VoidExplosion120Radius || log.LogData.EncounterIsCM(log, LogID, hde.Time)),
+                    new PlayerDstHealthDamageHitMechanic([VoidExplosion180Radius, VoidExplosion240Radius], new MechanicPlotlySetting(Symbols.StarSquareOpen, Colors.Yellow), "VoidExp.Champ.H", "Hit by Void Explosion (Last Laugh, Champion)", "Void Explosion Champion", 0)
+                        .UsingChecker((hde, log) => hde.SkillID == VoidExplosion240Radius || log.LogData.EncounterIsNM(log, LogID, hde.Time)),
+                ]),
                 new PlayerDstHealthDamageHitMechanic(MagicDischarge, new MechanicPlotlySetting(Symbols.Octagon, Colors.Grey), "MagicDisc.H", "Hit by Magic Discharge (Orb Explosion Wave)", "Magic Discharge", 0),
                 new MechanicGroup([
                     new EnemySrcEffectMechanic(EffectGUIDs.HarvestTempleSuccessGreen, new MechanicPlotlySetting(Symbols.Circle, Colors.DarkGreen), "S.Green", "Green Successful", "Success Green", 0),
@@ -86,12 +91,16 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
             // Mordremoth
             new MechanicGroup([
                 new MechanicGroup([
-                    new PlayerDstHealthDamageHitMechanic(MordremothShockwave, new MechanicPlotlySetting(Symbols.TriangleRight, Colors.Green), "ShckWv.H", "Hit by Mordremoth Shockwave", "Mordremoth Shockwave", 150),
+                    new PlayerDstHealthDamageHitMechanic(MordremothShockwave, new MechanicPlotlySetting(Symbols.TriangleRight, Colors.Green), "ShckWv.H", "Hit by Mordremoth's Shockwave", "Mordremoth Shockwave", 150),
                     new EnemyCastStartMechanic(MordremothShockwave, new MechanicPlotlySetting(Symbols.TriangleRightOpen, Colors.Green), "ShckWv.Start", "Mordremoth's Shockwave started", "Mordremoth Shockwave Start", 150)
                 ]),
-                new PlayerDstHealthDamageHitMechanic(Kick, new MechanicPlotlySetting(Symbols.TriangleDown, Colors.Green), "Kick.H", "Kicked by Void Skullpiercer", "Skullpiercer Kick", 150)
-                    .UsingBuffChecker(Stability, false),
-                new PlayerDstHealthDamageHitMechanic(PoisonRoar, new MechanicPlotlySetting(Symbols.TriangleUp, Colors.Green), "M.Poison.H", "Hit by Mordremoth Poison", "Mordremoth Poison", 150),
+                new PlayerDstHealthDamageHitMechanic(PoisonRoar, new MechanicPlotlySetting(Symbols.TriangleUp, Colors.Green), "M.Poison.H", "Hit by Mordremoth's Poison Roar", "Mordremoth Poison", 150),
+                // Skullpiercer
+                new MechanicGroup([
+                    new PlayerDstHealthDamageHitMechanic(Kick, new MechanicPlotlySetting(Symbols.TriangleDown, Colors.Green), "Kick.H", "Kicked by Void Skullpiercer", "Skullpiercer Kick", 150)
+                        .UsingBuffChecker(Stability, false),
+                    new PlayerDstHealthDamageHitMechanic(ChargedShot, new MechanicPlotlySetting(Symbols.TriangleDownOpen, Colors.FluoOrange), "ChrgShot.H", "Hit by Void Skullpiercer's Charged Shot", "Skullpiercer Charged Shot", 0),
+                ]),
             ]),
             // Giants
             new MechanicGroup([
@@ -1556,7 +1565,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
         {
             AddPlacedVoidPoolDecoration(log, redPuddleEffectsNM, 300, 24000, environmentDecorations);
         }
-        // Stormseer Ice Spike
+        // Stormseer Ice Spike - Not located under Stormseer because the effect Src is Unknown.
         if (log.CombatData.TryGetEffectEventsByGUID(EffectGUIDs.HarvestTempleVoidStormseerIceSpikeIndicator, out var iceSpikes))
         {
             foreach (EffectEvent effect in iceSpikes)
@@ -2281,9 +2290,8 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                 break;
             case (int)TargetID.VoidWarforgedElite:
             case (int)TargetID.VoidWarforgedVeteran:
-#if DEBUG_EFFECTS
-                    CombatReplay.DebugEffects(target, log, replay.Decorations, [], target.FirstAware, target.LastAware);
-#endif
+                // Void Explosion
+                AddVoidExplosionDecoration(log, target, replay, (120, 180));
                 break;
             case (int)TargetID.ZhaitansReach:
                 foreach (CastEvent cast in target.GetAnimatedCastEvents(log))
@@ -2346,6 +2354,9 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                 // Branded Artillery Orb
                 var brandedArtilleryOrbs = log.CombatData.GetMissileEventsBySrcBySkillID(target.AgentItem, BrandedArtillery);
                 replay.Decorations.AddNonHomingMissiles(log, brandedArtilleryOrbs, Colors.DarkPurple, 0.2, 50);
+
+                // Void Explosion
+                AddVoidExplosionDecoration(log, target, replay, (120, 180));
                 break;
             case (int)TargetID.VoidTimeCaster:
                 // Gravity Crush - Indicator
@@ -2373,6 +2384,9 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                 // Nightmare Epoch - Projectiles
                 var nightmareEpochProjectiles = log.CombatData.GetMissileEventsBySkillID(NightmareEpochDamage);
                 replay.Decorations.AddNonHomingMissiles(log, nightmareEpochProjectiles, Colors.Black, 0.5, 10);
+
+                // Void Explosion
+                AddVoidExplosionDecoration(log, target, replay, (180, 240));
                 break;
             case (int)TargetID.GravityBall:
                 // Setting the first aware to + 1600 due to the duration of the warning effect
@@ -2421,6 +2435,9 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         replay.Decorations.Add(circle);
                     }
                 }
+
+                // Void Explosion
+                AddVoidExplosionDecoration(log, target, replay, (180, 240));
                 break;
             case (int)TargetID.VoidSaltsprayDragon:
                 // Call Lightning
@@ -2539,6 +2556,9 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         counter = (counter + 1) % 7;
                     }
                 }
+
+                // Void Explosion
+                AddVoidExplosionDecoration(log, target, replay, (180, 240));
                 break;
             case (int)TargetID.VoidAbomination:
                 foreach (CastEvent cast in target.GetAnimatedCastEvents(log))
@@ -2558,6 +2578,9 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                             break;
                     }
                 }
+
+                // Void Explosion
+                AddVoidExplosionDecoration(log, target, replay, (120, 180));
                 break;
             case (int)TargetID.VoidObliterator:
                 foreach (CastEvent cast in target.GetAnimatedCastEvents(log))
@@ -2663,6 +2686,9 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         replay.Decorations.AddShockwave(connector, lifespan, Colors.LightGrey, 0.6, radius);
                     }
                 }
+
+                // Void Explosion
+                AddVoidExplosionDecoration(log, target, replay, (180, 240));
                 break;
             case (int)TargetID.VoidGoliath:
                 foreach (CastEvent cast in target.GetAnimatedCastEvents(log))
@@ -2690,6 +2716,48 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         lifespan = effect.ComputeLifespan(log, 5000);
                         var circle = new CircleDecoration(600, lifespan, Colors.Ice, 0.4, new PositionConnector(effect.Position));
                         replay.Decorations.AddWithBorder(circle, Colors.Red, 0.5);
+                    }
+                }
+
+                // Void Explosion
+                AddVoidExplosionDecoration(log, target, replay, (180, 240));
+                break;
+            case (int)TargetID.VoidColdsteel:
+                // Void Explosion
+                AddVoidExplosionDecoration(log, target, replay, (120, 180));
+                break;
+            case (int)TargetID.VoidSkullpiercer:
+                // Charged Shot
+                if (log.CombatData.TryGetEffectEventsBySrcWithGUID(target.AgentItem, EffectGUIDs.HarvestTempleVoidSkullpiercerChargedShot, out var chargedShots))
+                {
+                    foreach (EffectEvent effect in chargedShots)
+                    {
+                        lifespan = effect.ComputeLifespan(log, 5000);
+                        var line = (RectangleDecoration)new RectangleDecoration(20, 200, lifespan, Colors.FluoOrange, 0.8, new PositionConnector(effect.Position))
+                            .UsingRotationConnector(new AngleConnector(effect.Rotation.Z));
+                        replay.Decorations.AddWithBorder(line, Colors.Black, 0.5);
+                    }
+                }
+
+                // Void Explosion
+                AddVoidExplosionDecoration(log, target, replay, (120, 180));
+                break;
+            case (int)TargetID.VoidStormseer:
+                // Void Explosion
+                AddVoidExplosionDecoration(log, target, replay, (120, 180));
+                break;
+            case (int)TargetID.VoidTangler:
+                // Void Explosion
+                AddVoidExplosionDecoration(log, target, replay, (120, 180));
+                break;
+            case (int)TargetID.VoidBurster:
+                // Void Explosion - Different Effect GUID
+                if (log.CombatData.TryGetEffectEventsBySrcWithGUID(target.AgentItem, EffectGUIDs.HarvestTempleScalableOrangeAoE, out var voidExplosions))
+                {
+                    foreach (var effect in voidExplosions)
+                    {
+                        lifespan = effect.ComputeLifespan(log, 2500);
+                        replay.Decorations.AddWithBorder(new CircleDecoration(80, lifespan, Colors.Orange, 0.3, new PositionConnector(effect.Position)), Colors.Orange, 0.4);
                     }
                 }
                 break;
@@ -2839,6 +2907,31 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
             (long start, long end) lifespan = (green.Time - 250, green.Time);
             Color color = isSuccessful ? Colors.DarkGreen : Colors.DarkRed;
             environmentDecorations.Add(new CircleDecoration(180, lifespan, color, 0.6, new PositionConnector(green.Position)));
+        }
+    }
+
+    /// <summary>
+    /// Void Explosion - "Last Laugh" explosion effect after a NPC dies.
+    /// </summary>
+    /// <remarks>
+    /// Normal Mode: radius 120 for veteran and elites, 180 for champions.<br></br>
+    /// Challenge Mode: radius 180 for veteran and elites, 240 for champions.<br></br>
+    /// </remarks>
+    /// <param name="radiuses">First element Normal Mode, second element Challenge Mode.</param>
+    private void AddVoidExplosionDecoration(ParsedEvtcLog log, NPC target, CombatReplay replay, (uint nm, uint cm) radiuses)
+    {
+        if (log.CombatData.TryGetEffectEventsBySrcWithGUID(target.AgentItem, EffectGUIDs.HarvestTempleVoidExplosion, out var voidExplosions))
+        {
+            uint radius = radiuses.nm;
+            foreach (EffectEvent effect in voidExplosions)
+            {
+                if (log.LogData.EncounterIsCM(log, LogID, effect.Time))
+                {
+                    radius = radiuses.cm;
+                }
+                (long, long) lifespan = effect.ComputeLifespan(log, 2050);
+                replay.Decorations.AddWithBorder(new CircleDecoration(radius, lifespan, Colors.Orange, 0.3, new PositionConnector(effect.Position)), Colors.Orange, 0.4);   
+            }
         }
     }
 

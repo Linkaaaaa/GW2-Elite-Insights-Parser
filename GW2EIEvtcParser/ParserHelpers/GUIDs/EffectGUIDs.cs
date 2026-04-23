@@ -1029,6 +1029,7 @@ public static class EffectGUIDs
     public static readonly GUID HarvestTempleVoidObliteratorWyvernBreathFire = new("453283E51FF9EF489980B6F0208F5F43"); // duration 30000
     public static readonly GUID HarvestTempleVoidObliteratorFirebomb = new("D2E7228A6225FB44911507A45EF2CCEC"); // duration 21000
     public static readonly GUID HarvestTempleVoidObliteratorShockwave = new("4254DCF4AF72FF4A83847908DA98E427"); // duration 0, should probably be 2900
+    public static readonly GUID HarvestTempleVoidSkullpiercerChargedShot = new("2E9DC4D29F08554DA6ABB766A738FBF9"); // duration 5000, many events for each skill usage
     // Old Lion's Court
     public static readonly GUID OldLionsCourtExhaustPlumeAoE = new("E273E005F90E3041939C6235FF9CADBA"); // All Knights Src - Duration 5000 - AoE
     public static readonly GUID OldLionsCourtBoilingAetherExpanding = new("CBD8C6AE14B69A43A9596B94C402B9F3"); // All Knights Src - Duration 10000
