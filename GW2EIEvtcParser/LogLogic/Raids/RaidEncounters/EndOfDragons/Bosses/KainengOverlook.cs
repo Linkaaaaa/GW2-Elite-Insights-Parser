@@ -713,7 +713,7 @@ internal class KainengOverlook : EndOfDragonsRaidEncounter
         {
             base.ComputeAchievementEligibilityEvents(log, p, achievementEligibilityEvents);
         }
-        var allKOCMPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && x.IsCM && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
+        var allKOCMPhases = log.LogData.GetEncounterPhases(log, LogID).Where(x => x.IsCM && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
         {
             var testReflexesEligibilityEvents = new List<AchievementEligibilityEvent>();
             HashSet<EncounterPhaseData> koPhases = [.. allKOCMPhases];

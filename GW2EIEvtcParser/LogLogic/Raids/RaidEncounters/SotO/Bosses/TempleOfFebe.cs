@@ -573,12 +573,11 @@ internal class TempleOfFebe : SecretOfTheObscureRaidEncounter
         }
 
         // Pool of Despair - Spread AoE on ground
-        var tofPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && (x.IsCM || x.IsLegendaryCM)).ToList();
         if (log.CombatData.TryGetEffectEventsByGUID(EffectGUIDs.TempleOfFebePoolOfDespair, out var poolOfDespair))
         {
             foreach (EffectEvent effect in poolOfDespair)
             {
-                int duration = tofPhases.Any(x => x.InInterval(effect.Time)) ? 120000 : 60000;
+                int duration = log.LogData.EncounterIsCM(log, LogID, effect.Time) || log.LogData.EncounterIsLegendaryCM(log, LogID, effect.Time) ? 120000 : 60000;
                 (long start, long end) lifespan = effect.ComputeDynamicLifespan(log, duration);
                 var circle = new CircleDecoration(120, lifespan, Colors.RedSkin, 0.2, new PositionConnector(effect.Position));
                 environmentDecorations.Add(circle);
@@ -920,7 +919,7 @@ internal class TempleOfFebe : SecretOfTheObscureRaidEncounter
             base.SetInstanceBuffs(log, instanceBuffs);
         }
 
-        var encounterPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID);
+        var encounterPhases = log.LogData.GetEncounterPhases(log, LogID);
         var empoweredBuffs = new List<long>()
         {
             EmpoweredDespairCerus,
@@ -959,7 +958,7 @@ internal class TempleOfFebe : SecretOfTheObscureRaidEncounter
         }
         {
             var unboundedOptimismEligibilityEvents = new List<AchievementEligibilityEvent>();
-            var tofPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && (x.IsCM || x.IsLegendaryCM) && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
+            var tofPhases = log.LogData.GetEncounterPhases(log, LogID).Where(x => (x.IsCM || x.IsLegendaryCM) && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
             List<TimeCombatEvent> lostEvents = [
                 ..p.GetDamageTakenEvents(null, log).Where(x => UnboundOptimismSkillIDs.Contains(x.SkillID) && x.HasHit),
                 ..log.CombatData.GetDeadEvents(p.AgentItem),

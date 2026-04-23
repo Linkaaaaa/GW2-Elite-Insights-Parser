@@ -350,7 +350,7 @@ internal class WhisperingShadow : Kinfall
         }
         {
             var shatterstepEligibilityEvents = new List<AchievementEligibilityEvent>();
-            var whisperingShadowPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
+            var whisperingShadowPhases = log.LogData.GetEncounterPhases(log, LogID).Where(x => x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
             List<HealthDamageEvent> damageData = [
                 ..log.CombatData.GetDamageData(LoftedCryoflash),
                 ..log.CombatData.GetDamageData(TerrestialCryoflash)
@@ -376,7 +376,7 @@ internal class WhisperingShadow : Kinfall
         }
         if (log.CombatData.GetBuffData(AchievementEligibilityUndyingLight).Any())
         {
-            var encounterPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID);
+            var encounterPhases = log.LogData.GetEncounterPhases(log, LogID);
             var lastEncounter = encounterPhases.LastOrDefault();
             if (lastEncounter != null && lastEncounter.Success && lastEncounter.IsCM)
             {

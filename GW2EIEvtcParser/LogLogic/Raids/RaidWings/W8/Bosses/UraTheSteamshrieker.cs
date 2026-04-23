@@ -763,7 +763,7 @@ internal class UraTheSteamshrieker : MountBalrior
             base.SetInstanceBuffs(log, instanceBuffs);
         }
         var toxicGeysers = log.AgentData.GetNPCsByID(TargetID.ToxicGeyser);
-        var encounterPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID);
+        var encounterPhases = log.LogData.GetEncounterPhases(log, LogID);
         foreach (var encounterPhase in encounterPhases)
         {
             if (encounterPhase.Success && (encounterPhase.IsCM || encounterPhase.IsLegendaryCM))
@@ -806,7 +806,7 @@ internal class UraTheSteamshrieker : MountBalrior
         }
         {
             var hopscotchMasterEligibilityEvents = new List<AchievementEligibilityEvent>();
-            var uraPhases = log.LogData.GetEncounterPhases(log).Where(x => x.ID == LogID && (x.IsCM || x.IsLegendaryCM) && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
+            var uraPhases = log.LogData.GetEncounterPhases(log, LogID).Where(x => (x.IsCM || x.IsLegendaryCM) && x.IntersectsWindow(p.FirstAware, p.LastAware)).ToHashSet();
             List<HealthDamageEvent> damageData = [
                 ..log.CombatData.GetDamageData(EruptionVent),
                 ..log.CombatData.GetDamageData(SulfuricEruption)
