@@ -68,7 +68,7 @@ public static class EffectGUIDs
 
     #region Mesmer
     public static readonly GUID MesmerThePrestigeDisappear1 = new("48B69FBC3090E144BFC067D6C0208878");
-    public static readonly GUID MesmerThePrestigeDisappear2 = new("5FA6527231BB8041AC783396142C6200"); // also used with elementalist cleansing fire
+    public static readonly GUID MesmerThePrestigeDisappear2AndNonChronoShatterAroundClones = new("5FA6527231BB8041AC783396142C6200"); // also used with elementalist cleansing fire
     public static readonly GUID MesmerSignetOfMidnight = new("02154B72900B5740A73CD0ADECED27BF");
     public static readonly GUID MesmerFeedback = new("D6C8F406E4DEE04AB16A215BE068E910");
     public static readonly GUID MesmerVeil = new("6B29E895E2EB9341B560FFD3A78F78F2");
