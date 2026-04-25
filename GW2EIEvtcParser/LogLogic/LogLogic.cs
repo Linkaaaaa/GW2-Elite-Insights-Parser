@@ -430,7 +430,7 @@ public abstract class LogLogic
 
     internal virtual IEnumerable<ErrorEvent> GetCustomWarningMessages(LogData logData, AgentData agentData, CombatData combatData, EvtcVersionEvent evtcVersion)
     {
-        if (evtcVersion.Build >= ArcDPSBuilds.DirectX11Update)
+        if (evtcVersion.Build >= ArcDPSBuilds.DirectX11Update && evtcVersion.Build < ArcDPSBuilds.ExtraDataInGUIDEvents)
         {
             return [new("As of arcdps 20210923, animated cast events' durations are broken, as such, any feature having a dependency on it are to be taken with a grain of salt. Impacted features are: <br>- Rotations <br>- Time spent in animation statistics <br>- Mechanics <br>- Phases <br>- Combat Replay Decorations")];
         }
