@@ -690,6 +690,24 @@ namespace GW2EIBuilders.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;template&gt;
+        ///    &lt;div class=&quot;d-flex flex-row flex-wrap justify-content-center align-items-start mb-2&quot;&gt;
+        ///        &lt;ul class=&quot;nav nav-pills d-flex flex-row justify-content-center mb-1 scale85&quot;&gt;
+        ///            &lt;li class=&quot;nav-item&quot;&gt;
+        ///                &lt;a class=&quot;nav-link&quot; :class=&quot;{active: buffs}&quot; @click=&quot;buffs = !buffs&quot;&gt;
+        ///                    Show Buffs
+        ///                &lt;/a&gt;
+        ///            &lt;/li&gt;
+        ///            &lt;li class=&quot;nav-item&quot;&gt;
+        ///                &lt;a class=&quot;nav-link&quot; :class=&quot;{active: rotation}&quot; @click=&quot;rotation = !rotatio [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string tmplCombatReplayActorsStats {
+            get {
+                return ResourceManager.GetString("tmplCombatReplayActorsStats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div class=&quot;d-flex flex-column justify-content-center align-items-center&quot; style=&quot;width: 750px;&quot;&gt;
         ///        &lt;div v-if=&quot;showNormalPhases&quot; class=&quot;mb-1&quot;&gt;
         ///            &lt;ul class=&quot;nav nav-pills d-flex flex-row justify-content-center max-wd-700px&quot;&gt;
@@ -770,24 +788,6 @@ namespace GW2EIBuilders.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;template&gt;
-        ///    &lt;div class=&quot;d-flex flex-row flex-wrap justify-content-center align-items-start mb-2&quot;&gt;
-        ///        &lt;ul class=&quot;nav nav-pills d-flex flex-row justify-content-center mb-1 scale85&quot;&gt;
-        ///            &lt;li class=&quot;nav-item&quot;&gt;
-        ///                &lt;a class=&quot;nav-link&quot; :class=&quot;{active: buffs}&quot; @click=&quot;buffs = !buffs&quot;&gt;
-        ///                    Show Buffs
-        ///                &lt;/a&gt;
-        ///            &lt;/li&gt;
-        ///            &lt;li class=&quot;nav-item&quot;&gt;
-        ///                &lt;a class=&quot;nav-link&quot; :class=&quot;{active: rotation}&quot; @click=&quot;rotation = !rotatio [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string tmplCombatReplayPlayersStats {
-            get {
-                return ResourceManager.GetString("tmplCombatReplayPlayersStats", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div&gt;
         ///        &lt;combat-replay-actor-buffs-stats-component v-if=&quot;buffs &amp;&amp; buffstoshow.length &gt; 0&quot; :time=&quot;time&quot; :actorindex=&quot;playerindex&quot; :enemy=&quot;false&quot; :buffstoshow=&quot;buffstoshow&quot;&gt;&lt;/combat-replay-actor-buffs-stats-component&gt;
         ///        &lt;div class=&quot;d-flex mb-1 mt-1 align-items-center player-status-rotation&quot;&gt;
@@ -833,24 +833,6 @@ namespace GW2EIBuilders.Properties {
         internal static string tmplCombatReplayStatusData {
             get {
                 return ResourceManager.GetString("tmplCombatReplayStatusData", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;template&gt;
-        ///    &lt;div&gt;
-        ///        &lt;ul class=&quot;nav nav-pills d-flex flex-row justify-content-center mb-1 scale65&quot;&gt;
-        ///            &lt;li v-for=&quot;(buffType, index) in possibleBuffs&quot; class=&quot;ml-1 mr-1&quot;&gt;
-        ///                &lt;input :id=&quot;&apos;crtar-possibleBuffs-&apos; + index&quot; type=&quot;checkbox&quot; :value=&quot;buffType&quot; v-model=&quot;buffsToShow&quot; /&gt;
-        ///                &lt;label :for=&quot;&apos;crtar-possibleBuffs-&apos; + index&quot;&gt;{{buffType}}&lt;/label&gt;
-        ///            &lt;/li&gt;
-        ///        &lt;/ul&gt;
-        ///        &lt;div class=&quot;mt-1 combat-actor-status-container scrollable-y&quot;&gt;
-        ///            &lt;d [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string tmplCombatReplayTargetsStats {
-            get {
-                return ResourceManager.GetString("tmplCombatReplayTargetsStats", resourceCulture);
             }
         }
         
