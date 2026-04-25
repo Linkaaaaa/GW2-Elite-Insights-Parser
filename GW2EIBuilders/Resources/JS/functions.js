@@ -729,7 +729,7 @@ function computeBuffData(buffData, data) {
                 text: [],
                 yaxis: boon.stacking ? 'y4' : 'y',
                 type: 'scatter',
-                visible: boonItem.visible ? null : 'legendonly',
+                visible: 'legendonly',
                 line: {
                     color: boonItem.color,
                     shape: 'hv'
@@ -910,7 +910,7 @@ function computeBuffData(buffData, data) {
                 y: [],
                 yaxis: boon.stacking ? 'stacking' : 'y' + (2 + ystart++),
                 type: 'scatter',
-                visible: boonItem.visible || !boon.stacking ? null : 'legendonly',
+                visible: 'legendonly',
                 line: {
                     color: boonItem.color,
                     shape: 'hv'
