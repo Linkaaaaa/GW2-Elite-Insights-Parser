@@ -556,7 +556,10 @@ internal class UraTheSteamshrieker : MountBalrior
                 break;
             case (int)TargetID.SulfuricGeyser:
                 // Hardened Crust - Overhead
-                replay.Decorations.AddOverheadIcons(target.GetBuffStatus(log, HardenedCrust).Where(x => x.Value > 0), target, BuffImages.HardenedCrust);
+                if (log.LogData.EncounterIsNM(log, LogID, target.FirstAware))
+                {
+                    replay.Decorations.AddOverheadIcons(target.GetBuffStatus(log, HardenedCrust).Where(x => x.Value > 0), target, BuffImages.HardenedCrust);
+                }
 
                 // Damage field ring
                 replay.Decorations.Add(new CircleDecoration(580, (target.FirstAware, target.LastAware), Colors.Red, 0.2, new AgentConnector(target)).UsingFilled(false));
