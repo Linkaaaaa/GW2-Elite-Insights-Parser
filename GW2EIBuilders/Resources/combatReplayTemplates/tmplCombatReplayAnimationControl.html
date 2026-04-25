@@ -20,8 +20,10 @@
                 <canvas :width="canvasSize.x + 'px'" :height="canvasSize.y + 'px'" :id="htmlElementIDs.pickCanvasID"
                     class="replay"></canvas>
             </div>
-            <div class="animation-control">
-                <div class="d-flex justify-content-center mb-1">
+            <div class="animation-control">        
+                <div class="d-flex align-items-center justify-content-center mb-1">
+                    <img class="icon mr-2" :src="UIIcons.QuestionMark"
+                        data-original-title="Actors can be selected via picking on the animation" />
                     <div @click="toggleAnimate();" class="btn btn-small"
                         :class="{'btn-dark': !light, 'btn-light': light}" style="width: 50px;">{{animated ? "Pause" :
                         "Play"}}</div>
