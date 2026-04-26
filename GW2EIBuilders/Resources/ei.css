@@ -133,19 +133,19 @@
 
 .player-status {
     color: #DDDDDD;
-    width: 170px;
+    width: 202px;
     height: 27px;
     cursor: pointer;
     user-select: none;
 }
 
 .actor-rotation {
-    width: 170px;
+    width: 202px;
 }
 
 .target-status {
     color: #DDDDDD;
-    width: 170px;
+    width: 202px;
     height: 35px;
     cursor: pointer;
     user-select: none;
@@ -202,11 +202,11 @@
 }
 
 .cr-barrier-display-player {
-    left: 68%;
+    left: 71%;
 }
 
 .cr-barrier-display-target {
-    left: 68%;
+    left: 71%;
 }
 
 h6.player-shorten-cr {
