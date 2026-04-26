@@ -358,8 +358,8 @@ h6,
 }
 
 body.theme-yeti {
-    --footer-bg: #f8f9fa;
-    --footer-section-bg: #ffffff;
+    --footer-bg: #ffffff;
+    --footer-section-bg: #f8f9fa;
     --footer-text: #343a40;
     --footer-muted: #6c757d;
     --footer-tag-bg: #e9ecef;
