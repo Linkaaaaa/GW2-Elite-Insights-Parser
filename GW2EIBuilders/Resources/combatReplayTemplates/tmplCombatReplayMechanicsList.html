@@ -196,6 +196,8 @@
         },
         methods: {
             selectMechanic: function (mechanic) {
+                this.followTimeline = false;
+                animator.stopAnimate(true);
                 animator.updateTime(mechanic.time);
             },
             stopClickEvent: function (event) {
