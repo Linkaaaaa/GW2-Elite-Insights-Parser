@@ -10,47 +10,270 @@
             </ul>
         </div>
         <div class="d-flex flex-column justify-content-center flex-wrap mt-1"
-            :style="{'width': Math.max(canvasSize.x, canvasSize.y) + 'px'}">
+             :style="{'width': Math.max(canvasSize.x, canvasSize.y) + 'px'}">
             <div class="d-flex flex-column justify-content-center align-items-center"
-                :style="{'width': '100%', 'min-width': canvasSize.x + 'px', 'height': canvasSize.y + 'px', 'position': 'relative'}">
+                 :style="{'width': '100%', 'min-width': canvasSize.x + 'px', 'height': canvasSize.y + 'px', 'position': 'relative'}">
                 <canvas :width="canvasSize.x + 'px'" :height="canvasSize.y + 'px'" :id="htmlElementIDs.mainCanvasID"
-                    class="replay"></canvas>
+                        class="replay"></canvas>
                 <canvas :width="canvasSize.x + 'px'" :height="canvasSize.y + 'px'" :id="htmlElementIDs.bgCanvasID"
-                    class="replay"></canvas>
+                        class="replay"></canvas>
                 <canvas :width="canvasSize.x + 'px'" :height="canvasSize.y + 'px'" :id="htmlElementIDs.pickCanvasID"
-                    class="replay"></canvas>
+                        class="replay"></canvas>
             </div>
-            <div class="animation-control">        
+            <div class="animation-control">
+                <div class="d-flex justify-content-center slidercontainer mt-1">
+                    <div class="timeline mt-1 rounded" ref="timeline"
+                         :style="{
+                            backgroundColor: timelineColors.background,
+                            border: light ? '1px solid #dee2e6' : '1px solid #495057'}">
+                        <svg ref="svg"
+                             :width="timelineWidth"
+                             height="100"
+                             @mousemove="onTimelineMouseMove"
+                             @mouseleave="onTimelineMouseLeave">
+
+                            <!-- Invisible cursor scroll line -->
+                            <rect x="0"
+                                  y="0"
+                                  :width="timelineWidth"
+                                  height="80"
+                                  fill="transparent"
+                                  style="cursor: pointer;"
+                                  @click="onTimelineClick" />
+
+                            <!-- Breakbar phases -->
+                            <g v-for="phase in phases.filter(p => p.breakbarPhase)" :key="phase.id">
+                                <line :x1="timeToX(phase.start)" y1="60"
+                                      :x2="timeToX(phase.end)" y2="60"
+                                      :stroke="timelineColors.phaseBreakbar"
+                                      stroke-width="4"
+                                      stroke-linecap="butt"
+                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phase)" />
+                                <!-- Del -->
+                                <line :x1="timeToX(phase.start)" y1="55"
+                                      :x2="timeToX(phase.start)" y2="65"
+                                      :stroke="timelineColors.phaseBreakbar"
+                                      stroke-width="2"
+                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phase)" />
+                                <line :x1="timeToX(phase.end)" y1="55"
+                                      :x2="timeToX(phase.end)" y2="65"
+                                      :stroke="timelineColors.phaseBreakbar"
+                                      stroke-width="2"
+                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phase)" />
+                            </g>
+
+                            <!-- Remaining Phases -->
+                            <g v-for="phase in remainingSubPhases" :key="phase.id">
+                                <line :x1="timeToX(phase.start)" y1="50"
+                                      :x2="timeToX(phase.end)" y2="50"
+                                      :stroke="timelineColors.thirdSubPhases"
+                                      stroke-width="4"
+                                      stroke-linecap="butt"
+                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phase)" />
+                                <!-- Delimiters -->
+                                <line :x1="timeToX(phase.start)" y1="45"
+                                      :x2="timeToX(phase.start)" y2="55"
+                                      :stroke="timelineColors.thirdSubPhases"
+                                      stroke-width="2"
+                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phase)" />
+                                <line :x1="timeToX(phase.end)" y1="45"
+                                      :x2="timeToX(phase.end)" y2="55"
+                                      :stroke="timelineColors.thirdSubPhases"
+                                      stroke-width="2"
+                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phase)" />
+                            </g>
+
+                            <!-- 2 Phases -->
+                            <g v-for="phase in subPhasesOfSubPhases" :key="phase.id">
+                                <line :x1="timeToX(phase.start)" y1="40"
+                                      :x2="timeToX(phase.end)" y2="40"
+                                      :stroke="timelineColors.secondSubPhases"
+                                      stroke-width="4"
+                                      stroke-linecap="butt"
+                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phase)" />-->
+                                <!-- Delimiters -->
+                                <line :x1="timeToX(phase.start)" y1="35"
+                                      :x2="timeToX(phase.start)" y2="45"
+                                      :stroke="timelineColors.secondSubPhases"
+                                      stroke-width="2"
+                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phase)" />
+                                <line :x1="timeToX(phase.end)" y1="35"
+                                      :x2="timeToX(phase.end)" y2="45"
+                                      :stroke="timelineColors.secondSubPhases"
+                                      stroke-width="2"
+                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phase)" />
+                            </g>
+
+                            <!-- Phases -->
+                            <g v-for="phase in subPhasesOfPhase0" :key="phase.id">
+                                <line :x1="timeToX(phase.start)" y1="30"
+                                      :x2="timeToX(phase.end)" y2="30"
+                                      :stroke="timelineColors.firstSubPhases"
+                                      stroke-width="4"
+                                      stroke-linecap="butt"
+                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phase)" />
+                                <!-- Delimiters -->
+                                <line :x1="timeToX(phase.start)" y1="25"
+                                      :x2="timeToX(phase.start)" y2="35"
+                                      :stroke="timelineColors.firstSubPhases"
+                                      stroke-width="2"
+                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phase)" />
+                                <line :x1="timeToX(phase.end)" y1="25"
+                                      :x2="timeToX(phase.end)" y2="35"
+                                      :stroke="timelineColors.firstSubPhases"
+                                      stroke-width="2"
+                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phase)" />
+                            </g>
+
+                            <!-- Main Phase -->
+                            <g v-if="phases.length">
+                                <line :x1="timeToX(phases[0].start)" y1="20"
+                                      :x2="timeToX(phases[0].end)" y2="20"
+                                      :stroke="timelineColors.fullFight"
+                                      stroke-width="4"
+                                      stroke-linecap="butt"
+                                      style="cursor: pointer;"
+                                      @mouseenter="hoverPhase(phases[0])"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phases[0], $event)"
+                                      @dblclick="jumpToPhaseStart(phases[0])" />
+                            </g>
+
+                            <!-- Drag cursor, larger for easier grab -->
+                            <line :x1="timeToX(time)" y1="0"
+                                  :x2="timeToX(time)" y2="80"
+                                  stroke="transparent" stroke-width="10"
+                                  style="pointer-events: stroke; cursor: grab;"
+                                  @mousedown="startDragCursor" />
+                            <!-- The cursor visual -->
+                            <line :x1="timeToX(time)" y1="0"
+                                  :x2="timeToX(time)" y2="80"
+                                  :stroke="timelineColors.cursor" stroke-width="2" stroke-dasharray="4 2"
+                                  style="pointer-events: none;" />
+                            <!-- Cursor circle -->
+                            <circle :cx="timeToX(time)"
+                                    cy="75"
+                                    r="5"
+                                    :fill="timelineColors.cursor"
+                                    style="cursor: grab; pointer-events: all;"
+                                    @mousedown="startDragCursor" />
+
+                            <!-- Fixed time ticks -->
+                            <g v-for="tick in ticks" :key="tick.time">
+                                <line :x1="tick.x" y1="15" :x2="tick.x" y2="25"
+                                      :stroke="timelineColors.tick" />
+
+                                <text :x="getTickX(tick)" y="10"
+                                      font-size="10"
+                                      text-anchor="middle"
+                                      :fill="timelineColors.text">
+                                    {{ tick.label }}
+                                </text>
+                            </g>
+
+                            <!-- Moving time -->
+                            <g v-if="isHoveringTimeline">
+                                <rect :x="timeToX(hoverTime) - 18"
+                                      y="-3"
+                                      width="36"
+                                      height="16"
+                                      rx="3"
+                                      fill="black"
+                                      opacity="0.5"
+                                      pointer-events="none" />
+                                <text :x="timeToX(hoverTime)" y="10"
+                                      font-size="10"
+                                      text-anchor="middle"
+                                      :fill="timelineColors.text"
+                                      style="pointer-events: none; font-weight: 600;">
+                                    {{ formatTime(hoverTime) }}
+                                </text>
+                            </g>
+
+                            <text v-if="selectedPhase"
+                                  :x="timelineWidth / 2"
+                                  :y="95"
+                                  text-anchor="middle"
+                                  :fill="timelineColors.text"
+                                  font-size="12"
+                                  style="font-weight: 500; pointer-events: none;">
+                                {{ getFormattedPhaseText(selectedPhase) }}
+                            </text>
+                        </svg>
+                        <input type="range" :min="minTime" :max="maxTime" value="0" :id="htmlElementIDs.timeRangeID" style="display: none;">
+                    </div>
+                </div>
                 <div class="d-flex align-items-center justify-content-center mb-1">
                     <img class="icon mr-2" :src="UIIcons.QuestionMark"
-                        data-original-title="Actors can be selected via picking on the animation" />
+                         data-original-title="Actors can be selected via picking on the animation" />
                     <div @click="toggleAnimate();" class="btn btn-small"
-                        :class="{'btn-dark': !light, 'btn-light': light}" style="width: 50px;">{{animated ? "Pause" :
-                        "Play"}}</div>
+                         :class="{'btn-dark': !light, 'btn-light': light}" style="width: 50px;">
+                        {{ animated ? "Pause" : "Play "}}
+                    </div>
                     <div @click="restartAnimate();" class="btn btn-small"
-                        :class="{'btn-dark': !light, 'btn-light': light}">
+                         :class="{'btn-dark': !light, 'btn-light': light}">
                         Restart
                     </div>
                     <div @click="toggleBackwards();" class="btn btn-small"
-                        :class="{'active': backwards, 'btn-dark': !light, 'btn-light': light}">Backwards</div>
+                         :class="{'active': backwards, 'btn-dark': !light, 'btn-light': light}">Backwards</div>
                     <div @click="resetViewpoint();" class="btn btn-small"
-                        :class="{'btn-dark': !light, 'btn-light': light}">Reset Viewpoint</div>
-                </div>
-                <div class="d-flex justify-content-center slidercontainer mt-1">
-                    <input style="min-width: 400px;" @input="updateTime($event.target.value)" type="range" :min="minTime"
-                        :max="maxTime" value="0" class="slider" :id="htmlElementIDs.timeRangeID"
-                        :style="{'background': getSliderGradient()}">
-                    <p class="cr-slide-delimiter">
-                        {{sliderDelimiter.name}}
-                    </p>
-                    <input style="width: 70px; text-align: right;" class="ml-3 mr-1" type="text"
-                        :id="htmlElementIDs.timeRangeDisplayID" value="0"
-                        @input="updateInputTime($event.target.value);">
+                         :class="{'btn-dark': !light, 'btn-light': light}">Reset Viewpoint</div>
+                    <input style="width: 100px; text-align: right;" class="ml-3 mr-1" type="number" step="0.001"
+                           :id="htmlElementIDs.timeRangeDisplayID" value="0"
+                           @input="updateInputTime($event.target.value);">
                 </div>
                 <div class="d-flex justify-content-center">
                     <label v-for="speed in speeds" @click="setSpeed(speed)"
-                        :class="{'active': speed === selectedSpeed, 'btn-dark': !light, 'btn-light': light}"
-                        class="btn btn-ssmall">
+                           :class="{'active': speed === selectedSpeed, 'btn-dark': !light, 'btn-light': light}"
+                           class="btn btn-ssmall">
                         {{speed}}x
                     </label>
                 </div>
@@ -62,7 +285,7 @@
 
 <script>
     Vue.component("combat-replay-animation-control-component", {
-        props: ["light", "animated", "range"],
+        props: ["time", "light", "animated", "range"],
         template: `${template}`,
         mixins: [encounterPhaseComponent],
         data: function () {
@@ -70,15 +293,23 @@
                 selectedSpeed: 1,
                 backwards: false,
                 sliderDelimiter: sliderDelimiter,
+                selectedPhase: null,
+                draggingCursor: false,
+                hoverTime: null,
+                hasClickedPhase: false,
+                isHoveringTimeline: false,
+                isPhaseClicked: false,
+                clickTimeout: null,
             };
         },
         watch: {
             encounters: {
                 handler: function () {
-                    // make sure DOM is attached              
+                    // make sure DOM is attached
                     if (animator.mainCanvas) {
                         const encounterPhase = this.encounterPhase;
                         this.updateAnimatorTimes(encounterPhase);
+                        this.selectedPhase = this.phases[0];
                     }
                 },
                 deep: true
@@ -90,26 +321,26 @@
             this.updateAnimatorTimes(encounterPhase);
         },
         computed: {
-            phases: function() {
+            phases: function () {
                 for (let i = 0; i < this.encounters.length; i++) {
                     const encounter = this.encounters[i];
                     if (encounter.active) {
                         const phase = logData.phases[encounter.index];
                         let phases = [];
                         if (phase.type === PhaseTypes.INSTANCE) {
-                            if (IsMultiEncounterLog) {                          
+                            if (IsMultiEncounterLog) {
                                 return logData.phases.filter(x => x.type === PhaseTypes.ENCOUNTER || x.type === PhaseTypes.INSTANCE);
                             } else {
                                 return logData.phases;
                             }
                         } else {
-                            if (IsMultiEncounterLog) {    
+                            if (IsMultiEncounterLog) {
                                 for (let j = 0; j < logData.phases.length; j++) {
                                     const subPhase = logData.phases[j];
                                     if (subPhase === phase || subPhase.encounterPhase === encounter.index) {
                                         phases.push(subPhase);
                                     }
-                                }                      
+                                }
                             } else {
                                 return logData.phases;
                             }
@@ -127,6 +358,49 @@
             },
             hasBreakbarPhases: function () {
                 return this.phases.filter(phase => phase.breakbarPhase).length > 0;
+            },
+            subPhasesOfPhase0: function () {
+                let result = [];
+                for (let i = 1; i < this.phases.length; i++) {
+                    let phase = this.phases[i];
+                    if (this.phases[0].subPhases && this.phases[0].subPhases.indexOf(phase.id) > -1) result.push(phase);
+                }
+                return result;
+            },
+            subPhasesOfSubPhases: function () {
+                let result = [];
+                for (let i = 1; i < this.phases.length; i++) {
+                    let phase = this.phases[i];
+                    for (let j = 0; j < this.subPhasesOfPhase0.length; j++) {
+                        let subPhaseOfPhase0 = this.subPhasesOfPhase0[j];
+                        if (subPhaseOfPhase0.subPhases && subPhaseOfPhase0.subPhases.indexOf(phase.id) > -1) {
+                            result.push(phase);
+                            break;
+                        }
+                    }
+                }
+                return result;
+            },
+            remainingSubPhases: function () {
+                let result = [];
+                let knownIds = [];
+
+                for (let p of this.subPhasesOfPhase0) {
+                    knownIds.push(p.id);
+                }
+                for (let p of this.subPhasesOfSubPhases) {
+                    knownIds.push(p.id);
+                }
+                knownIds.push(this.phases[0].id);
+
+                for (let i = 1; i < this.phases.length; i++) {
+                    let phase = this.phases[i];
+                    if (!knownIds.includes(phase.id) && !phase.breakbarPhase) {
+                        result.push(phase);
+                    }
+                }
+
+                return result;
             },
             speeds: function () {
                 return [0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0];
@@ -151,25 +425,69 @@
                     timeRangeID: "timeRange",
                     timeRangeDisplayID: "timeRangeDisplay",
                 };
-            }
+            },
+            timelineWidth() {
+                return this.canvasSize.x - 16; // remove p-2 padding (0.5rem = 8px x 2)
+            },
+            fightDuration() {
+                return this.maxTime / 1000;
+            },
+            ticks() {
+                const interval = this.getTickInterval();
+                const ticks = [];
+
+                // Ticks every set time based on max fight length
+                for (let t = 0; t <= this.fightDuration; t += interval) {
+                    ticks.push({
+                        time: t,
+                        x: this.timeToX(t),
+                        label: this.formatTime(t),
+                    });
+                }
+
+                // Always display the end tick
+                const end = this.fightDuration;
+                ticks.push({
+                    time: end,
+                    x: this.timeToX(end),
+                    label: this.formatTime(end),
+                });
+
+                return ticks;
+            },
+            timelineColors() {
+                if (this.light) {
+                    return {
+                        tick: "#ffffff",
+                        text: "#ffffff",
+                        fullFight: "#2d9400",
+                        firstSubPhases: "#fffb00",
+                        secondSubPhases: "#ffa800",
+                        thirdSubPhases: "#ff2200",
+                        phaseBreakbar: "#007bff",
+                        cursor: "#ff6b6b",
+                        background: "#2f3338",
+                    };
+                } else {
+                    return {
+                        tick: "#ffffff",
+                        text: "#ffffff",
+                        fullFight: "#2d9400",
+                        firstSubPhases: "#fffb00",
+                        secondSubPhases: "#ffa800",
+                        thirdSubPhases: "#ff2200",
+                        phaseBreakbar: "#007bff",
+                        cursor: "#ff6b6b",
+                        background: "#2f3338",
+                    };
+                }
+            },
         },
         methods: {
             updateAnimatorTimes(phase) {
                 animator.updateRange(phase);
                 this.updatePhaseTime(phase);
                 animator._reselectIfEnglobed();
-            },
-            getSliderGradient: function () {
-                var startPercent, endPercent;
-                if (!this.sliderDelimiter || this.sliderDelimiter.min === -1) {
-                    startPercent = 0;
-                    endPercent = 100;
-                } else {
-                    var max = this.maxTime;
-                    startPercent = this.sliderDelimiter.min / max * 100;
-                    endPercent = this.sliderDelimiter.max / max * 100;
-                }
-                return computeSliderGradient("#888888", "#F3F3F3", startPercent, endPercent);
             },
             getPhaseData: function (id) {
                 return logData.phases[id];
@@ -192,10 +510,14 @@
             },
             updateTime: function (value) {
                 const offset = this.range.min;
-                animator.updateTime(parseInt(value) + offset);
+                const t = parseInt(value) + offset;
+                animator.updateTime(t);
             },
-            getPhaseName: function(phase) {
+            getPhaseName: function (phase) {
                 return phase === this.encounterPhase ? phase.nameNoMode : phase.name;
+            },
+            getFormattedPhaseText: function (phase) {
+                return this.getPhaseName(phase) + ' (' + phase.start + 's - ' + phase.end + 's)';
             },
             updatePhaseTime: function (phase) {
                 var min = phase.start * 1000;
@@ -209,7 +531,97 @@
             },
             updateInputTime: function (value) {
                 animator.updateInputTime(value);
-            }
+            },
+            timeToX(time) {
+                var t = Math.max(this.minTime, Math.min(this.fightDuration, time));
+                return (t / this.fightDuration) * this.timelineWidth;
+            },
+            xToTime(x) {
+                return (x / this.timelineWidth) * this.fightDuration;
+            },
+            getTickInterval() {
+                const numberOfTicks = 6;
+                const steps = [5, 10, 15, 30, 60, 120, 300, 600, 900, 1800, 3600, 7200, 14400]; // up to 24h, max evtc length accepted
+                let interval = this.fightDuration / numberOfTicks;
+
+                // pick smallest step >= interval
+                for (let i = 0; i < steps.length; i++) {
+                    if (interval <= steps[i]) {
+                        return steps[i];
+                    }
+                }
+            },
+            getTickX(tick) {
+                const pad = 10;
+
+                if (tick.x <= pad) return tick.x + pad;
+                if (tick.x >= this.timelineWidth - pad) return tick.x - pad;
+
+                return tick.x;
+            },
+            formatTime(t) {
+                const minutes = Math.floor(t / 60);
+                const seconds = Math.floor(t % 60);
+                return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+            },
+            getTimeFromEvent(e) {
+                const rect = this.$refs.svg.getBoundingClientRect();
+                const x = Math.max(0, Math.min(this.timelineWidth, e.clientX - rect.left));
+                return this.xToTime(x);
+            },
+            onTimelineMouseMove(e) {
+                this.hoverTime = this.getTimeFromEvent(e);
+                this.isHoveringTimeline = true;
+            },
+            onTimelineMouseLeave() {
+                this.isHoveringTimeline = false;
+                if (!this.hasClickedPhase) {
+                    this.selectedPhase = this.phases[0];
+                }
+            },
+            onTimelineClick(e) {
+                this.hasClickedPhase = false;
+                let time = this.getTimeFromEvent(e);
+                animator.updateTime(time * 1000);
+            },
+            hoverPhase(phase) {
+                this.selectedPhase = phase;
+            },
+            resetHoveredPhase() {
+                if (!this.hasClickedPhase) {
+                    this.selectedPhase = this.phases[0];
+                }
+            },
+            clickedPhase(phase, e) {
+                clearTimeout(this.clickTimeout);
+
+                this.clickTimeout = setTimeout(() => {
+                    this.hasClickedPhase = true;
+                    this.selectedPhase = phase;
+                    let time = this.getTimeFromEvent(e);
+                    animator.updateTime(time * 1000);
+                }, 200);
+            },
+            startDragCursor(e) {
+                this.draggingCursor = true;
+                window.addEventListener("mousemove", this.onDragCursor);
+                window.addEventListener("mouseup", this.stopDragCursor);
+            },
+            onDragCursor(e) {
+                if (!this.draggingCursor) return;
+                let time = this.getTimeFromEvent(e);
+                time = Math.max(this.minTime, Math.min(this.maxTime, time));
+                animator.updateTime(time * 1000);
+            },
+            stopDragCursor() {
+                this.draggingCursor = false;
+                window.removeEventListener("mousemove", this.onDragCursor);
+                window.removeEventListener("mouseup", this.stopDragCursor);
+            },
+            jumpToPhaseStart(phase) {
+                clearTimeout(this.clickTimeout);
+                animator.updateTime(phase.start * 1000);
+            },
         },
     });
 </script>
