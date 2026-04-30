@@ -4,9 +4,15 @@ namespace GW2EIEvtcParser.ParsedData;
 
 public class EvtcVersionEvent : MetaDataEvent
 {
-    public readonly int Build;
-    public readonly int Revision = -1;
-    internal EvtcVersionEvent(CombatItem evtcItem) : base(evtcItem)
+    public int Build { get; private set; }
+    public int Revision { get; private set; } = -1;
+
+    internal EvtcVersionEvent(int version)
+    {
+        Build = version;
+    }
+
+    internal void SetFromCombatItem(CombatItem evtcItem)
     {
         var bytes = new ByteBuffer(stackalloc byte[48]);
         // 8 bytes
@@ -51,10 +57,6 @@ public class EvtcVersionEvent : MetaDataEvent
         Build = int.Parse(majorSplit.Tail);
         var minorSplit = majorSplit.Head.SplitOnce('-');
         Revision = int.Parse(minorSplit.Tail);
-    }
-    internal EvtcVersionEvent(int version)
-    {
-        Build = version;
     }
 
     internal string ToEVTCString(bool buildOnly)

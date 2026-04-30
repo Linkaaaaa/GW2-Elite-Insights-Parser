@@ -1285,7 +1285,9 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                 }
                 greenEffectEventTuple.Item2.OverrideSrcAgent(greenAgent);
                 var (dstAgent, value) = MovementEvent.PackMovementData(position.X, position.Y, position.Z);
-                toAdd.Add(new CombatItem(greenEffectEvent.Time, greenAgent.Agent, dstAgent, value, 0, 0, 0, greenAgent.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Position, 0, 0, 0, 0));
+                toAdd.Add(new CombatItem(greenEffectEvent.Time, greenAgent.Agent, dstAgent, value, 0, 0, 0, greenAgent.InstID, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Position, 0, 0, 0, 0,
+                    evtcVersion));
             }
         }
         if (toAdd.Count > 0)

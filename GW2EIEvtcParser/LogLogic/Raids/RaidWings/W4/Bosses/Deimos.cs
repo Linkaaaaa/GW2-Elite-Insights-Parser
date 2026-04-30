@@ -352,7 +352,7 @@ internal class Deimos : BastionOfThePenitent
         return (null, gadgetsAgents, long.MaxValue, deimos.LastAware);
     }
 
-    internal static void HandleDeimosAndItsGadgets(SingleActor deimos, AgentItem? deimosStructBody, HashSet<AgentItem> gadgetAgents, AgentData agentData, List<CombatItem> combatData, IReadOnlyDictionary<uint, ExtensionHandler> extensions, long structStartTime, long lastAware)
+    internal static void HandleDeimosAndItsGadgets(SingleActor deimos, AgentItem? deimosStructBody, HashSet<AgentItem> gadgetAgents, AgentData agentData, List<CombatItem> combatData, IReadOnlyDictionary<uint, ExtensionHandler> extensions, EvtcVersionEvent evtcVersion, long structStartTime, long lastAware)
     {
         // invul correction
         CombatItem? invulApp = combatData.FirstOrDefault(x => x.DstMatchesAgent(deimos.AgentItem) && x.IsBuffApplyEvent() && x.SkillID == Determined762);
@@ -368,13 +368,13 @@ internal class Deimos : BastionOfThePenitent
             // Add custom spawn event
             if (!originalDeimosSpawnRelatedEvents.Any(x => x.IsStateChange == StateChange.Spawn))
             {
-                combatData.Add(new CombatItem(deimos.FirstAware, deimos.AgentItem.Agent, 0, 0, 0, 0, 0, deimos.AgentItem.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Spawn, 0, 0, 0, 0));
+                combatData.Add(new CombatItem(deimos.FirstAware, deimos.AgentItem.Agent, 0, 0, 0, 0, 0, deimos.AgentItem.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Spawn, 0, 0, 0, 0, evtcVersion));
             }
             if (!originalDeimosSpawnRelatedEvents.Any(x => x.IsStateChange == StateChange.Despawn))
             {
-                combatData.Add(new CombatItem(originalLastAware, deimos.AgentItem.Agent, 0, 0, 0, 0, 0, deimos.AgentItem.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Despawn, 0, 0, 0, 0));
+                combatData.Add(new CombatItem(originalLastAware, deimos.AgentItem.Agent, 0, 0, 0, 0, 0, deimos.AgentItem.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Despawn, 0, 0, 0, 0, evtcVersion));
             }
-            combatData.Add(new CombatItem(structStartTime, deimos.AgentItem.Agent, 0, 0, 0, 0, 0, deimos.AgentItem.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Spawn, 0, 0, 0, 0));
+            combatData.Add(new CombatItem(structStartTime, deimos.AgentItem.Agent, 0, 0, 0, 0, 0, deimos.AgentItem.InstID, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte)StateChange.Spawn, 0, 0, 0, 0, evtcVersion));
             combatData.SortByTime();
         }
     }
@@ -421,7 +421,7 @@ internal class Deimos : BastionOfThePenitent
             }
         }
         //
-        HandleDeimosAndItsGadgets(deimos, deimosStructBody, gadgetAgents, agentData, combatData, extensions, deimos10PercentTime, logData.LogEnd);
+        HandleDeimosAndItsGadgets(deimos, deimosStructBody, gadgetAgents, agentData, combatData, extensions, evtcVersion, deimos10PercentTime, logData.LogEnd);
         RenameTargetSauls(Targets);
     }
 

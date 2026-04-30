@@ -56,6 +56,8 @@ public class CombatItem
         || IsStateChange == StateChange.SquadCombatEnd || IsStateChange == StateChange.SquadCombatStart 
         || IsStateChange == StateChange.TickRate;
 
+    private readonly EvtcVersionEvent _version;
+
 #if DEBUG
     // For debugging, to get rid of statechanges seen generally on all agents
     public bool IsSpecial => IsStateChange != StateChange.None && IsStateChange != StateChange.Position && IsStateChange != StateChange.Rotation && IsStateChange != StateChange.Velocity && IsStateChange != StateChange.HealthUpdate && IsStateChange != StateChange.BarrierUpdate && IsStateChange != StateChange.EnterCombat && IsStateChange != StateChange.ExitCombat && IsStateChange != StateChange.BreakbarPercent && IsStateChange != StateChange.BreakbarState && IsStateChange != StateChange.Spawn && IsStateChange != StateChange.Despawn && IsStateChange != StateChange.TeamChange && IsStateChange != StateChange.StackActive;
@@ -67,7 +69,8 @@ public class CombatItem
            ushort dstMasterInstid, byte iff, byte isBuff,
            byte result, byte isActivation,
            byte isBuffRemove, byte isNinety, byte isFifty, byte isMoving,
-           byte isStateChange, byte isFlanking, byte isShields, byte isOffcycle, uint pad)
+           byte isStateChange, byte isFlanking, byte isShields, byte isOffcycle, uint pad,
+           EvtcVersionEvent version)
     {
         Time = time;
         SrcAgent = srcAgent;
@@ -104,6 +107,7 @@ public class CombatItem
             Pad3 = *((byte*)&pad + 2);
             Pad4 = *((byte*)&pad + 3);
         }
+        _version = version;
     }
 
     internal CombatItem(CombatItem c)
@@ -139,6 +143,7 @@ public class CombatItem
         Pad2 = c.Pad2;
         Pad3 = c.Pad3;
         Pad4 = c.Pad4;
+        _version = c._version;
     }
 
     internal bool HasTime()
@@ -352,9 +357,9 @@ public class CombatItem
 
     internal bool IsStartCastEvent()
     {
-        if (IsStateChange == StateChange.AnimationStart)
+        if (_version.Build >= ArcDPSBuilds.AnimationAsStateChanges)
         {
-            return true;
+            return IsStateChange == StateChange.AnimationStart;
         }
         if (IsStateChange != StateChange.None)
         {
@@ -365,9 +370,9 @@ public class CombatItem
 
     internal bool IsEndCastEvent()
     {
-        if (IsStateChange == StateChange.AnimationStop)
+        if (_version.Build >= ArcDPSBuilds.AnimationAsStateChanges)
         {
-            return true;
+            return IsStateChange == StateChange.AnimationStop;
         }
         if (IsStateChange != StateChange.None)
         {
