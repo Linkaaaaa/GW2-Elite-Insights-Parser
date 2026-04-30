@@ -25,7 +25,8 @@
                     <div class="timeline mt-1 rounded" ref="timeline"
                          :style="{
                             backgroundColor: timelineColors.background,
-                            border: '1px solid ' + timelineColors.backgroundBorder 
+                            border: '1px solid ' + timelineColors.backgroundBorder,
+                            width: (timelineWidth + 20) + 'px'
                         }">
                         <svg ref="svg"
                              :width="timelineWidth"
@@ -355,7 +356,7 @@
                 };
             },
             timelineWidth() {
-                return this.canvasSize.x - 16; // remove p-2 padding (0.5rem = 8px x 2)
+                return Math.max(this.canvasSize.x, this.canvasSize.y) - 20; // remove p-2 padding (0.5rem = 8px x 2)
             },
             fightDuration() {
                 return this.maxTime / 1000;
