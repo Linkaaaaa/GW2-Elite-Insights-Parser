@@ -176,7 +176,7 @@ public class CombatItem
         if (IsDirectDamage())
         {
             return Value > 0;
-    }
+        }
         if (IsBuffDamage())
         {
             return BuffDmg > 0;
@@ -256,6 +256,7 @@ public class CombatItem
             || IsStateChange == StateChange.MissileCreate
             || IsStateChange == StateChange.MissileLaunch
             || IsStateChange == StateChange.MissileRemove
+            || IsStateChange == StateChange.AnimationStart
             ;
     }
 
@@ -278,6 +279,7 @@ public class CombatItem
             || IsStateChange == StateChange.Effect_51
             || IsStateChange == StateChange.EffectAgentCreate
             || IsStateChange == StateChange.MissileLaunch
+            || IsStateChange == StateChange.AnimationStart
         ;
     }
 
@@ -349,6 +351,11 @@ public class CombatItem
     }
 
     internal bool IsStartCastEvent()
+    {
+        if (IsStateChange == StateChange.AnimationStart)
+        {
+            return true;
+        }
         if (IsStateChange != StateChange.None)
         {
             return false;
@@ -358,6 +365,10 @@ public class CombatItem
 
     internal bool IsEndCastEvent()
     {
+        if (IsStateChange == StateChange.AnimationStop)
+        {
+            return true;
+        }
         if (IsStateChange != StateChange.None)
         {
             return false;

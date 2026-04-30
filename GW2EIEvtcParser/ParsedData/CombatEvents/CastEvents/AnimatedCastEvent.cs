@@ -55,27 +55,47 @@ public class AnimatedCastEvent : CastEvent
         Acceleration = Math.Round(Acceleration, ParserHelper.AccelerationDigit);
     }
 
+    protected const float PositionConvertConstant = 10.0f;
     internal AnimatedCastEvent(CombatItem? startItem, AgentData agentData, SkillData skillData, CombatItem? endItem, long maxEnd) : base(startItem ?? endItem ?? throw new InvalidOperationException("Either start or end item must be non null"), agentData, skillData)
     {
         // Start is present
         if (startItem != null)
         {
             ExpectedDuration = startItem.BuffDmg > 0 ? startItem.BuffDmg : startItem.Value;
-            if (startItem.IsActivation == Activation.Quickness)
+            if (startItem.IsStateChange == StateChange.None)
             {
-                Acceleration = 1;
-            }
-            if (startItem.DstAgent != 0 || startItem.OverstackValue != 0)
-            {
-                unsafe
+                if (startItem.IsActivation == Activation.Quickness)
                 {
-                    //NOTE(Rennorb): Cannot directly take the address of the field, because its a property.
-                    var xyBits = startItem.DstAgent;
-                    var x = *(float*)&xyBits;
-                    var y = *((float*)&xyBits + 1);
-                    var z = BitConverter.Int32BitsToSingle(unchecked((int)startItem.OverstackValue));
-                    EffectPosition = new(x, y, z);
+                    Acceleration = 1;
                 }
+                if (startItem.DstAgent != 0 || startItem.OverstackValue != 0)
+                {
+                    unsafe
+                    {
+                        //NOTE(Rennorb): Cannot directly take the address of the field, because its a property.
+                        var xyBits = startItem.DstAgent;
+                        var x = *(float*)&xyBits;
+                        var y = *((float*)&xyBits + 1);
+                        var z = BitConverter.Int32BitsToSingle(unchecked((int)startItem.OverstackValue));
+                        EffectPosition = new(x, y, z);
+                    }
+                }
+            } 
+            else
+            {
+                var positionBytes = new byte[3 * sizeof(short)];
+                int offset = 0;
+                positionBytes[offset++] = startItem.IsShields;
+                positionBytes[offset++] = startItem.IsOffcycle;
+                positionBytes[offset++] = startItem.Pad1;
+                positionBytes[offset++] = startItem.Pad2;
+                positionBytes[offset++] = startItem.Pad3;
+                positionBytes[offset++] = startItem.Pad4;
+
+                var positionInt16 = new short[3];
+                Buffer.BlockCopy(positionBytes, 0, positionInt16, 0, positionBytes.Length);
+
+                EffectPosition = new Vector3(positionInt16[0], positionInt16[1], -positionInt16[2]) * PositionConvertConstant;
             }
             //_effectHappenedDuration = startItem.Value;
 
