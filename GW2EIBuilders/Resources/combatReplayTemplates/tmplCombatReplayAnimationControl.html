@@ -43,9 +43,9 @@
                                   style="cursor: pointer;"
                                   @click="onTimelineClick" />
 
-                            <g v-for="phaseBloc in phasesByDepth" :key="phaseBloc.phase.id">
-                                <line :x1="timeToX(phaseBloc.phase.start)" :y1="20 + phaseBloc.depth * 10"
-                                      :x2="timeToX(phaseBloc.phase.end)" :y2="20 + phaseBloc.depth * 10"
+                            <g v-for="phaseBloc in phasesByDepth">
+                                <line :x1="timeOffsetedToX(phaseBloc.phase.start)" :y1="20 + phaseBloc.depth * 10"
+                                      :x2="timeOffsetedToX(phaseBloc.phase.end)" :y2="20 + phaseBloc.depth * 10"
                                       :stroke="phaseBloc.color"
                                       stroke-width="4"
                                       stroke-linecap="butt"
@@ -55,8 +55,8 @@
                                       @click.stop="clickedPhase(phaseBloc.phase, $event)"
                                       @dblclick="jumpToPhaseStart(phaseBloc.phase)" />    
 
-                                <line :x1="timeToX(phaseBloc.phase.start)" :y1="20 - 5 + phaseBloc.depth * 10"
-                                      :x2="timeToX(phaseBloc.phase.start)" :y2="20 + 5 + phaseBloc.depth * 10"
+                                <line :x1="timeOffsetedToX(phaseBloc.phase.start)" :y1="20 - 5 + phaseBloc.depth * 10"
+                                      :x2="timeOffsetedToX(phaseBloc.phase.start)" :y2="20 + 5 + phaseBloc.depth * 10"
                                       :stroke="phaseBloc.color"
                                       stroke-width="2"
                                       :opacity="selectedPhase && selectedPhase !== phaseBloc.phase ? 0.4 : 1"
@@ -65,8 +65,8 @@
                                       @click.stop="clickedPhase(phaseBloc.phase, $event)"
                                       @dblclick="jumpToPhaseStart(phaseBloc.phase)" />
                
-                                <line :x1="timeToX(phaseBloc.phase.end)" :y1="20 - 5 + phaseBloc.depth * 10"
-                                      :x2="timeToX(phaseBloc.phase.end)" :y2="20 + 5 + phaseBloc.depth * 10"
+                                <line :x1="timeOffsetedToX(phaseBloc.phase.end)" :y1="20 - 5 + phaseBloc.depth * 10"
+                                      :x2="timeOffsetedToX(phaseBloc.phase.end)" :y2="20 + 5 + phaseBloc.depth * 10"
                                       :stroke="phaseBloc.color"
                                       stroke-width="2"
                                       :opacity="selectedPhase && selectedPhase !== phaseBloc.phase ? 0.4 : 1"
@@ -77,18 +77,18 @@
                             </g>
 
                             <!-- Drag cursor, larger for easier grab -->
-                            <line :x1="timeToX(time)" y1="0"
-                                  :x2="timeToX(time)" :y2="10 * maxDepth + 30"
+                            <line :x1="timeOffsetedToX(time)" y1="0"
+                                  :x2="timeOffsetedToX(time)" :y2="10 * maxDepth + 30"
                                   stroke="transparent" stroke-width="10"
                                   style="pointer-events: stroke; cursor: grab;"
                                   @mousedown="startDragCursor" />
                             <!-- The cursor visual -->
-                            <line :x1="timeToX(time)" y1="0"
-                                  :x2="timeToX(time)" :y2="10 * maxDepth + 30"
+                            <line :x1="timeOffsetedToX(time)" y1="0"
+                                  :x2="timeOffsetedToX(time)" :y2="10 * maxDepth + 30"
                                   :stroke="timelineColors.cursor" stroke-width="2" stroke-dasharray="4 2"
                                   style="pointer-events: none;" />
                             <!-- Cursor circle -->
-                            <circle :cx="timeToX(time)"
+                            <circle :cx="timeOffsetedToX(time)"
                                     :cy="10 * maxDepth + 25"
                                     r="5"
                                     :fill="timelineColors.cursor"
@@ -96,7 +96,7 @@
                                     @mousedown="startDragCursor" />
 
                             <!-- Fixed time ticks -->
-                            <g v-for="tick in ticks" :key="tick.time">
+                            <g v-for="tick in ticks">
                                 <line :x1="tick.x" y1="15" :x2="tick.x" y2="25"
                                       :stroke="timelineColors.tick" />
 
@@ -216,7 +216,7 @@
     Vue.component("combat-replay-animation-control-component", {
         props: ["time", "light", "animated", "range"],
         template: `${template}`,
-        mixins: [encounterPhaseComponent],
+        mixins: [encounterPhaseComponent, numberComponent],
         data: function () {
             return {
                 selectedSpeed: 1,
@@ -225,7 +225,7 @@
                 sliderDelimiter: sliderDelimiter,
                 selectedPhase: null,
                 draggingCursor: false,
-                hoverTime: null,
+                hoverTime: 0,
                 hasClickedPhase: false,
                 isHoveringTimeline: false,
                 isPhaseClicked: false,
@@ -311,7 +311,7 @@
                 for (let i = 0; i < breakbarPhases.length; i++) {
                     result.push({
                         phase: breakbarPhases[i],
-                        depth: depth + 1,
+                        depth: remainingPhases.size > 0 ? depth + 1 : depth,
                         color: breakbarPhaseColor,
                     });
                 }
@@ -359,14 +359,15 @@
                 return Math.max(this.canvasSize.x, this.canvasSize.y) - 20; // remove p-2 padding (0.5rem = 8px x 2)
             },
             fightDuration() {
-                return this.maxTime / 1000;
+                return (this.maxTime - this.minTime) / 1000;
             },
             ticks() {
                 const interval = this.getTickInterval();
                 const ticks = [];
 
                 // Ticks every set time based on max fight length
-                for (let t = 0; t <= this.fightDuration; t += interval) {
+                let t;
+                for (t = 0; t <= this.fightDuration; t += interval) {
                     ticks.push({
                         time: t,
                         x: this.timeToX(t),
@@ -376,11 +377,13 @@
 
                 // Always display the end tick
                 const end = this.fightDuration;
-                ticks.push({
-                    time: end,
-                    x: this.timeToX(end),
-                    label: this.formatTime(end),
-                });
+                if (this.timeToX(end) - this.timeToX(t - interval) > 30) {
+                    ticks.push({
+                        time: end,
+                        x: this.timeToX(end),
+                        label: this.formatTime(end),
+                    });
+                }
 
                 return ticks;
             },
@@ -437,8 +440,9 @@
             getPhaseName: function (phase) {
                 return phase === this.encounterPhase ? phase.nameNoMode : phase.name;
             },
-            getFormattedPhaseText: function (phase) {
-                return this.getPhaseName(phase) + ' (' + phase.start + 's - ' + phase.end + 's)';
+            getFormattedPhaseText: function (phase) {              
+                const offset = (this.range.min / 1000);
+                return this.getPhaseName(phase) + ' (' + this.round3(phase.start - offset) + 's - ' + this.round3(phase.end - offset) + 's)';
             },
             updatePhaseTime: function (phase) {
                 var min = phase.start * 1000;
@@ -454,8 +458,12 @@
                 animator.updateInputTime(value);
             },
             timeToX(time) {
+                time = time || this.minTime;
                 var t = Math.max(this.minTime, Math.min(this.fightDuration, time));
                 return (t / this.fightDuration) * this.timelineWidth;
+            },
+            timeOffsetedToX(time) {
+                return this.timeToX(time - (this.range.min / 1000));
             },
             xToTime(x) {
                 return (x / this.timelineWidth) * this.fightDuration;
@@ -503,7 +511,7 @@
             onTimelineClick(e) {
                 this.hasClickedPhase = false;
                 let time = this.getTimeFromEvent(e);
-                animator.updateTime(time * 1000);
+                this.updateTime(time * 1000);
             },
             hoverPhase(phase) {
                 this.selectedPhase = phase;
@@ -520,7 +528,7 @@
                     this.hasClickedPhase = true;
                     this.selectedPhase = phase;
                     let time = this.getTimeFromEvent(e);
-                    animator.updateTime(time * 1000);
+                    this.updateTime(time * 1000);
                 }, 200);
             },
             startDragCursor(e) {
@@ -532,7 +540,7 @@
                 if (!this.draggingCursor) return;
                 let time = this.getTimeFromEvent(e);
                 time = Math.max(this.minTime, Math.min(this.maxTime, time));
-                animator.updateTime(time * 1000);
+                this.updateTime(time * 1000);
             },
             stopDragCursor() {
                 this.draggingCursor = false;
@@ -541,7 +549,7 @@
             },
             jumpToPhaseStart(phase) {
                 clearTimeout(this.clickTimeout);
-                animator.updateTime(phase.start * 1000);
+                this.updateTime(phase.start * 1000 - this.range.min);
             },
         },
     });
