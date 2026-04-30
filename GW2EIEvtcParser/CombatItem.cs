@@ -314,6 +314,11 @@ public class CombatItem
         return IsStateChange == StateChange.None && IsActivation == Activation.None && IsBuffRemove != BuffRemove.None;
     }
 
+    internal bool IsBuffRemoveAllEvent()
+    {
+        return IsBuffRemoveAllEvent() && IsBuffRemove == BuffRemove.All;
+    }
+
     internal bool DstMatchesAgent(AgentItem agentItem, IReadOnlyDictionary<uint, ExtensionHandler> extensions)
     {
         if (DstIsAgent(extensions))

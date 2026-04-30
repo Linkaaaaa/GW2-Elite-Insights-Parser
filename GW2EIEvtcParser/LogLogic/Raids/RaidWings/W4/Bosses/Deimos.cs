@@ -239,7 +239,7 @@ internal class Deimos : BastionOfThePenitent
         long start = long.MinValue;
         long genericStart = GetGenericLogOffset(logData);
         // enter combat
-        CombatItem? spawnProtectionRemove = combatData.FirstOrDefault(x => x.DstMatchesAgent(deimos) && x.IsBuffRemove == BuffRemove.All && x.SkillID == SpawnProtection);
+        CombatItem? spawnProtectionRemove = combatData.FirstOrDefault(x => x.DstMatchesAgent(deimos) && x.IsBuffRemoveAllEvent() && x.SkillID == SpawnProtection);
         if (spawnProtectionRemove != null)
         {
             start = Math.Max(start, spawnProtectionRemove.Time);

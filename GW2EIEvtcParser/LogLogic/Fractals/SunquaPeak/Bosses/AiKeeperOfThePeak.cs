@@ -205,7 +205,7 @@ internal class AiKeeperOfThePeak : SunquaPeak
                 if (hasElementalMode)
                 {
                     long darkModeStart = aiCastEvents.FirstOrDefault(x => (china ? x.SkillID == AiDarkModeStartCN : x.SkillID == AiDarkModeStart) && x.Time >= darkModePhaseEvent!.Time)!.Time;
-                    CombatItem? invul895Loss = combatData.FirstOrDefault(x => x.Time <= darkModeStart && x.SkillID == Determined895 && x.IsBuffRemove == BuffRemove.All && x.SrcMatchesAgent(aiAgent) && x.Value > Determined895DurationCheckForSuccess);
+                    CombatItem? invul895Loss = combatData.FirstOrDefault(x => x.Time <= darkModeStart && x.SkillID == Determined895 && x.IsBuffRemoveAllEvent() && x.SrcMatchesAgent(aiAgent) && x.Value > Determined895DurationCheckForSuccess);
                     long elementalLastAwareTime = (invul895Loss != null ? invul895Loss.Time : darkModeStart);
 
                     AgentItem darkAiAgent = agentData.AddCustomNPCAgent(elementalLastAwareTime, aiAgent.LastAware, aiAgent.Name, aiAgent.Spec, TargetID.DarkAiKeeperOfThePeak, false, aiAgent.Toughness, aiAgent.Healing, aiAgent.Condition, aiAgent.Concentration, aiAgent.HitboxWidth, aiAgent.HitboxHeight);

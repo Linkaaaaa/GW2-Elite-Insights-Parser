@@ -285,7 +285,7 @@ internal class Cairn : BastionOfThePenitent
             throw new MissingKeyActorsException("Cairn not found");
         }
         // spawn protection loss -- most reliable
-        CombatItem? spawnProtectionLoss = combatData.Find(x => x.IsBuffRemove == BuffRemove.All && x.SrcMatchesAgent(cairn) && x.SkillID == SpawnProtection);
+        CombatItem? spawnProtectionLoss = combatData.Find(x => x.IsBuffRemoveAllEvent() && x.SrcMatchesAgent(cairn) && x.SkillID == SpawnProtection);
         if (spawnProtectionLoss != null)
         {
             return spawnProtectionLoss.Time;

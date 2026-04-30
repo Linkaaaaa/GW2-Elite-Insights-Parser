@@ -115,7 +115,7 @@ internal static class LogLogicTimeUtils
     internal static long GetLogOffsetByInvulnStart(LogData logData, List<CombatItem> combatData, AgentItem target, long invulnID)
     {
         long start = GetLogOffsetForTarget(logData, target);
-        CombatItem? invulnRemove = combatData.FirstOrDefault(x => x.SkillID == invulnID && x.IsBuffRemove == BuffRemove.All && x.SrcMatchesAgent(target) && x.Time >= start);
+        CombatItem? invulnRemove = combatData.FirstOrDefault(x => x.SkillID == invulnID && x.IsBuffRemoveAllEvent() && x.SrcMatchesAgent(target) && x.Time >= start);
         if (invulnRemove != null)
         {
             CombatItem? invulnApply = combatData.FirstOrDefault(x => x.SkillID == invulnID && x.DstMatchesAgent(target) && x.IsBuffApplyEvent() && x.Time >= start);
