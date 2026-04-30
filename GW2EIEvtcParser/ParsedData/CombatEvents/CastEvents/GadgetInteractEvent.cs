@@ -8,11 +8,12 @@ public class GadgetInteractEvent : AnimatedCastEvent
 
     public readonly AgentItem Gadget;
 
-    internal GadgetInteractEvent(CombatItem? startItem, AgentData agentData, SkillData skillData, CombatItem? endItem, long maxEnd) : base(startItem, agentData, skillData, endItem, maxEnd)
+    internal GadgetInteractEvent(CombatItem? startItem, AgentData agentData, SkillData skillData, 
+        CombatItem? endItem, long maxEnd, EvtcVersionEvent evtcVersion) : base(startItem, agentData, skillData, endItem, maxEnd, evtcVersion)
     {
         if (startItem != null)
         {
-            if (startItem.IsStateChange == StateChange.None)
+            if (evtcVersion.Build < ArcDPSBuilds.AnimationAsStateChanges)
             {
                 Gadget = agentData.GetAgentByInstID((ushort)startItem.Pad, startItem.Time);
             } 

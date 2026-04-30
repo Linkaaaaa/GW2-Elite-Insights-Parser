@@ -521,13 +521,13 @@ internal static class CombatEventFactory
     {
         if (evtcVersion.Build < ArcDPSBuilds.EmoteAndGadgetInteractionAdded)
         {
-            return new AnimatedCastEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd);
+            return new AnimatedCastEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd, evtcVersion);
         }
         return id switch
         {
-            SkillIDs.ArcDPSGenericEmote => new EmoteEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd, emoteGUIDict),
-            SkillIDs.ArcDPSGenericGadgetInteract => new GadgetInteractEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd),
-            _ => new AnimatedCastEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd),
+            SkillIDs.ArcDPSGenericEmote => new EmoteEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd, evtcVersion, emoteGUIDict),
+            SkillIDs.ArcDPSGenericGadgetInteract => new GadgetInteractEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd, evtcVersion),
+            _ => new AnimatedCastEvent(startItem, agentData, skillData, endItem, logData.EvtcLogEnd, evtcVersion),
         };
     }
 

@@ -56,13 +56,13 @@ public class AnimatedCastEvent : CastEvent
     }
 
     protected const float PositionConvertConstant = 10.0f;
-    internal AnimatedCastEvent(CombatItem? startItem, AgentData agentData, SkillData skillData, CombatItem? endItem, long maxEnd) : base(startItem ?? endItem ?? throw new InvalidOperationException("Either start or end item must be non null"), agentData, skillData)
+    internal AnimatedCastEvent(CombatItem? startItem, AgentData agentData, SkillData skillData, CombatItem? endItem, long maxEnd, EvtcVersionEvent evtcVersion) : base(startItem ?? endItem ?? throw new InvalidOperationException("Either start or end item must be non null"), agentData, skillData)
     {
         // Start is present
         if (startItem != null)
         {
             ExpectedDuration = startItem.BuffDmg > 0 ? startItem.BuffDmg : startItem.Value;
-            if (startItem.IsStateChange == StateChange.None)
+            if (evtcVersion.Build < ArcDPSBuilds.AnimationAsStateChanges)
             {
                 if (startItem.IsActivation == Activation.Quickness)
                 {
