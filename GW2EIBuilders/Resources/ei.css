@@ -819,6 +819,19 @@ canvas {
     text-decoration: none;
 }
 
+.theme-slate .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: #272B30;
+}
+
+.theme-yeti .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: #FFFFFF;
+}
 
 .slidercontainer {
     width: 100%;
