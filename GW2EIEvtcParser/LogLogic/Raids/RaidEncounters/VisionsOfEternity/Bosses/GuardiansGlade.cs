@@ -179,7 +179,7 @@ internal class GuardiansGlade : VisionsOfEternityRaidEncounter
         if (logStartNPCUpdate != null)
         {
             long enterCombatTime = GetEnterCombatTime(logData, agentData, combatData, logStartNPCUpdate.Time, GenericTriggerID, logStartNPCUpdate.DstAgent);
-            var firstFixation = combatData.FirstOrDefault(x => x.IsBuffApply() && x.SkillID == FixatedKela);
+            var firstFixation = combatData.FirstOrDefault(x => x.IsBuffApplyEvent() && x.SkillID == FixatedKela);
             // If fixation is missing or first seen fixation is after boss enters combat, fallback to enterCombatTime, log will be seen as late start
             if (firstFixation == null || firstFixation.Time > enterCombatTime)
             {

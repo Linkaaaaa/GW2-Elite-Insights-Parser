@@ -118,7 +118,7 @@ internal static class LogLogicTimeUtils
         CombatItem? invulnRemove = combatData.FirstOrDefault(x => x.SkillID == invulnID && x.IsBuffRemove == BuffRemove.All && x.SrcMatchesAgent(target) && x.Time >= start);
         if (invulnRemove != null)
         {
-            CombatItem? invulnApply = combatData.FirstOrDefault(x => x.SkillID == invulnID && x.DstMatchesAgent(target) && x.IsBuffApply() && x.Time >= start);
+            CombatItem? invulnApply = combatData.FirstOrDefault(x => x.SkillID == invulnID && x.DstMatchesAgent(target) && x.IsBuffApplyEvent() && x.Time >= start);
             if (invulnApply != null && invulnApply.Time <= invulnRemove.Time)
             {
                 // check if invuln was applied at start rather than already present (otherwise could be a late start)

@@ -195,7 +195,7 @@ internal class AiKeeperOfThePeak : SunquaPeak
     {
         foreach (var aiAgent in agentData.GetNPCsByID(TargetID.AiKeeperOfThePeak))
         {
-            var aiCastEvents = combatData.Where(x => x.StartCasting() && x.SrcMatchesAgent(aiAgent));
+            var aiCastEvents = combatData.Where(x => x.IsStartCastEvent() && x.SrcMatchesAgent(aiAgent));
             var china = combatData.FirstOrDefault(x => x.IsStateChange == StateChange.Language && LanguageEvent.GetLanguage(x) == LanguageEnum.Chinese) != null;
             CombatItem? darkModePhaseEvent = aiCastEvents.FirstOrDefault(x => x.SkillID == AiDarkPhaseEvent);
             var hasDarkMode = combatData.Exists(x => (china ? x.SkillID == AiHasDarkModeCN_SurgeOfDarkness : x.SkillID == AiHasDarkMode_SurgeOfDarkness) && x.SrcMatchesAgent(aiAgent));
@@ -252,7 +252,7 @@ internal class AiKeeperOfThePeak : SunquaPeak
         // first cast or fallback to regular offset (combat enter) for dark ai
         // old elemental ai will always end up with fallback due to idle time
         var start = base.GetLogOffset(evtcVersion, logData, agentData, combatData);
-        var firstCast = combatData.FirstOrDefault(x => x.StartCasting() && x.SrcMatchesAgent(ai));
+        var firstCast = combatData.FirstOrDefault(x => x.IsStartCastEvent() && x.SrcMatchesAgent(ai));
         if (firstCast != null)
         {
             return Math.Min(start, firstCast.Time);

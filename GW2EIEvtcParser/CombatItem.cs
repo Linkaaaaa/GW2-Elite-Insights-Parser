@@ -168,20 +168,20 @@ public class CombatItem
 
     internal bool IsDamage()
     {
-        return IsStateChange == StateChange.None &&
-                    IsActivation == Activation.None &&
-                    IsBuffRemove == BuffRemove.None &&
-                    ((IsBuff != 0 && Value == 0) || (IsBuff == 0))
-                    ;
+        return IsDirectDamage() || IsBuffDamage();
     }
 
     internal bool IsDamagingDamage()
     {
-        return IsStateChange == StateChange.None &&
-                    IsActivation == Activation.None &&
-                    IsBuffRemove == BuffRemove.None &&
-                    ((IsBuff != 0 && Value == 0 && BuffDmg > 0) || (IsBuff == 0 && Value > 0))
-                    ;
+        if (IsDirectDamage())
+        {
+            return Value > 0;
+    }
+        if (IsBuffDamage())
+        {
+            return BuffDmg > 0;
+        }
+        return false;
     }
 
     internal bool IsDamage(IReadOnlyDictionary<uint, ExtensionHandler> extensions)
@@ -202,7 +202,7 @@ public class CombatItem
         return IsDamagingDamage();
     }
 
-    internal bool IsPhysicalDamage()
+    internal bool IsDirectDamage()
     {
         return IsStateChange == StateChange.None &&
                     IsActivation == Activation.None &&
@@ -290,12 +290,19 @@ public class CombatItem
         return DstIsAgent();
     }
 
-    internal bool IsBuffApply()
+    internal bool IsBuffEvent()
     {
-        return (IsBuff != 0 && BuffDmg == 0 && Value > 0 && IsActivation == Activation.None && IsBuffRemove == BuffRemove.None && IsStateChange == StateChange.None) || IsStateChange == StateChange.BuffInitial;
+        return IsBuffApplyEvent() || IsBuffRemoveEvent();
     }
 
-    internal bool IsBuffRemoval()
+    internal bool IsBuffApplyEvent()
+    {
+        return (IsBuff != 0 && BuffDmg == 0 && Value > 0 && IsActivation == Activation.None && 
+            IsBuffRemove == BuffRemove.None && IsStateChange == StateChange.None) || 
+            IsStateChange == StateChange.BuffInitial;
+    }
+
+    internal bool IsBuffRemoveEvent()
     {
         return IsStateChange == StateChange.None && IsActivation == Activation.None && IsBuffRemove != BuffRemove.None;
     }
@@ -336,8 +343,12 @@ public class CombatItem
         return false;
     }
 
-    internal bool StartCasting()
+    internal bool IsCastEvent()
     {
+        return IsStartCastEvent() || IsEndCastEvent();
+    }
+
+    internal bool IsStartCastEvent()
         if (IsStateChange != StateChange.None)
         {
             return false;
@@ -345,7 +356,7 @@ public class CombatItem
         return IsActivation == Activation.Normal || IsActivation == Activation.Quickness;
     }
 
-    internal bool EndCasting()
+    internal bool IsEndCastEvent()
     {
         if (IsStateChange != StateChange.None)
         {

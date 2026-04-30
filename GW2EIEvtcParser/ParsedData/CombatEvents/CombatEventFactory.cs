@@ -272,7 +272,6 @@ internal static class CombatEventFactory
                 buffEvents.Add(new BuffStackResetEvent(stateChangeEvent, agentData, skillData));
                 break;
             case StateChange.BuffInitial:
-                buffEvents.Add(new BuffApplyEvent(stateChangeEvent, agentData, skillData, evtcVersion));
                 break;
             case StateChange.TickRate:
                 metaDataEvents.TickRateEvents.Add(new TickRateEvent(stateChangeEvent));
@@ -547,7 +546,7 @@ internal static class CombatEventFactory
                 var skillID = castEventsBySkillID.Key;
                 foreach (CombatItem c in castEventsBySkillID)
                 {
-                    if (c.StartCasting())
+                    if (c.IsStartCastEvent())
                     {
                         // missing end
                         if (startItem != null)
@@ -556,7 +555,7 @@ internal static class CombatEventFactory
                         }
                         startItem = c;
                     }
-                    else if (c.EndCasting())
+                    else if (c.IsEndCastEvent())
                     {
                         if (startItem != null && startItem.SkillID == c.SkillID)
                         {

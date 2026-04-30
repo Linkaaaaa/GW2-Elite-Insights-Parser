@@ -535,7 +535,7 @@ public partial class CombatData
         }
         foreach (CombatItem combatItem in combatEvents)
         {
-            if (combatItem.IsStateChange != StateChange.None)
+            if (combatItem.IsStateChange != StateChange.None && !combatItem.IsCastEvent() && !combatItem.IsBuffEvent())
             {
                 if (combatItem.IsEssentialMetadata)
                 {
@@ -554,25 +554,25 @@ public partial class CombatData
                 }
 
             }
-            else if (combatItem.IsActivation != Activation.None)
+            else if (combatItem.IsCastEvent())
             {
                 castCombatEvents.AddToList(combatItem.SrcAgent, combatItem);
             }
-            else if (combatItem.IsBuffRemove != BuffRemove.None)
+            else if (combatItem.IsBuffRemoveEvent())
             {
                 CombatEventFactory.AddBuffRemoveEvent(combatItem, buffEvents, agentData, skillData);
             }
             else
             {
-                if (combatItem.IsBuff != 0 && combatItem.BuffDmg == 0 && combatItem.Value > 0)
+                if (combatItem.IsBuffApplyEvent())
                 {
                     CombatEventFactory.AddBuffApplyEvent(combatItem, buffEvents, agentData, skillData, evtcVersion);
                 }
-                else if (combatItem.IsBuff == 0)
+                else if (combatItem.IsDirectDamage())
                 {
                     CombatEventFactory.AddDirectDamageEvent(combatItem, damageData, brkDamageData, brkRecoveredData, crowdControlData, agentData, skillData);
                 }
-                else if (combatItem.IsBuff != 0 && combatItem.Value == 0)
+                else if (combatItem.IsBuffDamage())
                 {
                     CombatEventFactory.AddIndirectDamageEvent(combatItem, damageData, agentData, skillData);
                 }

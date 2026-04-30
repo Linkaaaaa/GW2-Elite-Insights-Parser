@@ -248,7 +248,7 @@ internal class Deimos : BastionOfThePenitent
                 AgentItem? shackledPrisoner = GetShackledPrisonerFirstOrDefault(agentData, combatData);
                 if (shackledPrisoner != null)
                 {
-                    CombatItem? firstGreen = combatData.FirstOrDefault(x => x.IsBuffApply() && x.SkillID == DeimosSelectedByGreen);
+                    CombatItem? firstGreen = combatData.FirstOrDefault(x => x.IsBuffApplyEvent() && x.SkillID == DeimosSelectedByGreen);
                     CombatItem? firstHPUpdate = combatData.FirstOrDefault(x => x.IsStateChange == StateChange.HealthUpdate && x.SrcMatchesAgent(shackledPrisoner));
                     if (firstGreen != null && firstGreen.Time < start && firstHPUpdate != null && HealthUpdateEvent.GetHealthPercent(firstHPUpdate) == 100) // sanity check
                     {
@@ -355,7 +355,7 @@ internal class Deimos : BastionOfThePenitent
     internal static void HandleDeimosAndItsGadgets(SingleActor deimos, AgentItem? deimosStructBody, HashSet<AgentItem> gadgetAgents, AgentData agentData, List<CombatItem> combatData, IReadOnlyDictionary<uint, ExtensionHandler> extensions, long structStartTime, long lastAware)
     {
         // invul correction
-        CombatItem? invulApp = combatData.FirstOrDefault(x => x.DstMatchesAgent(deimos.AgentItem) && x.IsBuffApply() && x.SkillID == Determined762);
+        CombatItem? invulApp = combatData.FirstOrDefault(x => x.DstMatchesAgent(deimos.AgentItem) && x.IsBuffApplyEvent() && x.SkillID == Determined762);
         invulApp?.OverrideValue((int)(deimos.LastAware - invulApp.Time));
         deimos.OverrideName("Deimos");
         var originalLastAware = deimos.AgentItem.LastAware;

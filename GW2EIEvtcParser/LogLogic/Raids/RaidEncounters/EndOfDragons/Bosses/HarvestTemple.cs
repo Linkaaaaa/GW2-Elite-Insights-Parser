@@ -1342,7 +1342,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
         IReadOnlyList<AgentItem> voidAmalgamates = agentData.GetNPCsByID(TargetID.VoidAmalgamate);
         foreach (AgentItem voidAmal in voidAmalgamates)
         {
-            if (combatData.Any(x => x.SkillID == VoidShell && x.IsBuffApply() && x.SrcMatchesAgent(voidAmal)))
+            if (combatData.Any(x => x.SkillID == VoidShell && x.IsBuffApplyEvent() && x.SrcMatchesAgent(voidAmal)))
             {
                 voidAmal.OverrideID(TargetID.PushableVoidAmalgamate, agentData);
             }
