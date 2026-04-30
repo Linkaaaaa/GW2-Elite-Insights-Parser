@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex flex-column align-items-center" style="width: 750px;">
-        <div v-if="showNormalPhases" class="mb-1">
+        <div v-if="showNormalPhases && isTouchDevice" class="mb-1">
             <ul class="nav nav-pills d-flex flex-row justify-content-center max-wd-700px">
                 <li class="nav-item" v-for="(phase, id) in phases"
                     v-show="!phase.breakbarPhase"
@@ -21,14 +21,15 @@
                         class="replay"></canvas>
             </div>
             <div class="animation-control">
-                <div class="d-flex justify-content-center slidercontainer mt-1">
+                <div v-if="!isTouchDevice" class="d-flex justify-content-center slidercontainer mt-1">
                     <div class="timeline mt-1 rounded" ref="timeline"
                          :style="{
                             backgroundColor: timelineColors.background,
-                            border: light ? '1px solid #dee2e6' : '1px solid #495057'}">
+                            border: '1px solid ' + timelineColors.backgroundBorder 
+                        }">
                         <svg ref="svg"
                              :width="timelineWidth"
-                             height="100"
+                             :height="20 + 10 * maxDepth + 30"
                              @mousemove="onTimelineMouseMove"
                              @mouseleave="onTimelineMouseLeave">
 
@@ -36,171 +37,58 @@
                             <rect x="0"
                                   y="0"
                                   :width="timelineWidth"
-                                  height="80"
+                                  :height="10 * maxDepth + 30"
                                   fill="transparent"
                                   style="cursor: pointer;"
                                   @click="onTimelineClick" />
 
-                            <!-- Breakbar phases -->
-                            <g v-for="phase in phases.filter(p => p.breakbarPhase)" :key="phase.id">
-                                <line :x1="timeToX(phase.start)" y1="60"
-                                      :x2="timeToX(phase.end)" y2="60"
-                                      :stroke="timelineColors.phaseBreakbar"
+                            <g v-for="phaseBloc in phasesByDepth" :key="phaseBloc.phase.id">
+                                <line :x1="timeToX(phaseBloc.phase.start)" :y1="20 + phaseBloc.depth * 10"
+                                      :x2="timeToX(phaseBloc.phase.end)" :y2="20 + phaseBloc.depth * 10"
+                                      :stroke="phaseBloc.color"
                                       stroke-width="4"
                                       stroke-linecap="butt"
-                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phase)"
+                                      :opacity="selectedPhase && selectedPhase !== phaseBloc.phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phaseBloc.phase)"
                                       @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phase)" />
-                                <!-- Del -->
-                                <line :x1="timeToX(phase.start)" y1="55"
-                                      :x2="timeToX(phase.start)" y2="65"
-                                      :stroke="timelineColors.phaseBreakbar"
-                                      stroke-width="2"
-                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phase)"
-                                      @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phase)" />
-                                <line :x1="timeToX(phase.end)" y1="55"
-                                      :x2="timeToX(phase.end)" y2="65"
-                                      :stroke="timelineColors.phaseBreakbar"
-                                      stroke-width="2"
-                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phase)"
-                                      @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phase)" />
-                            </g>
+                                      @click.stop="clickedPhase(phaseBloc.phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phaseBloc.phase)" />    
 
-                            <!-- Remaining Phases -->
-                            <g v-for="phase in remainingSubPhases" :key="phase.id">
-                                <line :x1="timeToX(phase.start)" y1="50"
-                                      :x2="timeToX(phase.end)" y2="50"
-                                      :stroke="timelineColors.thirdSubPhases"
-                                      stroke-width="4"
-                                      stroke-linecap="butt"
-                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phase)"
-                                      @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phase)" />
-                                <!-- Delimiters -->
-                                <line :x1="timeToX(phase.start)" y1="45"
-                                      :x2="timeToX(phase.start)" y2="55"
-                                      :stroke="timelineColors.thirdSubPhases"
+                                <line :x1="timeToX(phaseBloc.phase.start)" :y1="20 - 5 + phaseBloc.depth * 10"
+                                      :x2="timeToX(phaseBloc.phase.start)" :y2="20 + 5 + phaseBloc.depth * 10"
+                                      :stroke="phaseBloc.color"
                                       stroke-width="2"
-                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phase)"
+                                      :opacity="selectedPhase && selectedPhase !== phaseBloc.phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phaseBloc.phase)"
                                       @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phase)" />
-                                <line :x1="timeToX(phase.end)" y1="45"
-                                      :x2="timeToX(phase.end)" y2="55"
-                                      :stroke="timelineColors.thirdSubPhases"
+                                      @click.stop="clickedPhase(phaseBloc.phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phaseBloc.phase)" />
+               
+                                <line :x1="timeToX(phaseBloc.phase.end)" :y1="20 - 5 + phaseBloc.depth * 10"
+                                      :x2="timeToX(phaseBloc.phase.end)" :y2="20 + 5 + phaseBloc.depth * 10"
+                                      :stroke="phaseBloc.color"
                                       stroke-width="2"
-                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phase)"
+                                      :opacity="selectedPhase && selectedPhase !== phaseBloc.phase ? 0.4 : 1"
+                                      @mouseenter="hoverPhase(phaseBloc.phase)"
                                       @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phase)" />
-                            </g>
-
-                            <!-- 2 Phases -->
-                            <g v-for="phase in subPhasesOfSubPhases" :key="phase.id">
-                                <line :x1="timeToX(phase.start)" y1="40"
-                                      :x2="timeToX(phase.end)" y2="40"
-                                      :stroke="timelineColors.secondSubPhases"
-                                      stroke-width="4"
-                                      stroke-linecap="butt"
-                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phase)"
-                                      @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phase)" />-->
-                                <!-- Delimiters -->
-                                <line :x1="timeToX(phase.start)" y1="35"
-                                      :x2="timeToX(phase.start)" y2="45"
-                                      :stroke="timelineColors.secondSubPhases"
-                                      stroke-width="2"
-                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phase)"
-                                      @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phase)" />
-                                <line :x1="timeToX(phase.end)" y1="35"
-                                      :x2="timeToX(phase.end)" y2="45"
-                                      :stroke="timelineColors.secondSubPhases"
-                                      stroke-width="2"
-                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phase)"
-                                      @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phase)" />
-                            </g>
-
-                            <!-- Phases -->
-                            <g v-for="phase in subPhasesOfPhase0" :key="phase.id">
-                                <line :x1="timeToX(phase.start)" y1="30"
-                                      :x2="timeToX(phase.end)" y2="30"
-                                      :stroke="timelineColors.firstSubPhases"
-                                      stroke-width="4"
-                                      stroke-linecap="butt"
-                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phase)"
-                                      @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phase)" />
-                                <!-- Delimiters -->
-                                <line :x1="timeToX(phase.start)" y1="25"
-                                      :x2="timeToX(phase.start)" y2="35"
-                                      :stroke="timelineColors.firstSubPhases"
-                                      stroke-width="2"
-                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phase)"
-                                      @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phase)" />
-                                <line :x1="timeToX(phase.end)" y1="25"
-                                      :x2="timeToX(phase.end)" y2="35"
-                                      :stroke="timelineColors.firstSubPhases"
-                                      stroke-width="2"
-                                      :opacity="selectedPhase && selectedPhase !== phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phase)"
-                                      @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phase)" />
-                            </g>
-
-                            <!-- Main Phase -->
-                            <g v-if="phases.length">
-                                <line :x1="timeToX(phases[0].start)" y1="20"
-                                      :x2="timeToX(phases[0].end)" y2="20"
-                                      :stroke="timelineColors.fullFight"
-                                      stroke-width="4"
-                                      stroke-linecap="butt"
-                                      style="cursor: pointer;"
-                                      @mouseenter="hoverPhase(phases[0])"
-                                      @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phases[0], $event)"
-                                      @dblclick="jumpToPhaseStart(phases[0])" />
+                                      @click.stop="clickedPhase(phaseBloc.phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phaseBloc.phase)" />
                             </g>
 
                             <!-- Drag cursor, larger for easier grab -->
                             <line :x1="timeToX(time)" y1="0"
-                                  :x2="timeToX(time)" y2="80"
+                                  :x2="timeToX(time)" :y2="10 * maxDepth + 30"
                                   stroke="transparent" stroke-width="10"
                                   style="pointer-events: stroke; cursor: grab;"
                                   @mousedown="startDragCursor" />
                             <!-- The cursor visual -->
                             <line :x1="timeToX(time)" y1="0"
-                                  :x2="timeToX(time)" y2="80"
+                                  :x2="timeToX(time)" :y2="10 * maxDepth + 30"
                                   :stroke="timelineColors.cursor" stroke-width="2" stroke-dasharray="4 2"
                                   style="pointer-events: none;" />
                             <!-- Cursor circle -->
                             <circle :cx="timeToX(time)"
-                                    cy="75"
+                                    :cy="10 * maxDepth + 25"
                                     r="5"
                                     :fill="timelineColors.cursor"
                                     style="cursor: grab; pointer-events: all;"
@@ -240,7 +128,7 @@
 
                             <text v-if="selectedPhase"
                                   :x="timelineWidth / 2"
-                                  :y="95"
+                                  :y="10 * maxDepth + 45"
                                   text-anchor="middle"
                                   :fill="timelineColors.text"
                                   font-size="12"
@@ -253,7 +141,7 @@
                 </div>
                 <div class="d-flex align-items-center justify-content-center mb-1">
                     <img class="icon mr-2" :src="UIIcons.QuestionMark"
-                         data-original-title="Actors can be selected via picking on the animation" />
+                         data-original-title="You can click on the canvas to select agents" />
                     <div @click="toggleAnimate();" class="btn btn-small"
                          :class="{'btn-dark': !light, 'btn-light': light}" style="width: 50px;">
                         {{ animated ? "Pause" : "Play "}}
@@ -266,7 +154,7 @@
                          :class="{'active': backwards, 'btn-dark': !light, 'btn-light': light}">Backwards</div>
                     <div @click="resetViewpoint();" class="btn btn-small"
                          :class="{'btn-dark': !light, 'btn-light': light}">Reset Viewpoint</div>
-                    <input style="width: 100px; text-align: right;" class="ml-3 mr-1" type="number" step="0.001"
+                    <input v-if="!isTouchDevice" style="width: 100px; text-align: right;" class="ml-3 mr-1" type="number" step="0.001"
                            :id="htmlElementIDs.timeRangeDisplayID" value="0"
                            @input="updateInputTime($event.target.value);">
                 </div>
@@ -277,13 +165,42 @@
                         {{speed}}x
                     </label>
                 </div>
-                <p class="text-justify text-center">You can click on the canvas to select agents</p>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+
+    const MaxPhaseDepth = 2;
+
+    // Last one breakbar, previous is remainings
+    const PhaseDepthColors = ["#2d9400", "#fffb00", "#ffa800", "#ff2200", "#007bff"];
+
+    function traversePhasesWithDepth(result, parentPhase, depth, remainingPhases, addedPhases) {
+        if (depth > MaxPhaseDepth) {
+            return depth;
+        }
+        let returnDepth = depth;
+        if (parentPhase.subPhases) {
+            const subPhases = parentPhase.subPhases;
+            remainingPhases.forEach((phase) => {
+                if (subPhases.indexOf(phase.id) > -1) {
+                    result.push({
+                        phase: phase,
+                        depth: depth,
+                        color: PhaseDepthColors[depth]
+                    });
+                    remainingPhases.delete(phase);
+                    addedPhases.add(phase);
+                    let finalDepth = traversePhasesWithDepth(result, phase, depth + 1, remainingPhases, addedPhases);
+                    returnDepth = Math.max(finalDepth, returnDepth);
+                }
+            });
+        }
+        return returnDepth;
+    }
+
     Vue.component("combat-replay-animation-control-component", {
         props: ["time", "light", "animated", "range"],
         template: `${template}`,
@@ -291,6 +208,7 @@
         data: function () {
             return {
                 selectedSpeed: 1,
+                isTouchDevice: false,
                 backwards: false,
                 sliderDelimiter: sliderDelimiter,
                 selectedPhase: null,
@@ -319,6 +237,7 @@
             animator.attachDOM(this.htmlElementIDs.mainCanvasID, this.htmlElementIDs.bgCanvasID, this.htmlElementIDs.pickCanvasID, this.htmlElementIDs.timeRangeID, this.htmlElementIDs.timeRangeDisplayID);
             const encounterPhase = this.encounterPhase;
             this.updateAnimatorTimes(encounterPhase);
+            this.selectedPhase = this.phases[0];
         },
         computed: {
             phases: function () {
@@ -359,48 +278,46 @@
             hasBreakbarPhases: function () {
                 return this.phases.filter(phase => phase.breakbarPhase).length > 0;
             },
-            subPhasesOfPhase0: function () {
-                let result = [];
-                for (let i = 1; i < this.phases.length; i++) {
-                    let phase = this.phases[i];
-                    if (this.phases[0].subPhases && this.phases[0].subPhases.indexOf(phase.id) > -1) result.push(phase);
+            phasesByDepth: function() {
+                const phase0 = this.phases[0];
+                const remainingPhases = new Set(this.phases.filter(phase => !phase.breakbarPhase));
+                remainingPhases.delete(phase0);
+                const addedPhases = new Set();
+                addedPhases.add(phase0);
+                let depth = 0;
+                let result = [{
+                    phase: phase0,
+                    depth: depth,
+                    color: PhaseDepthColors[depth]
+                }];
+                depth = traversePhasesWithDepth(result, phase0, depth + 1, remainingPhases, addedPhases);
+
+                const breakbarPhaseColor = PhaseDepthColors[PhaseDepthColors.length - 1];
+                const remainingPhaseColor = PhaseDepthColors[PhaseDepthColors.length - 2];
+
+                const breakbarPhases = this.phases.filter(phase => phase.breakbarPhase);
+                for (let i = 0; i < breakbarPhases.length; i++) {
+                    result.push({
+                        phase: breakbarPhases[i],
+                        depth: depth + 1,
+                        color: breakbarPhaseColor,
+                    });
                 }
+                remainingPhases.forEach(phase => {
+                    result.push({
+                        phase: phase,
+                        depth: depth,
+                        color: remainingPhaseColor,
+                    });
+                });
                 return result;
             },
-            subPhasesOfSubPhases: function () {
-                let result = [];
-                for (let i = 1; i < this.phases.length; i++) {
-                    let phase = this.phases[i];
-                    for (let j = 0; j < this.subPhasesOfPhase0.length; j++) {
-                        let subPhaseOfPhase0 = this.subPhasesOfPhase0[j];
-                        if (subPhaseOfPhase0.subPhases && subPhaseOfPhase0.subPhases.indexOf(phase.id) > -1) {
-                            result.push(phase);
-                            break;
-                        }
-                    }
+            maxDepth: function() {
+                let maxDepth = -1;
+                for (let i = 0; i < this.phasesByDepth.length; i++) {
+                    maxDepth = Math.max(maxDepth, this.phasesByDepth[i].depth);
                 }
-                return result;
-            },
-            remainingSubPhases: function () {
-                let result = [];
-                let knownIds = [];
-
-                for (let p of this.subPhasesOfPhase0) {
-                    knownIds.push(p.id);
-                }
-                for (let p of this.subPhasesOfSubPhases) {
-                    knownIds.push(p.id);
-                }
-                knownIds.push(this.phases[0].id);
-
-                for (let i = 1; i < this.phases.length; i++) {
-                    let phase = this.phases[i];
-                    if (!knownIds.includes(phase.id) && !phase.breakbarPhase) {
-                        result.push(phase);
-                    }
-                }
-
-                return result;
+                return Math.max(maxDepth + 1, 2);
             },
             speeds: function () {
                 return [0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0];
@@ -458,27 +375,19 @@
             timelineColors() {
                 if (this.light) {
                     return {
-                        tick: "#ffffff",
-                        text: "#ffffff",
-                        fullFight: "#2d9400",
-                        firstSubPhases: "#fffb00",
-                        secondSubPhases: "#ffa800",
-                        thirdSubPhases: "#ff2200",
-                        phaseBreakbar: "#007bff",
+                        tick: "#343a40",
+                        text: "#343a40",
                         cursor: "#ff6b6b",
-                        background: "#2f3338",
+                        background: "#f8f9fa",
+                        backgroundBorder: "#dee2e6",
                     };
                 } else {
                     return {
-                        tick: "#ffffff",
-                        text: "#ffffff",
-                        fullFight: "#2d9400",
-                        firstSubPhases: "#fffb00",
-                        secondSubPhases: "#ffa800",
-                        thirdSubPhases: "#ff2200",
-                        phaseBreakbar: "#007bff",
+                        tick: "#e6e6e6",
+                        text: "#e6e6e6",
                         cursor: "#ff6b6b",
-                        background: "#2f3338",
+                        background: "#2C3035",
+                        backgroundBorder: "#3e444c",
                     };
                 }
             },
