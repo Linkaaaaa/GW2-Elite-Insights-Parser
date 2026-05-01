@@ -9,11 +9,11 @@ public class EmoteEvent : AnimatedCastEvent
     public readonly EmoteGUIDEvent EmoteGUIDEvent = EmoteGUIDEvent.DummyEmoteGUID;
 
     internal EmoteEvent(CombatItem? startItem, AgentData agentData, SkillData skillData, CombatItem? endItem, 
-        long maxEnd, EvtcVersionEvent evtcVersion, IReadOnlyDictionary<long, EmoteGUIDEvent> emoteGUIDict) : base(startItem, agentData, skillData, endItem, maxEnd, evtcVersion)
+        long maxEnd, IReadOnlyDictionary<long, EmoteGUIDEvent> emoteGUIDict) : base(startItem, agentData, skillData, endItem, maxEnd)
     {
         if (startItem != null)
         {
-            EmoteID = evtcVersion.Build < ArcDPSBuilds.AnimationAsStateChanges ? startItem.Pad : startItem.OverstackValue;
+            EmoteID = startItem.IsStateChange == StateChange.AnimationStart ? startItem.OverstackValue : startItem.Pad;
             if (emoteGUIDict.TryGetValue(EmoteID, out var emoteGUIDEvent))
             {
                 EmoteGUIDEvent = emoteGUIDEvent;

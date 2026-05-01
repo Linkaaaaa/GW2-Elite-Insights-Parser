@@ -593,7 +593,7 @@ public partial class CombatData
         skillData.CombineWithSkillInfo(_metaDataEvents.SkillInfoEvents);
         
         operation.UpdateProgressWithCancellationCheck("Parsing: Creating Cast Events");
-        List<AnimatedCastEvent> animatedCastData = CombatEventFactory.CreateCastEvents(evtcVersion, castCombatEvents, agentData, skillData, logData, _metaDataEvents.EmoteGUIDEventsByEmoteID);
+        List<AnimatedCastEvent> animatedCastData = CombatEventFactory.CreateCastEvents(castCombatEvents, agentData, skillData, logData, _metaDataEvents.EmoteGUIDEventsByEmoteID);
         _weaponSwapData = wepSwaps.GroupBy(x => x.Caster).ToDictionary(x => x.Key, x => x.ToList());
         _animatedCastData = animatedCastData.GroupBy(x => x.Caster).ToDictionary(x => x.Key, x => x.ToList());
         //TODO_PERF(Rennorb)

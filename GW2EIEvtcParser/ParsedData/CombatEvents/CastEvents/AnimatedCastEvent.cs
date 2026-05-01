@@ -57,37 +57,19 @@ public class AnimatedCastEvent : CastEvent
     }
 
     protected const float PositionConvertConstant = 10.0f;
-    internal AnimatedCastEvent(CombatItem? startItem, AgentData agentData, SkillData skillData, CombatItem? endItem, long maxEnd, EvtcVersionEvent evtcVersion) : base(startItem ?? endItem ?? throw new InvalidOperationException("Either start or end item must be non null"), agentData, skillData)
+    internal AnimatedCastEvent(CombatItem? startItem, AgentData agentData, SkillData skillData, CombatItem? endItem, long maxEnd) : base(startItem ?? endItem ?? throw new InvalidOperationException("Either start or end item must be non null"), agentData, skillData)
     {
         // Start is present
         if (startItem != null)
         {
             ExpectedDuration = startItem.BuffDmg > 0 ? startItem.BuffDmg : startItem.Value;
-            if (evtcVersion.Build < ArcDPSBuilds.AnimationAsStateChanges)
+            if (startItem.IsStateChange == StateChange.AnimationStart)
             {
-                if (startItem.IsActivation == Activation.Quickness)
-                {
-                    Acceleration = 1;
-                }
-                if (startItem.DstAgent != 0 || startItem.OverstackValue != 0)
-                {
-                    unsafe
-                    {
-                        //NOTE(Rennorb): Cannot directly take the address of the field, because its a property.
-                        var xyBits = startItem.DstAgent;
-                        var x = *(float*)&xyBits;
-                        var y = *((float*)&xyBits + 1);
-                        var z = BitConverter.Int32BitsToSingle(unchecked((int)startItem.OverstackValue));
-                        EffectPosition = new(x, y, z);
-                    }
-                }
-            } 
-            else
-            {
+
                 if (startItem.DstAgent != 0)
                 {
                     EffectTarget = agentData.GetAgent(startItem.DstAgent, startItem.Time);
-                } 
+                }
                 else
                 {
                     var positionBytes = new byte[3 * sizeof(short)];
@@ -104,6 +86,25 @@ public class AnimatedCastEvent : CastEvent
 
 
                     EffectPosition = new Vector3(positionInt16[0], positionInt16[1], -positionInt16[2]) * PositionConvertConstant;
+                }
+            } 
+            else
+            {
+                if (startItem.IsActivation == Activation.Quickness)
+                {
+                    Acceleration = 1;
+                }
+                if (startItem.DstAgent != 0 || startItem.OverstackValue != 0)
+                {
+                    unsafe
+                    {
+                        //NOTE(Rennorb): Cannot directly take the address of the field, because its a property.
+                        var xyBits = startItem.DstAgent;
+                        var x = *(float*)&xyBits;
+                        var y = *((float*)&xyBits + 1);
+                        var z = BitConverter.Int32BitsToSingle(unchecked((int)startItem.OverstackValue));
+                        EffectPosition = new(x, y, z);
+                    }
                 }
             }
             //_effectHappenedDuration = startItem.Value;
