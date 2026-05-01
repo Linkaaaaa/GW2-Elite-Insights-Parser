@@ -35,7 +35,7 @@ public static class ArcDPSEnums
         public const int MissilesIntroduced = 20250525;
         public const int BuffFormulaOriginalAttribute = 20250913;
         public const int EmoteAndGadgetInteractionAdded = 20260318;
-        public const int AnimationAsStateChanges = 20260423;
+        public const int AnimationAsStateChanges = 20260430;
         //
         public const int EndOfLife = int.MaxValue;
     }
