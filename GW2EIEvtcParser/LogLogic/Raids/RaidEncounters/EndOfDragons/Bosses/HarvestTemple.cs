@@ -545,6 +545,18 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
         ];
     }
 
+    private static void AddCustomDragonVoidCastEventFromEffect(List<CastEvent> res, SingleActor target, SkillItem skill, EffectEvent effect, long dur, long startOffset = 0)
+    {
+        if (effect.IsAroundDst)
+        {
+            res.Add(new AnimatedCastEvent(target.AgentItem, skill, effect.Time - startOffset, dur, effect.Dst));
+        } 
+        else
+        {
+            res.Add(new AnimatedCastEvent(target.AgentItem, skill, effect.Time - startOffset, dur, effect.Position));
+        }
+    }
+
     internal override List<CastEvent> SpecialCastEventProcess(CombatData combatData, AgentData agentData, SkillData skillData, Dictionary<long, List<AnimatedCastEvent>> animatedCastDataByID)
     {
         List<CastEvent> res = [];
@@ -602,7 +614,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         var lavaSlamSkill = skillData.Get(LavaSlam);
                         foreach (var lavaSlamEffect in lavaSlamEffects)
                         {
-                            res.Add(new AnimatedCastEvent(target.AgentItem, lavaSlamSkill, lavaSlamEffect.Time, 3500));
+                            AddCustomDragonVoidCastEventFromEffect(res, target, lavaSlamSkill, lavaSlamEffect, 3500);
                         }
                     }
                     int jawsOfDestructionIndicatorDuration = 6950;
@@ -611,7 +623,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         var jawsOfDestructionSkill = skillData.Get(JawsOfDestruction);
                         foreach (var jawsOfDestructionIndicatorEffect in jawsOfDestructionIndicatorEffects)
                         {
-                            res.Add(new AnimatedCastEvent(target.AgentItem, jawsOfDestructionSkill, jawsOfDestructionIndicatorEffect.Time, jawsOfDestructionIndicatorDuration));
+                            AddCustomDragonVoidCastEventFromEffect(res, target, jawsOfDestructionSkill, jawsOfDestructionIndicatorEffect, jawsOfDestructionIndicatorDuration);
                         }
                     }
                     if (combatData.TryGetEffectEventsByGUID(EffectGUIDs.HarvestTemplePrimordusJawsOfDestructionDamage, out var jawsOfDestructionDamageEffects))
@@ -622,7 +634,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                             // Bugged, no indicator
                             if (jawsOfDestructionIndicatorEffects == null || jawsOfDestructionIndicatorEffects.FirstOrDefault(x => x.Time > jawsOfDestructionDamageEffect.Time - 10000 && x.Time < jawsOfDestructionDamageEffect.Time) == null)
                             {
-                                res.Add(new AnimatedCastEvent(target.AgentItem, jawsOfDestructionSkill, jawsOfDestructionDamageEffect.Time - jawsOfDestructionIndicatorDuration, jawsOfDestructionIndicatorDuration));
+                                AddCustomDragonVoidCastEventFromEffect(res, target, jawsOfDestructionSkill, jawsOfDestructionDamageEffect, jawsOfDestructionIndicatorDuration, jawsOfDestructionIndicatorDuration);
                             }
                         }
                     }
@@ -633,7 +645,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         var brandingBeamSkill = skillData.Get(BrandingBeam);
                         foreach (var brandingBeamEffects in brandingBeamEffectsGrouped)
                         {
-                            res.Add(new AnimatedCastEvent(target.AgentItem, brandingBeamSkill, brandingBeamEffects.First().Time, 4000));
+                            AddCustomDragonVoidCastEventFromEffect(res, target, brandingBeamSkill, brandingBeamEffects.First(), 4000);
                         }
                     }
                     var crystalBarrageSkill = skillData.Get(CrystalBarrage);
@@ -653,7 +665,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         var shockwaveSkill = skillData.Get(MordremothShockwave);
                         foreach (var shockwaveEffect in shockwaveEffects)
                         {
-                            res.Add(new AnimatedCastEvent(target.AgentItem, shockwaveSkill, shockwaveEffect.Time, 1600));
+                            AddCustomDragonVoidCastEventFromEffect(res, target, shockwaveSkill, shockwaveEffect, 1600);
                         }
                     }
                     var poisonRoarSkill = skillData.Get(PoisonRoar);
@@ -677,7 +689,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         }
                         foreach (var zhaitanScreamIndicator in zhaitanScreamIndicators)
                         {
-                            res.Add(new AnimatedCastEvent(target.AgentItem, screamSkill, zhaitanScreamIndicator.Time, 3000));
+                            AddCustomDragonVoidCastEventFromEffect(res, target, screamSkill, zhaitanScreamIndicator, 3000);
                         }
                     }
                     if (combatData.TryGetEffectEventsByGUID(EffectGUIDs.HarvestTempleZhaitanTailSlamImpact, out var zhaitanTailSlamImpacts))
@@ -685,7 +697,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         var tailSlamSkill = skillData.Get(ZhaitanTailSlam);
                         foreach (var zhaitanTailSlamImpact in zhaitanTailSlamImpacts)
                         {
-                            res.Add(new AnimatedCastEvent(target.AgentItem, tailSlamSkill, zhaitanTailSlamImpact.Time - 3000, 3000));
+                            AddCustomDragonVoidCastEventFromEffect(res, target, tailSlamSkill, zhaitanTailSlamImpact, 3000, 3000);
                         }
                     }
                     var putridDelugeSkill = skillData.Get(PutridDeluge);
@@ -705,7 +717,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         var clawSlapSkill = skillData.Get(ClawSlap);
                         foreach (var sooWonClawEffect in sooWonClawEffects)
                         {
-                            res.Add(new AnimatedCastEvent(target.AgentItem, clawSlapSkill, sooWonClawEffect.Time, 2300));
+                            AddCustomDragonVoidCastEventFromEffect(res, target, clawSlapSkill, sooWonClawEffect, 2300);
                         }
                     }
                     if (combatData.TryGetEffectEventsByGUID(EffectGUIDs.HarvestTempleTsunamiSlamTailIndicator, out var sooWonTailSlamEffects))
@@ -713,7 +725,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         var clawSlapSkill = skillData.Get(TsunamiSlamTail);
                         foreach (var sooWonTailSlam in sooWonTailSlamEffects)
                         {
-                            res.Add(new AnimatedCastEvent(target.AgentItem, clawSlapSkill, sooWonTailSlam.Time, 1600));
+                            AddCustomDragonVoidCastEventFromEffect(res, target, clawSlapSkill, sooWonTailSlam, 1600);
                         }
                     }
                     if (combatData.TryGetEffectEventsByGUID(EffectGUIDs.HarvestTempleSooWonTsunamiSlamClawIndicator, out var sooWonClawSlamEffects))
@@ -721,7 +733,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         var clawSlam = skillData.Get(TsunaniSlamClaw);
                         foreach (var sooWonClawSlam in sooWonClawSlamEffects)
                         {
-                            res.Add(new AnimatedCastEvent(target.AgentItem, clawSlam, sooWonClawSlam.Time, 1600));
+                            AddCustomDragonVoidCastEventFromEffect(res, target, clawSlam, sooWonClawSlam, 1600);
                         }
                     }
                     break;

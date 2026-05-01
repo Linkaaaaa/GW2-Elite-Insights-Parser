@@ -90,21 +90,21 @@ public class AnimatedCastEvent : CastEvent
                 } 
                 else
                 {
-                var positionBytes = new byte[3 * sizeof(short)];
-                int offset = 0;
-                positionBytes[offset++] = startItem.IsShields;
-                positionBytes[offset++] = startItem.IsOffcycle;
-                positionBytes[offset++] = startItem.Pad1;
-                positionBytes[offset++] = startItem.Pad2;
-                positionBytes[offset++] = startItem.Pad3;
-                positionBytes[offset++] = startItem.Pad4;
+                    var positionBytes = new byte[3 * sizeof(short)];
+                    int offset = 0;
+                    positionBytes[offset++] = startItem.IsShields;
+                    positionBytes[offset++] = startItem.IsOffcycle;
+                    positionBytes[offset++] = startItem.Pad1;
+                    positionBytes[offset++] = startItem.Pad2;
+                    positionBytes[offset++] = startItem.Pad3;
+                    positionBytes[offset++] = startItem.Pad4;
 
-                var positionInt16 = new short[3];
-                Buffer.BlockCopy(positionBytes, 0, positionInt16, 0, positionBytes.Length);
+                    var positionInt16 = new short[3];
+                    Buffer.BlockCopy(positionBytes, 0, positionInt16, 0, positionBytes.Length);
 
 
-                EffectPosition = new Vector3(positionInt16[0], positionInt16[1], -positionInt16[2]) * PositionConvertConstant;
-            }
+                    EffectPosition = new Vector3(positionInt16[0], positionInt16[1], -positionInt16[2]) * PositionConvertConstant;
+                }
             }
             //_effectHappenedDuration = startItem.Value;
 
@@ -176,6 +176,16 @@ public class AnimatedCastEvent : CastEvent
         Acceleration = 0;
         Status = AnimationStatus.Full;
         SavedDuration = 0;
+    }
+
+    internal AnimatedCastEvent(AgentItem caster, SkillItem skill, long start, long dur, Vector3 effectPosition) : this(caster, skill, start, dur)
+    {
+        EffectPosition = effectPosition;
+    }
+
+    internal AnimatedCastEvent(AgentItem caster, SkillItem skill, long start, long dur, AgentItem effectTarget) : this(caster, skill, start, dur)
+    {
+        EffectTarget = effectTarget;
     }
 
     public override long GetInterruptedByBuffTime(ParsedEvtcLog log, long buffID)
