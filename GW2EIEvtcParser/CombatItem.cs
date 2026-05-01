@@ -263,6 +263,9 @@ public class CombatItem
             || IsStateChange == StateChange.MissileRemove
             || IsStateChange == StateChange.AnimationStart
             || IsStateChange == StateChange.AnimationStop
+            || IsStateChange == StateChange.BuffRemoveAll
+            || IsStateChange == StateChange.BuffRemoveSingle
+            || IsStateChange == StateChange.BuffApply
             ;
     }
 
@@ -286,6 +289,10 @@ public class CombatItem
             || IsStateChange == StateChange.EffectAgentCreate
             || IsStateChange == StateChange.MissileLaunch
             || IsStateChange == StateChange.AnimationStart
+            || IsStateChange == StateChange.BuffRemoveAll
+            || IsStateChange == StateChange.BuffRemoveSingle
+            || IsStateChange == StateChange.BuffApply
+            || IsStateChange == StateChange.BuffChange
         ;
     }
 
@@ -298,13 +305,17 @@ public class CombatItem
         return DstIsAgent();
     }
 
-    internal bool IsBuffEvent()
+    internal bool IsBuffApplyOrRemoveEvent()
     {
         return IsBuffApplyEvent() || IsBuffRemoveEvent();
     }
 
     internal bool IsBuffApplyEvent()
     {
+        if (_version.Build >= ArcDPSBuilds.BuffAppliesAndRemovesAsStateChanges)
+        {
+            return IsStateChange == StateChange.BuffApply || IsStateChange == StateChange.BuffChange || IsStateChange == StateChange.BuffInitial;
+        }
         return (IsBuff != 0 && BuffDmg == 0 && Value > 0 && IsActivation == Activation.None && 
             IsBuffRemove == BuffRemove.None && IsStateChange == StateChange.None) || 
             IsStateChange == StateChange.BuffInitial;
@@ -312,11 +323,19 @@ public class CombatItem
 
     internal bool IsBuffRemoveEvent()
     {
+        if (_version.Build >= ArcDPSBuilds.BuffAppliesAndRemovesAsStateChanges)
+        {
+            return IsStateChange == StateChange.BuffRemoveAll || IsStateChange == StateChange.BuffRemoveSingle;
+        }
         return IsStateChange == StateChange.None && IsActivation == Activation.None && IsBuffRemove != BuffRemove.None;
     }
 
     internal bool IsBuffRemoveAllEvent()
     {
+        if (_version.Build >= ArcDPSBuilds.BuffAppliesAndRemovesAsStateChanges)
+        {
+            return IsStateChange == StateChange.BuffRemoveAll;
+        }
         return IsBuffRemoveEvent() && IsBuffRemove == BuffRemove.All;
     }
 

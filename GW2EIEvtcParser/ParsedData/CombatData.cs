@@ -539,7 +539,7 @@ public partial class CombatData
             {
                 castCombatEvents.AddToList(combatItem.SrcAgent, combatItem);
             }
-            else if (combatItem.IsBuffEvent())
+            else if (combatItem.IsBuffApplyOrRemoveEvent())
             {
                 if (combatItem.IsBuffApplyEvent())
                 {
@@ -547,7 +547,7 @@ public partial class CombatData
                 }
                 else
                 {
-                    CombatEventFactory.AddBuffRemoveEvent(combatItem, buffEvents, agentData, skillData);
+                    CombatEventFactory.AddBuffRemoveEvent(combatItem, buffEvents, agentData, skillData, evtcVersion);
                 }
             }
             else if (combatItem.IsStateChange != StateChange.None)

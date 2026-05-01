@@ -36,6 +36,7 @@ public static class ArcDPSEnums
         public const int BuffFormulaOriginalAttribute = 20250913;
         public const int EmoteAndGadgetInteractionAdded = 20260318;
         public const int AnimationAsStateChanges = 20260430;
+        public const int BuffAppliesAndRemovesAsStateChanges = 20260501;
         //
         public const int EndOfLife = int.MaxValue;
     }
@@ -310,7 +311,11 @@ public static class ArcDPSEnums
         MapChange = 65,
         SomethingUnused = 66,
         AnimationStart = 67,
-        AnimationStop = 68,
+        AnimationStop = 68, 
+        BuffApply = 69,
+        BuffChange = 70, // Extension
+        BuffRemoveSingle = 71, // Single or Manual
+        BuffRemoveAll = 72,
         Unknown
     };
 

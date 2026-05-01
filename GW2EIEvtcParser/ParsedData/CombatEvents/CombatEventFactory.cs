@@ -271,8 +271,6 @@ internal static class CombatEventFactory
             case StateChange.StackReset:
                 buffEvents.Add(new BuffStackResetEvent(stateChangeEvent, agentData, skillData));
                 break;
-            case StateChange.BuffInitial:
-                break;
             case StateChange.TickRate:
                 metaDataEvents.TickRateEvents.Add(new TickRateEvent(stateChangeEvent));
                 break;
@@ -481,39 +479,79 @@ internal static class CombatEventFactory
                 _ = new EffectEventAgentRemove(stateChangeEvent, agentData, statusEvents.AgentEffectEventsByTrackingID);
                 break;
             default:
-                break;
+                throw new InvalidOperationException("Unsupported StateChange in AddStateChangeEvent");
         }
     }
 
     public static void AddBuffApplyEvent(CombatItem buffEvent, List<BuffEvent> buffEvents, AgentData agentData, SkillData skillData, EvtcVersionEvent evtcVersion)
     {
-        if (buffEvent.IsOffcycle > 0)
+        if (evtcVersion.Build >= ArcDPSBuilds.BuffAppliesAndRemovesAsStateChanges)
         {
-            var extensionEvent = new BuffExtensionEvent(buffEvent, agentData, skillData);
-            if (evtcVersion.Build > ArcDPSBuilds.BuffExtensionBroken || extensionEvent.ExtendedDuration > 0)
+            if (buffEvent.IsStateChange == StateChange.BuffChange)
             {
-                buffEvents.Add(extensionEvent);
+                var extensionEvent = new BuffExtensionEvent(buffEvent, agentData, skillData);
+                if (extensionEvent.ExtendedDuration > 0)
+                {
+                    buffEvents.Add(extensionEvent);
+                }
+            } 
+            else
+            {
+                buffEvents.Add(new BuffApplyEvent(buffEvent, agentData, skillData, evtcVersion));
+            }
+        } 
+        else
+        {
+            if (buffEvent.IsOffcycle > 0)
+            {
+                var extensionEvent = new BuffExtensionEvent(buffEvent, agentData, skillData);
+                if (evtcVersion.Build > ArcDPSBuilds.BuffExtensionBroken || extensionEvent.ExtendedDuration > 0)
+                {
+                    buffEvents.Add(extensionEvent);
+                }
+            }
+            else
+            {
+                buffEvents.Add(new BuffApplyEvent(buffEvent, agentData, skillData, evtcVersion));
+            }
+        }
+    }
+
+    public static void AddBuffRemoveEvent(CombatItem buffEvent, List<BuffEvent> buffEvents, AgentData agentData, SkillData skillData, EvtcVersionEvent evtcVersion)
+    {
+        if (evtcVersion.Build >= ArcDPSBuilds.BuffAppliesAndRemovesAsStateChanges)
+        {
+            if (buffEvent.IsStateChange == StateChange.BuffRemoveAll)
+            {
+                buffEvents.Add(new BuffRemoveAllEvent(buffEvent, agentData, skillData));
+            }
+            else
+            {
+                switch (buffEvent.IsBuffRemove)
+                {
+                    case BuffRemove.Single:
+                        buffEvents.Add(new BuffRemoveSingleEvent(buffEvent, agentData, skillData));
+                        break;
+                    case BuffRemove.Manual:
+                        buffEvents.Add(new BuffRemoveManualEvent(buffEvent, agentData, skillData));
+                        break;
+                }
             }
         }
         else
         {
-            buffEvents.Add(new BuffApplyEvent(buffEvent, agentData, skillData, evtcVersion));
-        }
-    }
-
-    public static void AddBuffRemoveEvent(CombatItem buffEvent, List<BuffEvent> buffEvents, AgentData agentData, SkillData skillData)
-    {
-        switch (buffEvent.IsBuffRemove)
-        {
-            case BuffRemove.Single:
-                buffEvents.Add(new BuffRemoveSingleEvent(buffEvent, agentData, skillData));
-                break;
-            case BuffRemove.All:
-                buffEvents.Add(new BuffRemoveAllEvent(buffEvent, agentData, skillData));
-                break;
-            case BuffRemove.Manual:
-                buffEvents.Add(new BuffRemoveManualEvent(buffEvent, agentData, skillData));
-                break;
+            switch (buffEvent.IsBuffRemove)
+            {
+                case BuffRemove.Single:
+                    buffEvents.Add(new BuffRemoveSingleEvent(buffEvent, agentData, skillData));
+                    break;
+                case BuffRemove.All:
+                    buffEvents.Add(new BuffRemoveAllEvent(buffEvent, agentData, skillData));
+                    break;
+                case BuffRemove.Manual:
+                    buffEvents.Add(new BuffRemoveManualEvent(buffEvent, agentData, skillData));
+                    break;
+            }
         }
     }
 
