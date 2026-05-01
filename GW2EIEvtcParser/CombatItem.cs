@@ -262,6 +262,7 @@ public class CombatItem
             || IsStateChange == StateChange.MissileLaunch
             || IsStateChange == StateChange.MissileRemove
             || IsStateChange == StateChange.AnimationStart
+            || IsStateChange == StateChange.AnimationStop
             ;
     }
 

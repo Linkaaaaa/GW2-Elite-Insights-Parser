@@ -308,8 +308,9 @@ public static class ArcDPSEnums
         EffectAgentRemove = 63,
         AgentChange = 64,
         MapChange = 65,
-        AnimationStart = 66,
-        AnimationStop = 67,
+        SomethingUnused = 66,
+        AnimationStart = 67,
+        AnimationStop = 68,
         Unknown
     };
 
