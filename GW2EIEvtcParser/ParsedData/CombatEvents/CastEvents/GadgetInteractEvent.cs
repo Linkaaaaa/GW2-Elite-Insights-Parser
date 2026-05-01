@@ -6,7 +6,7 @@ namespace GW2EIEvtcParser.ParsedData;
 public class GadgetInteractEvent : AnimatedCastEvent
 {
 
-    public readonly AgentItem Gadget;
+    public AgentItem Gadget => EffectTarget;
 
     internal GadgetInteractEvent(CombatItem? startItem, AgentData agentData, SkillData skillData, 
         CombatItem? endItem, long maxEnd, EvtcVersionEvent evtcVersion) : base(startItem, agentData, skillData, endItem, maxEnd, evtcVersion)
@@ -15,16 +15,12 @@ public class GadgetInteractEvent : AnimatedCastEvent
         {
             if (evtcVersion.Build < ArcDPSBuilds.AnimationAsStateChanges)
             {
-                Gadget = agentData.GetAgentByInstID((ushort)startItem.Pad, startItem.Time);
-            } 
-            else
-            {
-                Gadget = agentData.GetAgent(startItem.DstAgent, startItem.Time);
+                EffectTarget = agentData.GetAgentByInstID((ushort)startItem.Pad, startItem.Time);
             }
         }
         else
         {
-            Gadget = ParserHelper._unknownAgent;
+            EffectTarget = ParserHelper._unknownAgent;
         }
         // Bandaid, may not be perfect
         if (AnimStop != AnimationStop.AnyViaReset && AnimStop != AnimationStop.Ended && Status != AnimationStatus.Interrupted)

@@ -9,6 +9,7 @@ public class AnimatedCastEvent : CastEvent
     //private readonly int _effectHappenedDuration;
 
     public readonly Vector3? EffectPosition;
+    public AgentItem EffectTarget { get; protected set; } = ParserHelper._unknownAgent;
 
     public bool HasEffectPosition => EffectPosition != null;
 
@@ -83,6 +84,12 @@ public class AnimatedCastEvent : CastEvent
             } 
             else
             {
+                if (startItem.DstAgent != 0)
+                {
+                    EffectTarget = agentData.GetAgent(startItem.DstAgent, startItem.Time);
+                } 
+                else
+                {
                 var positionBytes = new byte[3 * sizeof(short)];
                 int offset = 0;
                 positionBytes[offset++] = startItem.IsShields;
@@ -95,7 +102,9 @@ public class AnimatedCastEvent : CastEvent
                 var positionInt16 = new short[3];
                 Buffer.BlockCopy(positionBytes, 0, positionInt16, 0, positionBytes.Length);
 
+
                 EffectPosition = new Vector3(positionInt16[0], positionInt16[1], -positionInt16[2]) * PositionConvertConstant;
+            }
             }
             //_effectHappenedDuration = startItem.Value;
 
