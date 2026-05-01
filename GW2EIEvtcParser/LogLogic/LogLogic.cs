@@ -66,11 +66,17 @@ public abstract class LogLogic
         public readonly Buff Buff;
         public readonly int Stack;
         public readonly PhaseDataWithMetaData AttachedPhase;
+        public readonly long RemainingDuration;
         public InstanceBuff(Buff buff, int stack, PhaseDataWithMetaData phase)
         {
             Buff = buff;
             Stack = stack;
             AttachedPhase = phase;
+        }
+
+        public InstanceBuff(Buff buff, int stack, PhaseDataWithMetaData phase, long remainingDuration) : this(buff, stack, phase)
+        {
+            RemainingDuration = remainingDuration;
         }
     }
     protected List<InstanceBuff>? InstanceBuffs { get; private set; } = null;

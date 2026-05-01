@@ -25,7 +25,10 @@
                     <div v-if="encounterData.instanceBuffs" class="d-flex flex-row justify-content-around mb-1">
                         <span v-for="instanceBuff in encounterData.instanceBuffs">
                             {{instanceBuff.stack > 1 ? instanceBuff.stack + ' x' : ''}}
-                            <img :data-original-title="instanceBuff.buff.name + (instanceBuff.buff.description ? '<br> ' + instanceBuff.buff.description : '')"
+                            <img :data-original-title="instanceBuff.buff.name + 
+                                        (instanceBuff.buff.description ? '<br> ' + instanceBuff.buff.description : '') + 
+                                        (instanceBuff.remainingDuration ? '<br> Remaining Duration: ' + round3(instanceBuff.remainingDuration / 1000) + ' seconds' : '')
+                                "
                                  :src="instanceBuff.buff.icon" class="icon icon-hover" />
                         </span>
                     </div>
@@ -85,6 +88,7 @@
 
     Vue.component("encounter-component", {
         props: ["light", "encounters"],
+        mixins: [numberComponent],
         template: `${template}`,
         data: function () {
             return {
@@ -312,7 +316,7 @@
                         for (let i = 0; i < logData.instanceBuffs.length; i++) {
                             const cur = logData.instanceBuffs[i];
                             if (cur[2] <= phase.start && cur[3] >= phase.end) {
-                                res.push({buff: findSkill(true, cur[0]), stack: cur[1]});
+                                res.push({buff: findSkill(true, cur[0]), stack: cur[1], remainingDuration: cur[4]});
                             }
                         }
                         if (res.length > 0) {
