@@ -317,7 +317,7 @@ public class CombatItem
 
     internal bool IsBuffRemoveAllEvent()
     {
-        return IsBuffRemoveAllEvent() && IsBuffRemove == BuffRemove.All;
+        return IsBuffRemoveEvent() && IsBuffRemove == BuffRemove.All;
     }
 
     internal bool DstMatchesAgent(AgentItem agentItem, IReadOnlyDictionary<uint, ExtensionHandler> extensions)
