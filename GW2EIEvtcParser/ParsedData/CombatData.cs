@@ -535,7 +535,22 @@ public partial class CombatData
         }
         foreach (CombatItem combatItem in combatEvents)
         {
-            if (combatItem.IsStateChange != StateChange.None && !combatItem.IsCastEvent() && !combatItem.IsBuffEvent())
+            if (combatItem.IsCastEvent())
+            {
+                castCombatEvents.AddToList(combatItem.SrcAgent, combatItem);
+            }
+            else if (combatItem.IsBuffEvent())
+            {
+                if (combatItem.IsBuffApplyEvent())
+                {
+                    CombatEventFactory.AddBuffApplyEvent(combatItem, buffEvents, agentData, skillData, evtcVersion);
+                }
+                else
+                {
+                    CombatEventFactory.AddBuffRemoveEvent(combatItem, buffEvents, agentData, skillData);
+                }
+            }
+            else if (combatItem.IsStateChange != StateChange.None)
             {
                 if (combatItem.IsEssentialMetadata)
                 {
@@ -552,27 +567,14 @@ public partial class CombatData
                 {
                     CombatEventFactory.AddStateChangeEvent(logData.EvtcLogOffset, combatItem, agentData, skillData, _metaDataEvents, _statusEvents, _rewardEvents, wepSwaps, buffEvents, evtcVersion, settings, apiController);
                 }
-
             }
-            else if (combatItem.IsCastEvent())
+            else if (combatItem.IsDamageEvent())
             {
-                castCombatEvents.AddToList(combatItem.SrcAgent, combatItem);
-            }
-            else if (combatItem.IsBuffRemoveEvent())
-            {
-                CombatEventFactory.AddBuffRemoveEvent(combatItem, buffEvents, agentData, skillData);
-            }
-            else
-            {
-                if (combatItem.IsBuffApplyEvent())
-                {
-                    CombatEventFactory.AddBuffApplyEvent(combatItem, buffEvents, agentData, skillData, evtcVersion);
-                }
-                else if (combatItem.IsDirectDamage())
+                if (combatItem.IsDirectDamageEvent())
                 {
                     CombatEventFactory.AddDirectDamageEvent(combatItem, damageData, brkDamageData, brkRecoveredData, crowdControlData, agentData, skillData);
                 }
-                else if (combatItem.IsBuffDamage())
+                else if (combatItem.IsBuffDamageEvent())
                 {
                     CombatEventFactory.AddIndirectDamageEvent(combatItem, damageData, agentData, skillData);
                 }

@@ -1423,7 +1423,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         GraspOfJormag,
                         FrostMeteor,
                     ];
-                    jormagDamagingAgents = [.. combatData.Where(x => x.IsDamage() && jormagAttacks.Contains(x.SkillID)).Select(x => x.SrcAgent)];
+                    jormagDamagingAgents = [.. combatData.Where(x => x.IsDamageEvent() && jormagAttacks.Contains(x.SkillID)).Select(x => x.SrcAgent)];
                     break;
                 case (int)TargetID.TheDragonVoidKralkatorrik:
                     target.OverrideName("The KralkatorrikVoid");
@@ -1435,7 +1435,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         CrystalBarrage,
                         VoidPoolKralkatorrik,
                     ];
-                    kralkDamagingAgents = [.. combatData.Where(x => x.IsDamage() && kralkAttacks.Contains(x.SkillID)).Select(x => x.SrcAgent)];
+                    kralkDamagingAgents = [.. combatData.Where(x => x.IsDamageEvent() && kralkAttacks.Contains(x.SkillID)).Select(x => x.SrcAgent)];
                     break;
                 case (int)TargetID.TheDragonVoidMordremoth:
                     target.OverrideName("The MordremothVoid");
@@ -1446,7 +1446,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         MordremothShockwave,
                         PoisonRoar,
                     ];
-                    mordDamagingAgents = [.. combatData.Where(x => x.IsDamage() && mordAttacks.Contains(x.SkillID)).Select(x => x.SrcAgent)];
+                    mordDamagingAgents = [.. combatData.Where(x => x.IsDamageEvent() && mordAttacks.Contains(x.SkillID)).Select(x => x.SrcAgent)];
                     break;
                 case (int)TargetID.TheDragonVoidPrimordus:
                     target.OverrideName("The PrimordusVoid");
@@ -1457,7 +1457,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         LavaSlam,
                         JawsOfDestruction,
                     ];
-                    primordusDamagingAgents = [.. combatData.Where(x => x.IsDamage() && primordusAttacks.Contains(x.SkillID)).Select(x => x.SrcAgent)];
+                    primordusDamagingAgents = [.. combatData.Where(x => x.IsDamageEvent() && primordusAttacks.Contains(x.SkillID)).Select(x => x.SrcAgent)];
                     break;
                 case (int)TargetID.TheDragonVoidSooWon:
                     target.OverrideName("The SooWonVoid");
@@ -1474,7 +1474,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         TormentOfTheVoid,
                         TsunamiSlamTail,
                     ];
-                    soowonDamagingAgents = [.. combatData.Where(x => x.IsDamage() && soowonAttacks.Contains(x.SkillID)).Select(x => x.SrcAgent)];
+                    soowonDamagingAgents = [.. combatData.Where(x => x.IsDamageEvent() && soowonAttacks.Contains(x.SkillID)).Select(x => x.SrcAgent)];
                     break;
                 case (int)TargetID.TheDragonVoidZhaitan:
                     target.OverrideName("The ZhaitanVoid");
@@ -1487,7 +1487,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                         ZhaitanTailSlam,
                         PutridDeluge,
                     ];
-                    zhaitanDamagingAgents = [.. combatData.Where(x => x.IsDamage() && zhaiAttacks.Contains(x.SkillID)).Select(x => x.SrcAgent)];
+                    zhaitanDamagingAgents = [.. combatData.Where(x => x.IsDamageEvent() && zhaiAttacks.Contains(x.SkillID)).Select(x => x.SrcAgent)];
                     break;
                 case (int)TargetID.PushableVoidAmalgamate:
                 case (int)TargetID.KillableVoidAmalgamate:
@@ -1499,7 +1499,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
         {
             foreach (CombatItem cbt in combatData)
             {
-                if (cbt.IsDamage())
+                if (cbt.IsDamageEvent())
                 {
                     // sanity check
                     if (agentData.GetAgent(cbt.SrcAgent, cbt.Time).GetFinalMaster().IsPlayer)

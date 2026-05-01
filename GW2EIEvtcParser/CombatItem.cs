@@ -171,43 +171,43 @@ public class CombatItem
         return HasTime();
     }
 
-    internal bool IsDamage()
+    internal bool IsDamageEvent()
     {
-        return IsDirectDamage() || IsBuffDamage();
+        return IsDirectDamageEvent() || IsBuffDamageEvent();
     }
 
-    internal bool IsDamagingDamage()
+    internal bool IsNonZeroDamageEvent()
     {
-        if (IsDirectDamage())
+        if (IsDirectDamageEvent())
         {
             return Value > 0;
         }
-        if (IsBuffDamage())
+        if (IsBuffDamageEvent())
         {
             return BuffDmg > 0;
         }
         return false;
     }
 
-    internal bool IsDamage(IReadOnlyDictionary<uint, ExtensionHandler> extensions)
+    internal bool IsDamageEvent(IReadOnlyDictionary<uint, ExtensionHandler> extensions)
     {
         if (IsExtension && Pad != 0 && extensions.TryGetValue(Pad, out var handler))
         {
-            return handler.IsDamage(this);
+            return handler.IsDamageEvent(this);
         }
-        return IsDamage();
+        return IsDamageEvent();
     }
 
-    internal bool IsDamagingDamage(IReadOnlyDictionary<uint, ExtensionHandler> extensions)
+    internal bool IsNonZeroDamageEvent(IReadOnlyDictionary<uint, ExtensionHandler> extensions)
     {
         if (IsExtension && Pad != 0 && extensions.TryGetValue(Pad, out var handler))
         {
-            return handler.IsDamagingDamage(this);
+            return handler.IsNonZeroDamageEvent(this);
         }
-        return IsDamagingDamage();
+        return IsNonZeroDamageEvent();
     }
 
-    internal bool IsDirectDamage()
+    internal bool IsDirectDamageEvent()
     {
         return IsStateChange == StateChange.None &&
                     IsActivation == Activation.None &&
@@ -216,7 +216,7 @@ public class CombatItem
                     ;
     }
 
-    internal bool IsBuffDamage()
+    internal bool IsBuffDamageEvent()
     {
         return IsStateChange == StateChange.None &&
                     IsActivation == Activation.None &&

@@ -301,7 +301,7 @@ internal class Xera : StrongholdOfTheFaithful
         var chargedBloodStones = maxHPUpdates.Where(x => x.MaxHealth == 74700).Select(x => x.Src).Where(x => x.Type == AgentItem.AgentType.Gadget);
         foreach (AgentItem gadget in chargedBloodStones)
         {
-            if (!combatData.Any(x => x.IsDamage() && x.DstMatchesAgent(gadget)))
+            if (!combatData.Any(x => x.IsDamageEvent() && x.DstMatchesAgent(gadget)))
             {
                 continue;
             }

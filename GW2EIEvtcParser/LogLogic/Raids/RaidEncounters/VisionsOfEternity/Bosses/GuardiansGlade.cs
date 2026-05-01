@@ -715,7 +715,7 @@ internal class GuardiansGlade : VisionsOfEternityRaidEncounter
             var kela = kelas.FirstOrDefault(x => x.InAwareTimes(croc));
             if (kela != null)
             {
-                IEnumerable<CombatItem> items = combatData.Where(x => x.IsDamage() && x.DstMatchesAgent(croc) && x.SrcInstid == 0 && x.SkillID == ArcDPSGenericKill);
+                IEnumerable<CombatItem> items = combatData.Where(x => x.IsDamageEvent() && x.DstMatchesAgent(croc) && x.SrcInstid == 0 && x.SkillID == ArcDPSGenericKill);
                 foreach (CombatItem item in items)
                 {
                     item.OverrideSrcAgent(kela);
@@ -732,7 +732,7 @@ internal class GuardiansGlade : VisionsOfEternityRaidEncounter
             var kela = kelas.FirstOrDefault(x => x.InAwareTimes(eatableAgent));
             if (kela != null)
             {
-                IEnumerable<CombatItem> items = combatData.Where(x => x.IsDamage() && x.DstMatchesAgent(eatableAgent)
+                IEnumerable<CombatItem> items = combatData.Where(x => x.IsDamageEvent() && x.DstMatchesAgent(eatableAgent)
                     && x.SrcInstid == 0 && x.SkillID == ArcDPSGenericKill
                     && x.IFF == IFF.Foe);
                 foreach (CombatItem item in items)

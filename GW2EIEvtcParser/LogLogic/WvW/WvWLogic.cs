@@ -325,7 +325,7 @@ internal class WvWLogic : LogLogic
             var enemyPlayerDicts = enemyPlayerList.GroupBy(x => x.AgentItem.Agent).ToDictionary(x => x.Key, x => x.ToList());
             foreach (CombatItem c in combatData)
             {
-                if (c.IsDamage(extensions))
+                if (c.IsDamageEvent(extensions))
                 {
                     if (enemyPlayerDicts.TryGetValue(c.SrcAgent, out var srcs))
                     {
