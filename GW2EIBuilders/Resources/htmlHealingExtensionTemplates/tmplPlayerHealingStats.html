@@ -5,8 +5,8 @@
             <img :alt="player.profession" class="icon" :src="player.icon">
             {{player.name}}       
             <img v-if="playerIsRunningHealingExtension(player)"
-                            :src="UIIcons.GreenFlag" alt="Accurate"
-                            class="icon" data-original-title="Accurate Healing Data">
+                            :src="UIIcons.GreenFlag" alt="Complete"
+                            class="icon" data-original-title="Complete Healing Data">
         </h3> 
         <ul class="nav nav-tabs" v-show="activeplayer > -1">
             <li>
