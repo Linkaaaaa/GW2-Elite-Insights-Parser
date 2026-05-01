@@ -180,7 +180,7 @@
     Vue.component("defense-stats-component", {
         props: ["phaseindex", "playerindex"],
         template: `${template}`,
-        mixins: [numberComponent, sortedTableComponent, encounterPhaseComponent],
+        mixins: [numberComponent, sortedTableComponent, encounterPhaseComponent, UIIconsComponent],
         data: function () {
             return {
                 cache: new Map(),
@@ -286,9 +286,6 @@
                 this.cache.set(cacheID, res);
                 return res;
             },
-            UIIcons: function() {
-                return UIIcons;
-            }
         }
     });
 </script>

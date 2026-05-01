@@ -91,6 +91,7 @@
     }
     Vue.component("player-healing-stats-component", {
         props: ["phaseindex", 'activetargets', 'activeplayer', 'light'],
+        mixins: [extensionPresentComponent, UIIconsComponent],
         template: `${template}`,
         data: function () {
             return {

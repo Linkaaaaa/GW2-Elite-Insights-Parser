@@ -80,7 +80,7 @@
     Vue.component("incoming-healing-stats-component", {
         props: ["phaseindex", "playerindex"],
         template: `${template}`,
-        mixins: [numberComponent, sortedTableComponent, encounterPhaseComponent],
+        mixins: [numberComponent, sortedTableComponent, encounterPhaseComponent, extensionPresentComponent, UIIconsComponent],
         data: function () {
             return {
                 cache: new Map(),

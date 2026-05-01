@@ -62,7 +62,7 @@
     Vue.component("buff-volume-table-component", {
         props: ["buffs", "playerdata", "outgoing", "sums", "id", "playerindex", "hidecustom"],
         template: `${template}`,
-        mixins: [numberComponent, sortedTableComponent, colSliderComponent(maxBuffColumns)],
+        mixins: [numberComponent, sortedTableComponent, colSliderComponent(maxBuffColumns), UIIconsComponent],
         data: function () {
             return {             
                 sortdata: {
@@ -163,9 +163,6 @@
             },
             tableid: function() {
                 return this.id;
-            },
-            UIIcons: function() {
-                return UIIcons;
             },
             tooltipExplInc: function () {
                 return `<ul style='text-align:left;margin-block-end: 0.3em;'>
