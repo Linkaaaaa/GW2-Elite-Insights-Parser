@@ -326,7 +326,7 @@ public class CombatItem
         {
             return IsStateChange == StateChange.BuffApply || IsStateChange == StateChange.BuffChange || IsStateChange == StateChange.BuffInitial;
         }
-        return (IsBuff != 0 && Value > 0 && IsActivation == Activation.None && 
+        return (IsBuff != 0 && BuffDmg == 0 && Value > 0 && IsActivation == Activation.None && 
             IsBuffRemove == BuffRemove.None && IsStateChange == StateChange.Combat) || 
             IsStateChange == StateChange.BuffInitial;
     }
