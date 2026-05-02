@@ -609,7 +609,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                     }
                     break;
                 case (int)TargetID.TheDragonVoidPrimordus:
-                    if (combatData.TryGetEffectEventsByGUID(EffectGUIDs.HarvestTemplePrimordusLavaSlamIndicator, out var lavaSlamEffects))
+                    if (combatData.TryGetEffectEventsByGUID(EffectGUIDs.HarvestTemplePrimordusLavaSlamHitIndicator, out var lavaSlamEffects))
                     {
                         var lavaSlamSkill = skillData.Get(LavaSlam);
                         foreach (var lavaSlamEffect in lavaSlamEffects)
@@ -873,7 +873,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
         var usefulMissileEvents = combatData.Where(x => x.IsStateChange == StateChange.MissileCreate && usefulMissileIDs.Contains(x.SkillID)).GroupBy(x => x.SkillID).ToDictionary(x => (long)x.Key, x => x.ToList());
         HashSet<GUID> usefulEffectGUIDs =
         [
-            EffectGUIDs.HarvestTemplePrimordusLavaSlamIndicator,
+            EffectGUIDs.HarvestTemplePrimordusLavaSlamHitIndicator,
             EffectGUIDs.HarvestTemplePrimordusJawsOfDestructionIndicator,
             EffectGUIDs.HarvestTemplePrimordusJawsOfDestructionDamage,
             // Kralkatorrik
@@ -1031,7 +1031,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                 }
                 // Primordus
                 else if (
-                    (usefulEffectEvents.TryGetValue(EffectGUIDs.HarvestTemplePrimordusLavaSlamIndicator, out var lavaSlams) && lavaSlams.Any(x => x.Time >= start && x.Time <= end))
+                    (usefulEffectEvents.TryGetValue(EffectGUIDs.HarvestTemplePrimordusLavaSlamHitIndicator, out var lavaSlams) && lavaSlams.Any(x => x.Time >= start && x.Time <= end))
                     ||
                     (usefulEffectEvents.TryGetValue(EffectGUIDs.HarvestTemplePrimordusJawsOfDestructionIndicator, out var jawsIndicator) && jawsIndicator.Any(x => x.Time >= start && x.Time <= end))
                     ||
@@ -1847,16 +1847,14 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
                 break;
             case (int)TargetID.TheDragonVoidPrimordus:
                 // Lava Slam - Chin Indicator
-                if (log.CombatData.TryGetEffectEventsByGUID(EffectGUIDs.HarvestTemplePrimordusLavaSlamIndicator, out var lavaSlams))
+                if (log.CombatData.TryGetEffectEventsByGUID(EffectGUIDs.HarvestTemplePrimordusLavaSlamHitIndicator, out var lavaSlams))
                 {
                     foreach (EffectEvent effect in lavaSlams)
                     {
                         // The indicator gets cancelled when phasing to Kralkatorrik.
                         int duration = 3500;
-                        long growingEnd = effect.Time + duration;
-                        lifespan = (effect.Time - duration, effect.Time);
-                        lifespan.end = Math.Min(lifespan.end, target.LastAware);
-                        replay.Decorations.AddWithGrowing(new CircleDecoration(580, lifespan, Colors.Orange, 0.2, new PositionConnector(effect.Position)), growingEnd);
+                        lifespan = (effect.Time - duration, Math.Min(effect.Time, target.LastAware));
+                        replay.Decorations.AddWithGrowing(new CircleDecoration(580, lifespan, Colors.Orange, 0.2, new PositionConnector(effect.Position)), effect.Time);
                     }
                 }
 
