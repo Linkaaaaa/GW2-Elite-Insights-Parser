@@ -479,7 +479,7 @@ internal static class CombatEventFactory
                 _ = new EffectEventAgentRemove(stateChangeEvent, agentData, statusEvents.AgentEffectEventsByTrackingID);
                 break;
             default:
-                throw new InvalidOperationException("Unsupported StateChange in AddStateChangeEvent");
+                break;
         }
     }
 
