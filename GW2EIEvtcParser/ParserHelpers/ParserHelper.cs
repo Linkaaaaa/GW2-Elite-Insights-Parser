@@ -198,7 +198,7 @@ public static class ParserHelper
         return state != StateChange.Unknown && state != StateChange.ReplInfo && 
             state != StateChange.StatReset && state != StateChange.APIDelayed && 
             state != StateChange.Idle && state != StateChange.AgentChange &&
-            state != StateChange.SomethingUnused;
+            state != StateChange.EarlyExit;
     }
     internal static bool IsSupportedStateChangeForInstanceLogs(StateChange state)
     {

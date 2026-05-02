@@ -319,7 +319,7 @@ public static class ArcDPSEnums
         EffectAgentRemove = 63,
         AgentChange = 64,
         MapChange = 65,
-        SomethingUnused = 66,
+        EarlyExit = 66,
         AnimationStart = 67,
         AnimationStop = 68, 
         BuffApply = 69,
