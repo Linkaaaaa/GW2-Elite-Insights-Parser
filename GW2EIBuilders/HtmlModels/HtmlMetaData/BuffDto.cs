@@ -44,6 +44,10 @@ internal class BuffDto : IDItemDto
             {
                 Description += descriptions[i] + (i < descriptions.Count - 1 ? "<br>" : "");
             }
+        } 
+        else
+        {
+            Description = "ID: " + buff.ID;
         }
     }
 
