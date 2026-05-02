@@ -115,14 +115,7 @@ internal class BuffDictionary(int layer1InitialCapacity, int layer2InitialCapaci
             }
             _lastRemovedRegen = null;
         }
-        if (!_buffIDToEvents.TryGetValue(buff.ID, out var list))
-        {
-            list = new(_layer2InitialCapacityBuffs);
-            _buffIDToEvents[buff.ID] = list;
-            _buffIDToExtensions[buff.ID] = new(_layer2InitialCapacityExts);
-        }
-        
-        AddToList(log, list, _buffIDToExtensions[buff.ID], buffEvent, _layer3InitialCapacityExts);
+        Add(log, buff, buffEvent);
     }
 
 
