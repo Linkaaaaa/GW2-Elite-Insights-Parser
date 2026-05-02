@@ -244,7 +244,7 @@ public static class ArcDPSEnums
     // State Change    
     public enum StateChange : byte
     {
-        None = 0,
+        Combat = 0,
         EnterCombat = 1,
         ExitCombat = 2,
         ChangeUp = 3,

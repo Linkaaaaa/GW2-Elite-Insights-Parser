@@ -60,7 +60,7 @@ public class CombatItem
 
 #if DEBUG
     // For debugging, to get rid of statechanges seen generally on all agents
-    public bool IsSpecial => IsStateChange != StateChange.None && IsStateChange != StateChange.Position && IsStateChange != StateChange.Rotation && IsStateChange != StateChange.Velocity && IsStateChange != StateChange.HealthUpdate && IsStateChange != StateChange.BarrierUpdate && IsStateChange != StateChange.EnterCombat && IsStateChange != StateChange.ExitCombat && IsStateChange != StateChange.BreakbarPercent && IsStateChange != StateChange.BreakbarState && IsStateChange != StateChange.Spawn && IsStateChange != StateChange.Despawn && IsStateChange != StateChange.TeamChange && IsStateChange != StateChange.StackActive;
+    public bool IsSpecial => IsStateChange != StateChange.Combat && IsStateChange != StateChange.Position && IsStateChange != StateChange.Rotation && IsStateChange != StateChange.Velocity && IsStateChange != StateChange.HealthUpdate && IsStateChange != StateChange.BarrierUpdate && IsStateChange != StateChange.EnterCombat && IsStateChange != StateChange.ExitCombat && IsStateChange != StateChange.BreakbarPercent && IsStateChange != StateChange.BreakbarState && IsStateChange != StateChange.Spawn && IsStateChange != StateChange.Despawn && IsStateChange != StateChange.TeamChange && IsStateChange != StateChange.StackActive;
 #endif
 
     // Constructor
@@ -210,6 +210,7 @@ public class CombatItem
     internal bool IsDirectDamageEvent()
     {
         return IsStateChange == StateChange.None &&
+        return IsStateChange == StateChange.Combat &&
                     IsActivation == Activation.None &&
                     IsBuffRemove == BuffRemove.None &&
                     IsBuff == 0
@@ -219,6 +220,7 @@ public class CombatItem
     internal bool IsBuffDamageEvent()
     {
         return IsStateChange == StateChange.None &&
+        return IsStateChange == StateChange.Combat &&
                     IsActivation == Activation.None &&
                     IsBuffRemove == BuffRemove.None &&
                     IsBuff != 0 && Value == 0
@@ -227,7 +229,7 @@ public class CombatItem
 
     internal bool SrcIsAgent()
     {
-        return IsStateChange == StateChange.None
+        return IsStateChange == StateChange.Combat
             || IsStateChange == StateChange.EnterCombat
             || IsStateChange == StateChange.ExitCombat
             || IsStateChange == StateChange.ChangeUp
@@ -280,7 +282,7 @@ public class CombatItem
 
     internal bool DstIsAgent()
     {
-        return IsStateChange == StateChange.None
+        return IsStateChange == StateChange.Combat
             || IsStateChange == StateChange.AttackTarget
             || IsStateChange == StateChange.BuffInitial
             || IsStateChange == StateChange.Effect_45
@@ -317,7 +319,7 @@ public class CombatItem
             return IsStateChange == StateChange.BuffApply || IsStateChange == StateChange.BuffChange || IsStateChange == StateChange.BuffInitial;
         }
         return (IsBuff != 0 && BuffDmg == 0 && Value > 0 && IsActivation == Activation.None && 
-            IsBuffRemove == BuffRemove.None && IsStateChange == StateChange.None) || 
+            IsBuffRemove == BuffRemove.None && IsStateChange == StateChange.Combat) || 
             IsStateChange == StateChange.BuffInitial;
     }
 
@@ -327,7 +329,7 @@ public class CombatItem
         {
             return IsStateChange == StateChange.BuffRemoveAll || IsStateChange == StateChange.BuffRemoveSingle;
         }
-        return IsStateChange == StateChange.None && IsActivation == Activation.None && IsBuffRemove != BuffRemove.None;
+        return IsStateChange == StateChange.Combat && IsActivation == Activation.None && IsBuffRemove != BuffRemove.None;
     }
 
     internal bool IsBuffRemoveAllEvent()
@@ -386,7 +388,7 @@ public class CombatItem
         {
             return IsStateChange == StateChange.AnimationStart;
         }
-        if (IsStateChange != StateChange.None)
+        if (IsStateChange != StateChange.Combat)
         {
             return false;
         }
@@ -399,11 +401,11 @@ public class CombatItem
         {
             return IsStateChange == StateChange.AnimationStop;
         }
-        if (IsStateChange != StateChange.None)
+        if (IsStateChange != StateChange.Combat)
         {
             return false;
         }
-        return IsActivation == Activation.CancelFire || IsActivation == Activation.Reset || IsActivation == Activation.CancelCancel || IsActivation == Activation.NoData;
+        return IsActivation == Activation.Minimum || IsActivation == Activation.Reset || IsActivation == Activation.Cancel || IsActivation == Activation.NoData;
     }
 
     ///

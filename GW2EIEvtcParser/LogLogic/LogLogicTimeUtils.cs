@@ -123,7 +123,7 @@ internal static class LogLogicTimeUtils
             {
                 // check if invuln was applied at start rather than already present (otherwise could be a late start)
                 // this is a faster check for targets that get their starting invuln applied as they spawn or as the encounter starts
-                if (invulnApply.IsStateChange == StateChange.None && invulnApply.Time <= target.FirstAware + ParserHelper.TimeThresholdConstant)
+                if (invulnApply.IsStateChange != StateChange.BuffInitial && invulnApply.Time <= target.FirstAware + ParserHelper.TimeThresholdConstant)
                 {
                     return invulnRemove.Time;
                 }

@@ -4,7 +4,7 @@ namespace GW2EIEvtcParser.ParsedData;
 
 public class DirectHealthDamageEvent : HealthDamageEvent
 {
-    internal DirectHealthDamageEvent(CombatItem evtcItem, AgentData agentData, SkillData skillData, PhysicalResult result) : base(evtcItem, agentData, skillData)
+    internal DirectHealthDamageEvent(CombatItem evtcItem, AgentData agentData, SkillData skillData, DamageResult result) : base(evtcItem, agentData, skillData)
     {
         HealthDamage = evtcItem.Value;
         AgainstDowned = evtcItem.IsOffcycle == 1;

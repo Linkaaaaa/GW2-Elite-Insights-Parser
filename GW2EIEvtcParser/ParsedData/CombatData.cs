@@ -550,7 +550,7 @@ public partial class CombatData
                     CombatEventFactory.AddBuffRemoveEvent(combatItem, buffEvents, agentData, skillData, evtcVersion);
                 }
             }
-            else if (combatItem.IsStateChange != StateChange.None)
+            else if (combatItem.IsStateChange != StateChange.Combat)
             {
                 if (combatItem.IsEssentialMetadata)
                 {
