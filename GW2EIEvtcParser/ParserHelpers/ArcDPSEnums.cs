@@ -281,7 +281,7 @@ public static class ArcDPSEnums
         MapID = 25,
         ReplInfo = 26,
         StackActive = 27,
-        StackReset = 28,
+        StackDeactive = 28, // Formerly as StackReset
         Guild = 29,
         BuffInfo = 30,
         BuffFormula = 31,

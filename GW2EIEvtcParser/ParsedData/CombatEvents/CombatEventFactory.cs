@@ -274,8 +274,8 @@ internal static class CombatEventFactory
             case StateChange.StackActive:
                 buffEvents.Add(new BuffStackActiveEvent(stateChangeEvent, agentData, skillData));
                 break;
-            case StateChange.StackReset:
-                buffEvents.Add(new BuffStackResetEvent(stateChangeEvent, agentData, skillData));
+            case StateChange.StackDeactive:
+                buffEvents.Add(new BuffStackDeactiveEvent(stateChangeEvent, agentData, skillData));
                 break;
             case StateChange.TickRate:
                 metaDataEvents.TickRateEvents.Add(new TickRateEvent(stateChangeEvent));

@@ -255,7 +255,7 @@ public class CombatItem
             || IsStateChange == StateChange.AttackTarget
             || IsStateChange == StateChange.Targetable
             || IsStateChange == StateChange.StackActive
-            || IsStateChange == StateChange.StackReset
+            || IsStateChange == StateChange.StackDeactive
             || IsStateChange == StateChange.Guild
             || IsStateChange == StateChange.BreakbarState
             || IsStateChange == StateChange.BreakbarPercent
