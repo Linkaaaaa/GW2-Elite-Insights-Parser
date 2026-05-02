@@ -8,14 +8,14 @@ public class DirectHealthDamageEvent : HealthDamageEvent
     {
         HealthDamage = evtcItem.Value;
         AgainstDowned = evtcItem.IsOffcycle == 1;
-        IsAbsorbed = result == PhysicalResult.Absorb;
-        IsBlind = result == PhysicalResult.Blind;
-        IsBlocked = result == PhysicalResult.Block;
-        HasCrit = result == PhysicalResult.Crit;
-        IsEvaded = result == PhysicalResult.Evade;
-        HasGlanced = result == PhysicalResult.Glance;
+        IsAbsorbed = result == DamageResult.Absorb; 
+        IsBlind = result == DamageResult.Blind;
+        IsBlocked = result == DamageResult.Block;
+        HasCrit = result == DamageResult.Crit;
+        IsEvaded = result == DamageResult.Evade;
+        HasGlanced = result == DamageResult.Glance;
         ShieldDamage = evtcItem.IsShields > 0 ? (int)evtcItem.OverstackValue : 0;
-        HasHit = result == PhysicalResult.Normal || HasGlanced || HasCrit; 
+        HasHit = result == DamageResult.Normal || HasGlanced || HasCrit; 
     }
 
     internal override void MakeIntoAbsorbed()
@@ -23,7 +23,11 @@ public class DirectHealthDamageEvent : HealthDamageEvent
         HasHit = false;
         HasCrit = false;
         HasGlanced = false;
+        IsBlind = false;
+        IsBlocked = false;
+        IsEvaded = false;
         IsAbsorbed = true;
+
         HealthDamage = 0;
         ShieldDamage = 0;
     }

@@ -636,10 +636,10 @@ internal static class CombatEventFactory
 
     public static void AddDirectDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage, List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents, AgentData agentData, SkillData skillData)
     {
-        PhysicalResult result = GetPhysicalResult(damageEvent.Result);
+        DamageResult result = GetDamageResult(damageEvent.Result);
         switch (result)
         {
-            case PhysicalResult.BreakbarDamage:
+            case DamageResult.BreakbarDamage:
                 var brkChange = new BreakbarChangeEvent(damageEvent, agentData, skillData);
                 // Change from unknown with generic id is recovery when positive, soft cc will cause negative values to appear
                 if (brkChange.SkillID == skillData.GenericBreakbarID && brkChange.From.IsUnknown)
@@ -651,19 +651,24 @@ internal static class CombatEventFactory
                     brkBarDamage.Add(new BreakbarDamageEvent(damageEvent, agentData, skillData));
                 }
                 break;
-            case PhysicalResult.CrowdControl:
+            case DamageResult.CrowdControl:
                 crowdControlEvents.Add(new CrowdControlEvent(damageEvent, agentData, skillData));
                 break;
-            case PhysicalResult.Interrupt:
-            case PhysicalResult.KillingBlow:
-            case PhysicalResult.Downed:
+            case DamageResult.Interrupt:
+            case DamageResult.KillingBlow:
+            case DamageResult.Downed:
                 hpDamage.Add(new NoDamageHealthDamageEvent(damageEvent, agentData, skillData, result));
                 break;
-            case PhysicalResult.Activation:
-            case PhysicalResult.Unknown:
+            case DamageResult.Normal:
+            case DamageResult.Crit:
+            case DamageResult.Glance:
+            case DamageResult.Block:
+            case DamageResult.Evade:
+            case DamageResult.Absorb:
+            case DamageResult.Blind:
+                hpDamage.Add(new DirectHealthDamageEvent(damageEvent, agentData, skillData, result));
                 break;
             default:
-                hpDamage.Add(new DirectHealthDamageEvent(damageEvent, agentData, skillData, result));
                 break;
         }
     }

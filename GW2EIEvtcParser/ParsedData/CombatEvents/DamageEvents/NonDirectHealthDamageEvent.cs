@@ -21,7 +21,9 @@ public class NonDirectHealthDamageEvent : HealthDamageEvent
     internal override void MakeIntoAbsorbed()
     {
         HasHit = false;
+        IsLifeLeech = false;
         IsAbsorbed = true;
+
         HealthDamage = 0;
         ShieldDamage = 0;
     }
