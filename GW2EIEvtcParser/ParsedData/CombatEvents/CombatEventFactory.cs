@@ -659,14 +659,14 @@ internal static class CombatEventFactory
             case DamageResult.Downed:
                 hpDamage.Add(new NoDamageHealthDamageEvent(damageEvent, agentData, skillData, result));
                 break;
-            case DamageResult.Normal:
-            case DamageResult.Crit:
-            case DamageResult.Glance:
-            case DamageResult.Block:
-            case DamageResult.Evade:
-            case DamageResult.Absorb:
-            case DamageResult.Blind:
-            case DamageResult.Invert:
+            case DamageResult.DirectNormal:
+            case DamageResult.DirectCrit:
+            case DamageResult.DirectGlance:
+            case DamageResult.DirectBlock:
+            case DamageResult.DirectEvade:
+            case DamageResult.DirectOrBuffAbsorb:
+            case DamageResult.DirectBlind:
+            case DamageResult.DirectOrBuffInvert:
                 hpDamage.Add(new DirectHealthDamageEvent(damageEvent, agentData, skillData, result));
                 break;
             default:
@@ -686,8 +686,8 @@ internal static class CombatEventFactory
                 case DamageResult.BuffNotCycle_DamageToSourceOnHit:
                 case DamageResult.BuffNotCycle_DamageToTargetOnHit:
                 case DamageResult.BuffNotCycle_DamageToTargetOnStackRemove:
-                case DamageResult.Absorb:
-                case DamageResult.Invert:
+                case DamageResult.DirectOrBuffAbsorb:
+                case DamageResult.DirectOrBuffInvert:
                     hpDamage.Add(new NonDirectHealthDamageEvent(damageEvent, agentData, skillData, result));
                     break;
                 default:

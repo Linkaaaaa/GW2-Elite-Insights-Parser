@@ -206,20 +206,20 @@ public static class ArcDPSEnums
 
     public enum DamageResult : byte
     {
-        Normal = 0,
-        Crit = 1,
-        Glance = 2,
-        Block = 3,
-        Evade = 4,
+        DirectNormal = 0,
+        DirectCrit = 1,
+        DirectGlance = 2,
+        DirectBlock = 3,
+        DirectEvade = 4,
         Interrupt = 5,
-        Absorb = 6,
-        Blind = 7,
+        DirectOrBuffAbsorb = 6,
+        DirectBlind = 7,
         KillingBlow = 8,
         Downed = 9,
         BreakbarDamage = 10,
         Activation = 11,
         CrowdControl = 12,
-        Invert = 13,
+        DirectOrBuffInvert = 13,
         BuffCycle = 14, // damage happened on tick timer
         BuffNotCycle = 15, // damage happened outside tick timer (resistable)
         BuffNotCycle_DamageToTargetOnHit = 16, // damage happened to target on hiting target
