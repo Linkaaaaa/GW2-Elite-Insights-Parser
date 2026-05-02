@@ -681,10 +681,6 @@ internal static class CombatEventFactory
             DamageResult result = GetDamageResult(damageEvent.Result);
             switch (result)
             {
-                case DamageResult.Activation:
-                case DamageResult.Unknown:
-                default:
-                    break;
                 case DamageResult.BuffNotCycle:
                 case DamageResult.BuffCycle:
                 case DamageResult.BuffNotCycle_DamageToSourceOnHit:
@@ -693,6 +689,8 @@ internal static class CombatEventFactory
                 case DamageResult.Absorb:
                 case DamageResult.Invert:
                     hpDamage.Add(new NonDirectHealthDamageEvent(damageEvent, agentData, skillData, result));
+                    break;
+                default:
                     break;
             }
         }
