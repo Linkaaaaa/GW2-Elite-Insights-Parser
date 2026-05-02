@@ -485,9 +485,13 @@ partial class CombatData
         return GetTimeValueOrEmpty(_crowControlTakenData, dst);
     }
 
-    public IReadOnlyList<StunBreakEvent> GetStunBreakEvents(AgentItem src)
+    public IReadOnlyList<StunBreakEvent> GetStunBreakReceivedData(AgentItem dst)
     {
-        return GetTimeValueOrEmpty(_statusEvents.StunBreakEventsBySrc, src);
+        return GetTimeValueOrEmpty(_stunBreakReceivedData, dst);
+    }
+    public IReadOnlyList<StunBreakEvent> GetStunBreakData(AgentItem src)
+    {
+        return GetTimeValueOrEmpty(_stunBreakData, src);
     }
     #endregion CROWDCONTROL
     #region CAST

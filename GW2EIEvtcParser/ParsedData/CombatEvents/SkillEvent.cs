@@ -6,9 +6,9 @@ namespace GW2EIEvtcParser.ParsedData;
 public abstract class SkillEvent : TimeCombatEvent
 {
     private int _isCondi = -1;
-    public readonly AgentItem From;
+    public AgentItem From { get; protected set; }
     public AgentItem CreditedFrom => From.GetFinalMaster();
-    public readonly AgentItem To;
+    public AgentItem To { get; protected set; }
 
     public readonly SkillItem Skill;
     public long SkillID => Skill.ID;

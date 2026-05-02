@@ -8,7 +8,13 @@ namespace GW2EIEvtcParser.ParsedData;
 internal static class CombatEventFactory
 {
 
-    public static void AddStateChangeEvent(long logStart, CombatItem stateChangeEvent, AgentData agentData, SkillData skillData, MetaEventsContainer metaDataEvents, StatusEventsContainer statusEvents, List<RewardEvent> rewardEvents, List<WeaponSwapEvent> wepSwaps, List<BuffEvent> buffEvents, EvtcVersionEvent evtcVersion, EvtcParserSettings settings, GW2APIController apiController)
+    public static void AddStateChangeEvent(long logStart, CombatItem stateChangeEvent, AgentData agentData, 
+        SkillData skillData, MetaEventsContainer metaDataEvents, 
+        StatusEventsContainer statusEvents, 
+        List<RewardEvent> rewardEvents, List<WeaponSwapEvent> wepSwaps,
+        List<BuffEvent> buffEvents, List<StunBreakEvent> stunBreakEvents,
+        EvtcVersionEvent evtcVersion, EvtcParserSettings settings,
+        GW2APIController apiController)
     {
         switch (stateChangeEvent.IsStateChange)
         {
@@ -404,8 +410,7 @@ internal static class CombatEventFactory
                 Add(statusEvents.GliderEventsBySrc, gliderEvent.Src, gliderEvent);
                 break;
             case StateChange.StunBreak:
-                var stunbreakEvent = new StunBreakEvent(stateChangeEvent, agentData);
-                Add(statusEvents.StunBreakEventsBySrc, stunbreakEvent.Src, stunbreakEvent);
+                stunBreakEvents.Add(new StunBreakEvent(stateChangeEvent, agentData, skillData));
                 break;
             case StateChange.MissileCreate:
                 var missileEvent = new MissileEvent(stateChangeEvent, agentData, skillData);
@@ -637,6 +642,7 @@ internal static class CombatEventFactory
     private static void AddNonDamageDamageEvent(CombatItem damageEvent, DamageResult result, 
         List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage,
         List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents,
+        List<StunBreakEvent> stunBreakEvents,
         AgentData agentData, SkillData skillData)
     {
         switch (result)
@@ -665,7 +671,8 @@ internal static class CombatEventFactory
     }
 
     public static void AddDirectDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage, 
-        List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents, 
+        List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents,
+        List<StunBreakEvent> stunBreakEvents,
         AgentData agentData, SkillData skillData)
     {
         DamageResult result = GetDamageResult(damageEvent.Result);
@@ -676,7 +683,7 @@ internal static class CombatEventFactory
             case DamageResult.Interrupt:
             case DamageResult.KillingBlow:
             case DamageResult.Downed:
-                AddNonDamageDamageEvent(damageEvent, result, hpDamage, brkBarDamage, brkBarRecovered, crowdControlEvents, agentData, skillData);
+                AddNonDamageDamageEvent(damageEvent, result, hpDamage, brkBarDamage, brkBarRecovered, crowdControlEvents, stunBreakEvents, agentData, skillData);
                 break;
             case DamageResult.DirectNormal:
             case DamageResult.DirectCrit:
@@ -694,7 +701,8 @@ internal static class CombatEventFactory
     }
 
     public static void AddBuffDamageDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage, 
-        List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents, 
+        List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents,
+        List<StunBreakEvent> stunBreakEvents,
         AgentData agentData, SkillData skillData, EvtcVersionEvent evtcVersion)
     {
         if (evtcVersion.Build >= ArcDPSBuilds.ResultEnumRework)
@@ -707,7 +715,7 @@ internal static class CombatEventFactory
                 case DamageResult.Interrupt:
                 case DamageResult.KillingBlow:
                 case DamageResult.Downed:
-                    AddNonDamageDamageEvent(damageEvent, result, hpDamage, brkBarDamage, brkBarRecovered, crowdControlEvents, agentData, skillData);
+                    AddNonDamageDamageEvent(damageEvent, result, hpDamage, brkBarDamage, brkBarRecovered, crowdControlEvents, stunBreakEvents, agentData, skillData);
                     break;
                 case DamageResult.BuffNotCycle:
                 case DamageResult.BuffCycle:
