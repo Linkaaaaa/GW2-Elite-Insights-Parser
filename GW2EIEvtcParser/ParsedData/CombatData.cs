@@ -38,6 +38,8 @@ public partial class CombatData
     private Dictionary<AgentItem, List<BuffRemoveAllEvent>> _buffRemoveAllDataBySrc;
     private Dictionary<AgentItem, List<BuffRemoveAllEvent>> _buffRemoveAllDataByDst;
 
+    private Dictionary<long, Dictionary<AgentItem, List<BuffRemoveSingleEvent>>> _buffRemoveSingleDataByIDByDst;
+
 
     private Dictionary<long, List<BuffExtensionEvent>> _buffExtensionData;
 
@@ -706,6 +708,12 @@ public partial class CombatData
         _buffRemoveAllDataByIDByDst = _buffData.ToDictionary(
             x => x.Key,
             x => x.Value.OfType<BuffRemoveAllEvent>()
+                .GroupBy(y => y.To)
+                .ToDictionary(y => y.Key, y => y.ToList())
+        );
+        _buffRemoveSingleDataByIDByDst = _buffData.ToDictionary(
+            x => x.Key,
+            x => x.Value.OfType<BuffRemoveSingleEvent>()
                 .GroupBy(y => y.To)
                 .ToDictionary(y => y.Key, y => y.ToList())
         );

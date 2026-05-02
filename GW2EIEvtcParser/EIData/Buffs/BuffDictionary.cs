@@ -110,8 +110,8 @@ internal class BuffDictionary(int layer1InitialCapacity, int layer2InitialCapaci
         {
             if (bae.Time - _lastRemovedRegen.Time < ParserHelper.ServerDelayConstant)
             {
-                bae.OverridenDurationInternal = (uint)_lastRemovedRegen.RemovedDuration;
-                bae.OverridenInstance = _lastRemovedRegen.BuffInstance;
+                bae.OverridenRegenDuration = (uint)_lastRemovedRegen.RemovedDuration;
+                bae.OverridenRegenInstance = _lastRemovedRegen.BuffInstance;
             }
             _lastRemovedRegen = null;
         }

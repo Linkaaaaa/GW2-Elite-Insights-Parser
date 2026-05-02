@@ -393,6 +393,15 @@ partial class CombatData
         return GetTimeValueOrEmpty(_buffRemoveAllDataByDst, dst);
     }
 
+    public IReadOnlyList<BuffRemoveSingleEvent> GetBuffRemoveSingleDataByIDByDst(long buffID, AgentItem dst)
+    {
+        if (_buffRemoveSingleDataByIDByDst.TryGetValue(buffID, out var byDst))
+        {
+            return GetTimeValueOrEmpty(byDst, dst);
+        }
+        return [];
+    }
+
     /// <summary>
     /// Returns list of buff events applied on agent
     /// </summary>
