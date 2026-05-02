@@ -263,8 +263,13 @@
                 let description = instanceBuff.buff.description;
 
                 if (description) {
+                    let stacks = "<br>Max Stack(s) 1";
+                    if (description.includes(stacks)) {
+                        description = description.replace(stacks, "");
+                    }
                     title += '<br> ' + description;
                 }
+
                 if (instanceBuff.remainingDuration) {
                     title += '<br> Remaining Duration: ' + this.round3(instanceBuff.remainingDuration / 1000) + ' seconds';
                 }
