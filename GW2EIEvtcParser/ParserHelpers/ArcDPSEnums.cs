@@ -37,6 +37,7 @@ public static class ArcDPSEnums
         public const int EmoteAndGadgetInteractionAdded = 20260318;
         public const int AnimationAsStateChanges = 20260430;
         public const int BuffAppliesAndRemovesAsStateChanges = 20260501;
+        public const int ResultEnumRework = 20260501;
         //
         public const int EndOfLife = int.MaxValue;
     }
@@ -184,6 +185,7 @@ public static class ArcDPSEnums
     }
 
     // Buff cycle
+    // Retired as of 20260501
     public enum BuffCycle : byte
     {
         Cycle, // damage happened on tick timer
@@ -202,7 +204,7 @@ public static class ArcDPSEnums
 
     // Result
 
-    public enum PhysicalResult : byte
+    public enum DamageResult : byte
     {
         Normal = 0,
         Crit = 1,
@@ -217,15 +219,22 @@ public static class ArcDPSEnums
         BreakbarDamage = 10,
         Activation = 11,
         CrowdControl = 12,
+        Invert = 13,
+        BuffCycle = 14, // damage happened on tick timer
+        BuffNotCycle = 15, // damage happened outside tick timer (resistable)
+        BuffNotCycle_DamageToTargetOnHit = 16, // damage happened to target on hiting target
+        BuffNotCycle_DamageToSourceOnHit = 17, // damage happened to source on hiting target
+        BuffNotCycle_DamageToTargetOnStackRemove = 18, // damage happened to target on source losing a stack
 
         Unknown
     };
 
-    public static PhysicalResult GetPhysicalResult(byte bt)
+    public static DamageResult GetDamageResult(byte bt)
     {
-        return bt < (byte)PhysicalResult.Unknown ? (PhysicalResult)bt : PhysicalResult.Unknown;
+        return bt < (byte)DamageResult.Unknown ? (DamageResult)bt : DamageResult.Unknown;
     }
 
+    // Retired as of 20260501
     public enum ConditionResult : byte
     {
         ExpectedToHit = 0,

@@ -666,6 +666,7 @@ internal static class CombatEventFactory
             case DamageResult.Evade:
             case DamageResult.Absorb:
             case DamageResult.Blind:
+            case DamageResult.Invert:
                 hpDamage.Add(new DirectHealthDamageEvent(damageEvent, agentData, skillData, result));
                 break;
             default:
@@ -673,16 +674,39 @@ internal static class CombatEventFactory
         }
     }
 
-    public static void AddIndirectDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, AgentData agentData, SkillData skillData)
+    public static void AddBuffDamageDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, AgentData agentData, SkillData skillData, EvtcVersionEvent evtcVersion)
     {
-        ConditionResult result = GetConditionResult(damageEvent.Result);
-        switch (result)
+        if (evtcVersion.Build >= ArcDPSBuilds.ResultEnumRework)
         {
-            case ConditionResult.Unknown:
-                break;
-            default:
-                hpDamage.Add(new NonDirectHealthDamageEvent(damageEvent, agentData, skillData, result));
-                break;
+            DamageResult result = GetDamageResult(damageEvent.Result);
+            switch (result)
+            {
+                case DamageResult.Activation:
+                case DamageResult.Unknown:
+                default:
+                    break;
+                case DamageResult.BuffNotCycle:
+                case DamageResult.BuffCycle:
+                case DamageResult.BuffNotCycle_DamageToSourceOnHit:
+                case DamageResult.BuffNotCycle_DamageToTargetOnHit:
+                case DamageResult.BuffNotCycle_DamageToTargetOnStackRemove:
+                case DamageResult.Absorb:
+                case DamageResult.Invert:
+                    hpDamage.Add(new NonDirectHealthDamageEvent(damageEvent, agentData, skillData, result));
+                    break;
+            }
+        }
+        else
+        {
+            ConditionResult result = GetConditionResult(damageEvent.Result);
+            switch (result)
+            {
+                case ConditionResult.Unknown:
+                    break;
+                default:
+                    hpDamage.Add(new NonDirectHealthDamageEvent(damageEvent, agentData, skillData, result));
+                    break;
+            }
         }
     }
 

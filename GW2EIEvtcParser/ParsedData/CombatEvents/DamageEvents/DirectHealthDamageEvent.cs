@@ -8,7 +8,7 @@ public class DirectHealthDamageEvent : HealthDamageEvent
     {
         HealthDamage = evtcItem.Value;
         AgainstDowned = evtcItem.IsOffcycle == 1;
-        IsAbsorbed = result == DamageResult.Absorb; 
+        IsAbsorbed = result == DamageResult.Absorb || result == DamageResult.Invert;
         IsBlind = result == DamageResult.Blind;
         IsBlocked = result == DamageResult.Block;
         HasCrit = result == DamageResult.Crit;

@@ -209,7 +209,11 @@ public class CombatItem
 
     internal bool IsDirectDamageEvent()
     {
-        return IsStateChange == StateChange.None &&
+        if (_version.Build >= ArcDPSBuilds.ResultEnumRework)
+        {
+            return IsStateChange == StateChange.Combat &&
+                    IsBuff == 0;
+        }
         return IsStateChange == StateChange.Combat &&
                     IsActivation == Activation.None &&
                     IsBuffRemove == BuffRemove.None &&
@@ -219,7 +223,11 @@ public class CombatItem
 
     internal bool IsBuffDamageEvent()
     {
-        return IsStateChange == StateChange.None &&
+        if (_version.Build >= ArcDPSBuilds.ResultEnumRework)
+        {
+            return IsStateChange == StateChange.Combat &&
+                    IsBuff != 0 && Value == 0;
+        }
         return IsStateChange == StateChange.Combat &&
                     IsActivation == Activation.None &&
                     IsBuffRemove == BuffRemove.None &&
@@ -318,7 +326,7 @@ public class CombatItem
         {
             return IsStateChange == StateChange.BuffApply || IsStateChange == StateChange.BuffChange || IsStateChange == StateChange.BuffInitial;
         }
-        return (IsBuff != 0 && BuffDmg == 0 && Value > 0 && IsActivation == Activation.None && 
+        return (IsBuff != 0 && Value > 0 && IsActivation == Activation.None && 
             IsBuffRemove == BuffRemove.None && IsStateChange == StateChange.Combat) || 
             IsStateChange == StateChange.BuffInitial;
     }

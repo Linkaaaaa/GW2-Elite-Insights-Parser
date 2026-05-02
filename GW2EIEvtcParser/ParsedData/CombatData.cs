@@ -576,7 +576,7 @@ public partial class CombatData
                 }
                 else if (combatItem.IsBuffDamageEvent())
                 {
-                    CombatEventFactory.AddIndirectDamageEvent(combatItem, damageData, agentData, skillData);
+                    CombatEventFactory.AddBuffDamageDamageEvent(combatItem, damageData, agentData, skillData, evtcVersion);
                 }
             }
         }
