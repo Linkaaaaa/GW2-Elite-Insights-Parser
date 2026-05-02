@@ -103,8 +103,8 @@ public static class ArcDPSEnums
         None = 0, // not used - not this kind of event
         Normal = 1, // started skill/animation activation
         Quickness = 2, // unused as of nov 5 2019
-        CancelFire = 3,  // stopped skill activation with reaching tooltip time
-        CancelCancel = 4, // stopped skill activation without reaching tooltip time
+        Minimum = 3,  // stopped skill activation with reaching tooltip time
+        Cancel = 4, // stopped skill activation without reaching tooltip time
         Reset = 5, // animation completed fully
         NoData = 6, // Treat it as CancelFire
 
@@ -154,9 +154,11 @@ public static class ArcDPSEnums
         MoveSkill = 16,
         MovePos = 17,
         Any = 18,
-        AnyViaReset = 19,
+        GadgetViaReset = 19,
         ManualExpiry = 20,
         Despawn = 21,
+        ReturnControl = 22,
+        Ready = 23,
 
         Unknown
     };
@@ -231,7 +233,6 @@ public static class ArcDPSEnums
         InvulByPlayerSkill1 = 2,
         InvulByPlayerSkill2 = 3,
         InvulByPlayerSkill3 = 4,
-        //BreakbarDamage = 5,
 
         Unknown
     };

@@ -23,7 +23,7 @@ public class GadgetInteractEvent : AnimatedCastEvent
             EffectTarget = ParserHelper._unknownAgent;
         }
         // Bandaid, may not be perfect
-        if (AnimStop != AnimationStop.AnyViaReset && AnimStop != AnimationStop.Ended && Status != AnimationStatus.Interrupted)
+        if (AnimStop != AnimationStop.GadgetViaReset && AnimStop != AnimationStop.Ended && Status != AnimationStatus.Interrupted)
         {
             Status = AnimationStatus.Interrupted;
             SavedDuration = -ActualDuration;

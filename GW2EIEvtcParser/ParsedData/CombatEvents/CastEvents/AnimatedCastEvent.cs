@@ -37,14 +37,14 @@ public class AnimatedCastEvent : CastEvent
         {
             switch (endItem.IsActivation)
             {
-                case Activation.CancelCancel:
+                case Activation.Cancel:
                     Status = AnimationStatus.Interrupted;
                     SavedDuration = -ActualDuration;
                     break;
                 case Activation.Reset:
                     Status = AnimationStatus.Full;
                     break;
-                case Activation.CancelFire:
+                case Activation.Minimum:
                 case Activation.NoData:
                     int scaledExpectedDuration = (int)Math.Round(ExpectedDuration / nonScaledToScaledRatio);
                     SavedDuration = Math.Max(scaledExpectedDuration - ActualDuration, 0);
