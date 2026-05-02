@@ -634,9 +634,11 @@ internal static class CombatEventFactory
         return res;
     }
 
-    public static void AddDirectDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage, List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents, AgentData agentData, SkillData skillData)
+    private static void AddNonDamageDamageEvent(CombatItem damageEvent, DamageResult result, 
+        List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage,
+        List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents,
+        AgentData agentData, SkillData skillData)
     {
-        DamageResult result = GetDamageResult(damageEvent.Result);
         switch (result)
         {
             case DamageResult.BreakbarDamage:
@@ -645,7 +647,7 @@ internal static class CombatEventFactory
                 if (brkChange.SkillID == skillData.GenericBreakbarID && brkChange.From.IsUnknown)
                 {
                     brkBarRecovered.Add(new BreakbarRecoveryEvent(damageEvent, agentData, skillData));
-                } 
+                }
                 else
                 {
                     brkBarDamage.Add(new BreakbarDamageEvent(damageEvent, agentData, skillData));
@@ -658,6 +660,23 @@ internal static class CombatEventFactory
             case DamageResult.KillingBlow:
             case DamageResult.Downed:
                 hpDamage.Add(new NoDamageHealthDamageEvent(damageEvent, agentData, skillData, result));
+                break;
+        }
+    }
+
+    public static void AddDirectDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage, 
+        List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents, 
+        AgentData agentData, SkillData skillData)
+    {
+        DamageResult result = GetDamageResult(damageEvent.Result);
+        switch (result)
+        {
+            case DamageResult.BreakbarDamage:
+            case DamageResult.CrowdControl:
+            case DamageResult.Interrupt:
+            case DamageResult.KillingBlow:
+            case DamageResult.Downed:
+                AddNonDamageDamageEvent(damageEvent, result, hpDamage, brkBarDamage, brkBarRecovered, crowdControlEvents, agentData, skillData);
                 break;
             case DamageResult.DirectNormal:
             case DamageResult.DirectCrit:
@@ -674,13 +693,22 @@ internal static class CombatEventFactory
         }
     }
 
-    public static void AddBuffDamageDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, AgentData agentData, SkillData skillData, EvtcVersionEvent evtcVersion)
+    public static void AddBuffDamageDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage, 
+        List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents, 
+        AgentData agentData, SkillData skillData, EvtcVersionEvent evtcVersion)
     {
         if (evtcVersion.Build >= ArcDPSBuilds.ResultEnumRework)
         {
             DamageResult result = GetDamageResult(damageEvent.Result);
             switch (result)
             {
+                case DamageResult.BreakbarDamage:
+                case DamageResult.CrowdControl:
+                case DamageResult.Interrupt:
+                case DamageResult.KillingBlow:
+                case DamageResult.Downed:
+                    AddNonDamageDamageEvent(damageEvent, result, hpDamage, brkBarDamage, brkBarRecovered, crowdControlEvents, agentData, skillData);
+                    break;
                 case DamageResult.BuffNotCycle:
                 case DamageResult.BuffCycle:
                 case DamageResult.BuffNotCycle_DamageToSourceOnHit:

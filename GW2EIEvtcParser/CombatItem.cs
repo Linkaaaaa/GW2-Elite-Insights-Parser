@@ -226,7 +226,7 @@ public class CombatItem
         if (_version.Build >= ArcDPSBuilds.ResultEnumRework)
         {
             return IsStateChange == StateChange.Combat &&
-                    IsBuff != 0 && Value == 0;
+                    IsBuff != 0;
         }
         return IsStateChange == StateChange.Combat &&
                     IsActivation == Activation.None &&

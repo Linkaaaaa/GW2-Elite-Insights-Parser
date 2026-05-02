@@ -14,7 +14,7 @@ public class DirectHealthDamageEvent : HealthDamageEvent
         HasCrit = result == DamageResult.DirectCrit;
         IsEvaded = result == DamageResult.DirectEvade;
         HasGlanced = result == DamageResult.DirectGlance;
-        ShieldDamage = evtcItem.IsShields > 0 ? (int)evtcItem.OverstackValue : 0;
+        ShieldDamage = evtcItem.IsShields > 0 || evtcItem.OverstackValue > 0 ? (int)evtcItem.OverstackValue : 0;
         HasHit = result == DamageResult.DirectNormal || HasGlanced || HasCrit; 
     }
 
