@@ -14,6 +14,11 @@ public class BuffExtensionEvent : AbstractBuffApplyEvent
 
     internal BuffExtensionEvent(CombatItem evtcItem, AgentData agentData, SkillData skillData) : base(evtcItem, agentData, skillData)
     {
+        if (evtcItem.IsStateChange == StateChange.BuffChange)
+        {
+            To = By;
+            By = ParserHelper._unknownAgent;
+        }
         NewDuration = evtcItem.OverstackValue;
         OriginalNewDuration = NewDuration;
         ExtendedDuration = Math.Max(evtcItem.Value, 0);
