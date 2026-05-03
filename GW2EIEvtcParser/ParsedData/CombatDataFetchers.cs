@@ -1067,6 +1067,15 @@ partial class CombatData
     {
         return _metaDataEvents.EmoteGUIDEventsByEmoteID.TryGetValue(emoteID, out var evt) ? evt : EmoteGUIDEvent.DummyEmoteGUID;
     }
+    public TransformationGUIDEvent GetTransformationGUIDEventByGUID(GUID transformation)
+    {
+        return _metaDataEvents.TransformationGUIDEventsByGUID.TryGetValue(transformation, out var evt) ? evt : TransformationGUIDEvent.DummyTransformationGUID;
+    }
+
+    public TransformationGUIDEvent GetTransformationGUIDEventByTransformationID(long transformationID)
+    {
+        return _metaDataEvents.TransformationGUIDEventsByTransformationID.TryGetValue(transformationID, out var evt) ? evt : TransformationGUIDEvent.DummyTransformationGUID;
+    }
 
     public MarkerGUIDEvent GetMarkerGUIDEventByGUID(GUID marker)
     {

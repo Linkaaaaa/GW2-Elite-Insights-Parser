@@ -589,6 +589,7 @@ public static class ArcDPSEnums
         Species = 3,
         Team = 4,
         Emote = 5,
+        Transformation = 6,
         Unknown
     }
     public static ContentLocal GetContentLocal(byte bt)
