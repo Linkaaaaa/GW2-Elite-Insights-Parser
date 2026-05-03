@@ -553,7 +553,7 @@ internal class HarvestTemple : EndOfDragonsRaidEncounter
         } 
         else
         {
-            res.Add(new AnimatedCastEvent(target.AgentItem, skill, effect.Time - startOffset, dur, effect.Position));
+            res.Add(new AnimatedCastEvent(target.AgentItem, skill, effect.Time - startOffset, dur));
         }
     }
 

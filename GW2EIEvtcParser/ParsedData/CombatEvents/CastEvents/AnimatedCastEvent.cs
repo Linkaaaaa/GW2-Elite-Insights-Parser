@@ -7,11 +7,7 @@ public class AnimatedCastEvent : CastEvent
 {
     private readonly int _scaledActualDuration;
     //private readonly int _effectHappenedDuration;
-
-    public readonly Vector3? EffectPosition;
     public AgentItem EffectTarget { get; protected set; } = ParserHelper._unknownAgent;
-
-    public bool HasEffectPosition => EffectPosition != null;
 
     public readonly AnimationStart AnimStart;
     public readonly AnimationStop AnimStop;
@@ -70,41 +66,12 @@ public class AnimatedCastEvent : CastEvent
                 {
                     EffectTarget = agentData.GetAgent(startItem.DstAgent, startItem.Time);
                 }
-                else
-                {
-                    var positionBytes = new byte[3 * sizeof(short)];
-                    int offset = 0;
-                    positionBytes[offset++] = startItem.IsShields;
-                    positionBytes[offset++] = startItem.IsOffcycle;
-                    positionBytes[offset++] = startItem.Pad1;
-                    positionBytes[offset++] = startItem.Pad2;
-                    positionBytes[offset++] = startItem.Pad3;
-                    positionBytes[offset++] = startItem.Pad4;
-
-                    var positionInt16 = new short[3];
-                    Buffer.BlockCopy(positionBytes, 0, positionInt16, 0, positionBytes.Length);
-
-
-                    EffectPosition = new Vector3(positionInt16[0], positionInt16[1], -positionInt16[2]) * PositionConvertConstant;
-                }
             } 
             else
             {
                 if (startItem.IsActivation == Activation.Quickness)
                 {
                     Acceleration = 1;
-                }
-                if (startItem.DstAgent != 0 || startItem.OverstackValue != 0)
-                {
-                    unsafe
-                    {
-                        //NOTE(Rennorb): Cannot directly take the address of the field, because its a property.
-                        var xyBits = startItem.DstAgent;
-                        var x = *(float*)&xyBits;
-                        var y = *((float*)&xyBits + 1);
-                        var z = BitConverter.Int32BitsToSingle(unchecked((int)startItem.OverstackValue));
-                        EffectPosition = new(x, y, z);
-                    }
                 }
             }
             //_effectHappenedDuration = startItem.Value;
@@ -177,11 +144,6 @@ public class AnimatedCastEvent : CastEvent
         Acceleration = 0;
         Status = AnimationStatus.Full;
         SavedDuration = 0;
-    }
-
-    internal AnimatedCastEvent(AgentItem caster, SkillItem skill, long start, long dur, Vector3 effectPosition) : this(caster, skill, start, dur)
-    {
-        EffectPosition = effectPosition;
     }
 
     internal AnimatedCastEvent(AgentItem caster, SkillItem skill, long start, long dur, AgentItem effectTarget) : this(caster, skill, start, dur)
