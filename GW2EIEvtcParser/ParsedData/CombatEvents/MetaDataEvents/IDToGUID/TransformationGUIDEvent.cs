@@ -3,7 +3,7 @@
 public class TransformationGUIDEvent : IDToGUIDEvent
 {
     internal static TransformationGUIDEvent DummyTransformationGUID = new();
-    public long TransformationID => ContentID;
+    public uint TransformationID => (uint)ContentID;
     internal TransformationGUIDEvent(CombatItem evtcItem, EvtcVersionEvent evtcVersion) : base(evtcItem)
     {
     }

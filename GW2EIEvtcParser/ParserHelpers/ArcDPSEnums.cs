@@ -326,6 +326,7 @@ public static class ArcDPSEnums
         BuffChange = 70, // Extension
         BuffRemoveSingle = 71, // Single or Manual
         BuffRemoveAll = 72,
+        Transformation = 73,
         Unknown
     };
 

@@ -232,7 +232,14 @@ partial class CombatData
     {
         if (TryGetMarkerEventsByGUID(marker, out var markers))
         {
-            markerEvents = markers.Where(marker => marker.Src.Is(agent)).ToList();
+            if (agent.IsEnglobedAgent)
+            {
+                markerEvents = markers.Where(marker => marker.Src.Is(agent) && agent.InAwareTimes(marker.Time)).ToList();
+            }
+            else
+            {
+                markerEvents = markers.Where(marker => marker.Src.Is(agent)).ToList();
+            }
             return true;
         }
         markerEvents = null;
@@ -240,7 +247,68 @@ partial class CombatData
     }
 
     #endregion MARKERS
-    
+
+    #region TRANSFORMATIONS
+
+    /// <summary>
+    /// Returns transformation events owned by agent
+    /// </summary>
+    /// <param name="agent"></param>
+    /// <returns></returns>
+    public IReadOnlyList<TransformationEvent> GetTransformationEvents(AgentItem agent)
+    {
+        return GetTimeValueOrEmpty(_statusEvents.TransformationEventsBySrc, agent);
+    }
+    /// <summary>
+    /// Returns transformation events of transformation marker ID
+    /// </summary>
+    /// <param name="transformationID">transformation ID</param>
+    /// <returns></returns>
+    public IReadOnlyList<TransformationEvent> GetTransformationEventsByTransformationID(long transformationID)
+    {
+        return _statusEvents.TransformationEventsByTransformationID.GetValueOrEmpty(transformationID);
+    }
+    /// <summary>
+    /// True if transformation events of given transformation GUID has been found
+    /// </summary>
+    /// <param name="transformation">transformation GUID</param>
+    /// <param name="transformationEvents">Found transformation events</param>
+    public bool TryGetTransformationEventsByGUID(GUID transformation, [NotNullWhen(true)] out IReadOnlyList<TransformationEvent>? transformationEvents)
+    {
+        var transformationGUIDEvent = GetTransformationGUIDEventByGUID(transformation);
+        transformationEvents = GetTransformationEventsByTransformationID(transformationGUIDEvent.TransformationID);
+        if (transformationEvents.Count > 0)
+        {
+            return true;
+        }
+        transformationEvents = null;
+        return false;
+    }
+    /// <summary>
+    /// True if transformation events of given transformation GUID has been found on given agent
+    /// </summary>
+    /// <param name="agent">transformation owner</param>
+    /// <param name="transformation">transformation GUID</param>
+    /// <param name="transformationEvents">Found transformation events</param>
+    public bool TryGetTransformationEventsBySrcWithGUID(AgentItem agent, GUID transformation, [NotNullWhen(true)] out IReadOnlyList<TransformationEvent>? transformationEvents)
+    {
+        if (TryGetTransformationEventsByGUID(transformation, out var transformations))
+        {
+            if (agent.IsEnglobedAgent)
+            {
+                transformationEvents = transformations.Where(transformation => transformation.Src.Is(agent) && agent.InAwareTimes(transformation.Time)).ToList();
+            } 
+            else
+            {
+                transformationEvents = transformations.Where(transformation => transformation.Src.Is(agent)).ToList();
+            }
+            return true;
+        }
+        transformationEvents = null;
+        return false;
+    }
+    #endregion TRANSFORMATIONS
+
     #region UPDATES
 
     public IReadOnlyList<BarrierUpdateEvent> GetBarrierUpdateEvents(AgentItem src)

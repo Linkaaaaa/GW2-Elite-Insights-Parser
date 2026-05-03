@@ -488,6 +488,33 @@ internal static class CombatEventFactory
             case StateChange.EffectAgentRemove:
                 _ = new EffectEventAgentRemove(stateChangeEvent, agentData, statusEvents.AgentEffectEventsByTrackingID);
                 break;
+            case StateChange.Transformation:
+                var transformationEvent = new TransformationEvent(stateChangeEvent, agentData, metaDataEvents.TransformationGUIDEventsByTransformationID);
+                if (transformationEvent.IsEnd)
+                {
+                    // Set end to transformation
+                    if (statusEvents.TransformationEventsBySrc.TryGetValue(transformationEvent.Src, out var srcTransformations))
+                    {
+                        var last = srcTransformations.LastOrDefault();
+                        last?.SetEndTime(transformationEvent.Time);
+                    }
+                } 
+                else
+                {
+                    if (statusEvents.TransformationEventsBySrc.TryGetValue(transformationEvent.Src, out var srcTransformations))
+                    {
+                        // sanity check
+                        // A new transformation but the previous one did not get an end event, set it to end at new transformation time
+                        var last = srcTransformations.LastOrDefault();
+                        if (last != null && last.EndNotSet)
+                        {
+                            last.SetEndTime(transformationEvent.Time);
+                        }
+                    }
+                    Add(statusEvents.TransformationEventsBySrc, transformationEvent.Src, transformationEvent);
+                    Add(statusEvents.TransformationEventsByTransformationID, transformationEvent.TransformationID, transformationEvent);
+                }
+                break;
             default:
                 break;
         }
