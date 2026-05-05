@@ -67,7 +67,7 @@
                                       :x2="timeOffsetedToX(phaseBloc.phase.start)" :y2="20 + 5 + phaseBloc.depth * 10"
                                       :stroke="phaseBloc.color"
                                       stroke-width="2"
-                                      :opacity="selectedPhase && selectedPhase !== phaseBloc.phase ? 0.4 : 1"
+                                      :opacity="getPhaseOpacity(phaseBloc.phase)"
                                       @mouseenter="hoverPhase(phaseBloc.phase)"
                                       @mouseleave="resetHoveredPhase"
                                       @click.stop="clickedPhase(phaseBloc.phase, $event)"
@@ -77,7 +77,7 @@
                                       :x2="timeOffsetedToX(phaseBloc.phase.end)" :y2="20 + 5 + phaseBloc.depth * 10"
                                       :stroke="phaseBloc.color"
                                       stroke-width="2"
-                                      :opacity="selectedPhase && selectedPhase !== phaseBloc.phase ? 0.4 : 1"
+                                      :opacity="getPhaseOpacity(phaseBloc.phase)"
                                       @mouseenter="hoverPhase(phaseBloc.phase)"
                                       @mouseleave="resetHoveredPhase"
                                       @click.stop="clickedPhase(phaseBloc.phase, $event)"
@@ -135,14 +135,14 @@
                                 </text>
                             </g>
 
-                            <text v-if="selectedPhase"
+                            <text v-if="hoveredPhase || selectedPhase"
                                   :x="timelineWidth / 2"
                                   :y="10 * maxDepth + 45"
                                   text-anchor="middle"
                                   :fill="timelineColors.text"
                                   font-size="12"
                                   style="font-weight: 500; pointer-events: none;">
-                                {{ getFormattedPhaseText(selectedPhase) }}
+                                {{ getFormattedPhaseText(hoveredPhase || selectedPhase) }}
                             </text>
                         </svg>
                         <input type="range" :min="minTime" :max="maxTime" value="0" :id="htmlElementIDs.timeRangeID" style="display: none;">
@@ -232,11 +232,10 @@
                 backwards: false,
                 sliderDelimiter: sliderDelimiter,
                 selectedPhase: null,
+                hoveredPhase: null,
                 draggingCursor: false,
                 hoverTime: 0,
-                hasClickedPhase: false,
                 isHoveringTimeline: false,
-                isPhaseClicked: false,
                 clickTimeout: null,
             };
         },
@@ -512,22 +511,23 @@
             },
             onTimelineMouseLeave() {
                 this.isHoveringTimeline = false;
-                if (!this.hasClickedPhase) {
-                    this.selectedPhase = this.phases[0];
-                }
+                this.hoveredPhase = null;
             },
             onTimelineClick(e) {
-                this.hasClickedPhase = false;
                 let time = this.getTimeFromEvent(e);
                 this.updateTime(time * 1000);
             },
+            getPhaseOpacity(phase) {
+                if (phase === this.hoveredPhase) {
+                    return 1.0;
+                }
+                return this.selectedPhase === phase ? 0.75 : 0.4;
+            },
             hoverPhase(phase) {
-                this.selectedPhase = phase;
+                this.hoveredPhase = phase;
             },
             resetHoveredPhase() {
-                if (!this.hasClickedPhase) {
-                    this.selectedPhase = this.phases[0];
-                }
+                this.hoveredPhase = null;
             },
             clickedPhase(phase, e) {
                 clearTimeout(this.clickTimeout);
@@ -557,6 +557,7 @@
             },
             jumpToPhaseStart(phase) {
                 clearTimeout(this.clickTimeout);
+                this.selectedPhase = phase;
                 this.updateTime(phase.start * 1000 - this.range.min);
             },
         },
