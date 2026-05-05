@@ -241,6 +241,7 @@
                 hoverTime: 0,
                 isHoveringTimeline: false,    
                 clickThroughDragCursor: false,    
+                blockDragCursor: false,
                 phaseDoubleClickTimeout: null, 
                 dragThroughPhaseBlockTimeout: null,
             };
@@ -581,6 +582,10 @@
                         this.selectedPhase = phase;
                         let time = this.getTimeFromEvent(e);
                         this.updateTime(time * 1000);
+                        this.blockDragCursor = true;
+                        setTimeout(() => {
+                            this.blockDragCursor = false
+                        }, 150);
                     }, 200);
                 }
             },
@@ -590,12 +595,16 @@
             },
             startDragCursorFromLine(e) {
                 // double click expected
+                if (this.blockDragCursor) {
+                    return;
+                }
                 if (e.detail > 1) {
                     this.clickThroughDragCursor = true;
                     let element = document.getElementById("large-line-drag")
                     element.style.pointerEvents = 'none'; // this will cause an hover on phase bloc to appear, if phase under, we will jumpToPhaseStart it
                     setTimeout(() => {
                         element.style.pointerEvents = 'stroke';
+                        this.clickThroughDragCursor = false;
                     }, 100);
                 } else {
                     // classic use case
