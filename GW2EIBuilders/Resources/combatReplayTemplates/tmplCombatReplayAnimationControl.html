@@ -422,6 +422,18 @@
                 this.updatePhaseTime(phase);
                 animator._reselectIfEnglobed();
             },
+            getSliderGradient: function () {
+                var startPercent, endPercent;
+                if (!this.sliderDelimiter || this.sliderDelimiter.min === -1) {
+                    startPercent = 0;
+                    endPercent = 100;
+                } else {
+                    var max = this.maxTime;
+                    startPercent = this.sliderDelimiter.min / max * 100;
+                    endPercent = this.sliderDelimiter.max / max * 100;
+                }
+                return computeSliderGradient("#888888", "#F3F3F3", startPercent, endPercent);
+            },
             getPhaseData: function (id) {
                 return logData.phases[id];
             },
