@@ -41,7 +41,7 @@
                                   :height="10 * maxDepth + 30"
                                   fill="transparent"
                                   style="cursor: pointer;"
-                                  @click="onTimelineClick" />
+                                  @mousedown="onTimelineMouseDown" />
 
                             <g v-for="phaseBloc in phasesByDepth">
                                 <!-- Invisible grab -->
@@ -52,8 +52,9 @@
                                       stroke-linecap="butt"
                                       @mouseenter="hoverPhase(phaseBloc.phase)"
                                       @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phaseBloc.phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phaseBloc.phase)" />    
+                                      @mousedown="onPhaseMouseDown(phaseBloc.phase, $event)"
+                                      @click="onPhaseClick(phaseBloc.phase, $event)"
+                                      @mouseup="onPhaseMouseUp(phaseBloc.phase, $event)" />    
 
                                 <line :x1="timeOffsetedToX(phaseBloc.phase.start)" :y1="20 + phaseBloc.depth * 10"
                                       :x2="timeOffsetedToX(phaseBloc.phase.end)" :y2="20 + phaseBloc.depth * 10"
@@ -70,8 +71,9 @@
                                       :opacity="getPhaseOpacity(phaseBloc.phase)"
                                       @mouseenter="hoverPhase(phaseBloc.phase)"
                                       @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phaseBloc.phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phaseBloc.phase)" />
+                                      @mousedown="onPhaseMouseDown(phaseBloc.phase, $event)"
+                                      @click="onPhaseClick(phaseBloc.phase, $event)"
+                                      @mouseup="onPhaseMouseUp(phaseBloc.phase, $event)" />
                
                                 <line :x1="timeOffsetedToX(phaseBloc.phase.end)" :y1="20 - 5 + phaseBloc.depth * 10"
                                       :x2="timeOffsetedToX(phaseBloc.phase.end)" :y2="20 + 5 + phaseBloc.depth * 10"
@@ -80,8 +82,9 @@
                                       :opacity="getPhaseOpacity(phaseBloc.phase)"
                                       @mouseenter="hoverPhase(phaseBloc.phase)"
                                       @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phaseBloc.phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phaseBloc.phase)" />
+                                      @mousedown="onPhaseMouseDown(phaseBloc.phase, $event)"
+                                      @click="onPhaseClick(phaseBloc.phase, $event)"
+                                      @mouseup="onPhaseMouseUp(phaseBloc.phase, $event)"  />
                             </g>
 
                             <!-- Drag cursor, larger for easier grab -->
@@ -236,9 +239,10 @@
                 hoveredPhase: null,
                 draggingCursor: false,
                 hoverTime: 0,
-                isHoveringTimeline: false,
-                clickTimeout: null,
-                fromFallThrough: false,
+                isHoveringTimeline: false,    
+                clickThroughDragCursor: false,    
+                phaseDoubleClickTimeout: null, 
+                dragThroughPhaseBlockTimeout: null,
             };
         },
         watch: {
@@ -527,9 +531,12 @@
                 this.isHoveringTimeline = false;
                 this.hoveredPhase = null;
             },
-            onTimelineClick(e) {
+            onTimelineMouseDown(e) {
                 let time = this.getTimeFromEvent(e);
                 this.updateTime(time * 1000);
+                if (e.detail === 1) {
+                    this.startDragCursor(e);
+                }
             },
             getPhaseOpacity(phase) {
                 if (phase === this.hoveredPhase) {
@@ -539,30 +546,54 @@
             },
             hoverPhase(phase) {
                 this.hoveredPhase = phase;
-                if (this.fromFallThrough) {
-                    this.fromFallThrough = false;
+                if (this.clickThroughDragCursor) {
+                    this.clickThroughDragCursor = false;
                     this.jumpToPhaseStart(phase);
                 }
             },
             resetHoveredPhase() {
                 this.hoveredPhase = null;
+            },    
+            clearPhaseMouseEvents() {
+                clearTimeout(this.dragThroughPhaseBlockTimeout);
+                this.dragThroughPhaseBlockTimeout = null;
+                clearTimeout(this.phaseDoubleClickTimeout);
+                this.phaseDoubleClickTimeout = null;
             },
-            clickedPhase(phase, e) {
-                clearTimeout(this.clickTimeout);
-
-                this.clickTimeout = setTimeout(() => {
-                    this.hasClickedPhase = true;
-                    this.selectedPhase = phase;
+            onPhaseMouseDown(phase, e) {
+                if (this.phaseDoubleClickTimeout) {
+                    return;
+                }
+                this.dragThroughPhaseBlockTimeout = setTimeout(() => {
+                    this.clearPhaseMouseEvents();
                     let time = this.getTimeFromEvent(e);
                     this.updateTime(time * 1000);
-                }, 200);
-            },       
+                    this.startDragCursor(e);
+                }, 100);
+            },
+            onPhaseClick(phase, e) {
+                if (this.phaseDoubleClickTimeout) {
+                    this.clearPhaseMouseEvents();
+                    this.jumpToPhaseStart(phase);
+                } else {
+                    this.phaseDoubleClickTimeout = setTimeout(() => {
+                        this.clearPhaseMouseEvents();
+                        this.selectedPhase = phase;
+                        let time = this.getTimeFromEvent(e);
+                        this.updateTime(time * 1000);
+                    }, 200);
+                }
+            },
+            onPhaseMouseUp(phase, e) {
+                clearTimeout(this.dragThroughPhaseBlockTimeout);
+                this.dragThroughPhaseBlockTimeout = null;
+            },
             startDragCursorFromLine(e) {
                 // double click expected
                 if (e.detail > 1) {
-                    this.fromFallThrough = true;
+                    this.clickThroughDragCursor = true;
                     let element = document.getElementById("large-line-drag")
-                    element.style.pointerEvents = 'none';
+                    element.style.pointerEvents = 'none'; // this will cause an hover on phase bloc to appear, if phase under, we will jumpToPhaseStart it
                     setTimeout(() => {
                         element.style.pointerEvents = 'stroke';
                     }, 100);
@@ -588,7 +619,6 @@
                 window.removeEventListener("mouseup", this.stopDragCursor);
             },
             jumpToPhaseStart(phase) {
-                clearTimeout(this.clickTimeout);
                 this.selectedPhase = phase;
                 this.updateTime(phase.start * 1000 - this.range.min);
             },
