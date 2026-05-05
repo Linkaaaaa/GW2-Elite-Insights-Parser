@@ -85,11 +85,12 @@
                             </g>
 
                             <!-- Drag cursor, larger for easier grab -->
-                            <line :x1="timeOffsetedToX(time)" y1="0"
+                            <line id="large-line-drag" 
+                                  :x1="timeOffsetedToX(time)" y1="0"
                                   :x2="timeOffsetedToX(time)" :y2="10 * maxDepth + 30"
                                   stroke="transparent" stroke-width="10"
                                   style="pointer-events: stroke; cursor: grab;"
-                                  @mousedown="startDragCursor" />
+                                  @mousedown="startDragCursorFromLine" />
                             <!-- The cursor visual -->
                             <line :x1="timeOffsetedToX(time)" y1="0"
                                   :x2="timeOffsetedToX(time)" :y2="10 * maxDepth + 30"
@@ -237,6 +238,7 @@
                 hoverTime: 0,
                 isHoveringTimeline: false,
                 clickTimeout: null,
+                fromFallThrough: false,
             };
         },
         watch: {
@@ -525,6 +527,10 @@
             },
             hoverPhase(phase) {
                 this.hoveredPhase = phase;
+                if (this.fromFallThrough) {
+                    this.fromFallThrough = false;
+                    this.jumpToPhaseStart(phase);
+                }
             },
             resetHoveredPhase() {
                 this.hoveredPhase = null;
@@ -538,6 +544,20 @@
                     let time = this.getTimeFromEvent(e);
                     this.updateTime(time * 1000);
                 }, 200);
+            },       
+            startDragCursorFromLine(e) {
+                // double click expected
+                if (e.detail > 1) {
+                    this.fromFallThrough = true;
+                    let element = document.getElementById("large-line-drag")
+                    element.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        element.style.pointerEvents = 'stroke';
+                    }, 100);
+                } else {
+                    // classic use case
+                    this.startDragCursor(e);
+                }
             },
             startDragCursor(e) {
                 this.draggingCursor = true;
