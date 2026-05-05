@@ -44,16 +44,24 @@
                                   @click="onTimelineClick" />
 
                             <g v-for="phaseBloc in phasesByDepth">
+                                <!-- Invisible grab -->
+                                <line :x1="timeOffsetedToX(phaseBloc.phase.start)" :y1="20 + phaseBloc.depth * 10"
+                                      :x2="timeOffsetedToX(phaseBloc.phase.end)" :y2="20 + phaseBloc.depth * 10"
+                                      stroke="transparent"
+                                      stroke-width="10"
+                                      stroke-linecap="butt"
+                                      @mouseenter="hoverPhase(phaseBloc.phase)"
+                                      @mouseleave="resetHoveredPhase"
+                                      @click.stop="clickedPhase(phaseBloc.phase, $event)"
+                                      @dblclick="jumpToPhaseStart(phaseBloc.phase)" />    
+
                                 <line :x1="timeOffsetedToX(phaseBloc.phase.start)" :y1="20 + phaseBloc.depth * 10"
                                       :x2="timeOffsetedToX(phaseBloc.phase.end)" :y2="20 + phaseBloc.depth * 10"
                                       :stroke="phaseBloc.color"
                                       stroke-width="4"
                                       stroke-linecap="butt"
-                                      :opacity="selectedPhase && selectedPhase !== phaseBloc.phase ? 0.4 : 1"
-                                      @mouseenter="hoverPhase(phaseBloc.phase)"
-                                      @mouseleave="resetHoveredPhase"
-                                      @click.stop="clickedPhase(phaseBloc.phase, $event)"
-                                      @dblclick="jumpToPhaseStart(phaseBloc.phase)" />    
+                                      :opacity="getPhaseOpacity(phaseBloc.phase)"
+                                      style="pointer-events: none;"/>    
 
                                 <line :x1="timeOffsetedToX(phaseBloc.phase.start)" :y1="20 - 5 + phaseBloc.depth * 10"
                                       :x2="timeOffsetedToX(phaseBloc.phase.start)" :y2="20 + 5 + phaseBloc.depth * 10"
