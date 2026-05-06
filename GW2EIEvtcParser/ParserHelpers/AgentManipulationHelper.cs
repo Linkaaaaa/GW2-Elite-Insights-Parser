@@ -448,18 +448,18 @@ public static class AgentManipulationHelper
                 if (squadTeams.Count != 0)
                 {
                     squadTeam = squadTeams.GroupBy(x => x).OrderByDescending(x => x.Count()).Select(x => x.Key).First();
-                }
-                foreach (AgentItem nonSquadPlayer in nonSquadPlayerAgents)
-                {
-                    if (teamChangeDict.TryGetValue(nonSquadPlayer.Agent, out var teamChangeList))
+                    foreach (AgentItem nonSquadPlayer in nonSquadPlayerAgents)
                     {
-                        var team = teamChangeList.Where(x => x.SrcMatchesAgent(nonSquadPlayer)).Select(TeamChangeEvent.GetTeamIDInto).ToList();
-                        if (evtcVersion.Build > ArcDPSBuilds.TeamChangeOnDespawn)
+                        if (teamChangeDict.TryGetValue(nonSquadPlayer.Agent, out var teamChangeList))
                         {
-                            team.AddRange(teamChangeList.Where(x => x.SrcMatchesAgent(nonSquadPlayer)).Select(TeamChangeEvent.GetTeamIDComingFrom));
+                            var team = teamChangeList.Where(x => x.SrcMatchesAgent(nonSquadPlayer)).Select(TeamChangeEvent.GetTeamIDInto).ToList();
+                            if (evtcVersion.Build > ArcDPSBuilds.TeamChangeOnDespawn)
+                            {
+                                team.AddRange(teamChangeList.Where(x => x.SrcMatchesAgent(nonSquadPlayer)).Select(TeamChangeEvent.GetTeamIDComingFrom));
+                            }
+                            team.RemoveAll(x => x == 0);
+                            nonSquadPlayer.OverrideIsNotInSquadFriendlyPlayer(team.Any(x => x == squadTeam));
                         }
-                        team.RemoveAll(x => x == 0);
-                        nonSquadPlayer.OverrideIsNotInSquadFriendlyPlayer(team.Any(x => x == squadTeam));
                     }
                 }
                 var nonSquadPlayersByInstids = nonSquadPlayerAgents.GroupBy(x => x.InstID).ToDictionary(x => x.Key, x => x.ToList());
