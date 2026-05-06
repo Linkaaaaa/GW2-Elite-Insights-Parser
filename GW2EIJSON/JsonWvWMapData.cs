@@ -80,15 +80,15 @@ public class JsonWvWMapData
     public uint GreenShardID;
 
     /// <summary>
-    /// Red Team's team ID
+    /// Red Team's team ID, can be 0 if red team is not present in the log
     /// </summary>
     public uint RedTeamID;
     /// <summary>
-    /// Blue Team's team ID
+    /// Blue Team's team ID, can be 0 if blue team is not present in the log
     /// </summary>
     public uint BlueTeamID;
     /// <summary>
-    /// Green Team's team ID
+    /// Green Team's team ID, can be 0 if green team is not present in the log
     /// </summary>
     public uint GreenTeamID;
 }
