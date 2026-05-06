@@ -139,6 +139,11 @@ partial class CombatData
     {
         return _metaDataEvents.PointOfViewEvent;
     }
+
+    public WvWTeamsEvent? GetWvWTeamsEvent()
+    {
+        return _metaDataEvents.WvWTeamsEvent;
+    }
     public FractalScaleEvent? GetFractalScaleEvent()
     {
         return _metaDataEvents.FractalScaleEvent;

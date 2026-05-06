@@ -17,6 +17,7 @@ internal class MetaEventsContainer
     public PointOfViewEvent? PointOfViewEvent { get; set; }
     public FractalScaleEvent? FractalScaleEvent { get; set; }
     public EvtcVersionEvent? EvtcVersionEvent { get; set; }
+    public WvWTeamsEvent? WvWTeamsEvent { get; set; }
 
     public readonly Dictionary<AgentItem, List<GuildEvent>> GuildEvents = [];
 

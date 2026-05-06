@@ -515,6 +515,9 @@ internal static class CombatEventFactory
                     Add(statusEvents.TransformationEventsByTransformationID, transformationEvent.TransformationID, transformationEvent);
                 }
                 break;
+            case StateChange.WvWTeams:
+                metaDataEvents.WvWTeamsEvent = new WvWTeamsEvent(stateChangeEvent);
+                break;
             default:
                 break;
         }

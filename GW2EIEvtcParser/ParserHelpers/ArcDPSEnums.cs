@@ -327,6 +327,7 @@ public static class ArcDPSEnums
         BuffRemoveSingle = 71, // Single or Manual
         BuffRemoveAll = 72,
         Transformation = 73,
+        WvWTeams = 74,
         Unknown
     };
 
