@@ -1151,3 +1151,7 @@ td.approximate::before {
 .opacity-90{
     opacity: 0.9;
 }
+
+.border-dark {
+    border-color: black !important;
+}
