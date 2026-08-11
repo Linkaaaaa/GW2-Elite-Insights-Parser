@@ -36,16 +36,16 @@
             <div v-show="!isTouchDevice && isMechanicSelected" @click="resetMechanic();"
                  class="btn btn-small position-bottom-right opacity-90 top-of-canvas m-2" :class="{'btn-dark': !light, 'btn-light': light}"
                  data-original-title="Remove mechanic ticks from timeline">
-                &#128295; Reset Mechanicq
+                &#128295; Reset Mechanic
             </div>
         </div>
 
-        <div v-if="!isTouchDevice" class="timeline mt-1 rounded" ref="timeline" :style="{
+         <div class="timeline mt-1 rounded" ref="timeline" :style="{
                 backgroundColor: timelineColors.background,
                 border: '1px solid ' + timelineColors.backgroundBorder,
                 width: (timelineWidth + 20) + 'px'
             }">
-            <svg ref="svg"
+            <svg v-if="!isTouchDevice" ref="svg" 
                  :width="timelineWidth"
                  :height="20 + 10 * maxDepth + 30"
                  @mousemove="onTimelineMouseMove"
@@ -178,50 +178,50 @@
                     {{ getFormattedPhaseText(hoveredPhase || selectedPhase) }}
                 </text>
             </svg>
-        </div>
-        <div v-else class="d-flex justify-content-center slidercontainer mt-1 mr-auto" :style="{ width: (timelineWidth + 20) + 'px' }">
-            <input style="min-width: 400px;" @input="updateTime($event.target.value)" type="range" :min="minTime"
-                   :max="maxTime" value="0" class="slider" :id="htmlElementIDs.timeRangeID"
-                   :style="{'background': getSliderGradient()}">
-            <div class="cr-slide-delimiter text-center" :style="{ width: (timelineWidth + 20) + 'px' }">
-                {{ sliderDelimiter.name }}
-            </div>
-        </div>
-
-        <div class="d-flex align-items-center justify-content-center mt-1 w-100">
-            <label class="mr-auto">
-                Time :
-                <input style="width: 100px;" class="form-control d-inline h-auto text-right" type="number" step="0.001"
-                       :id="htmlElementIDs.timeRangeDisplayID" value="0"
-                       @input="updateInputTime($event.target.value);">
-                <input type="range" :min="minTime" :max="maxTime" value="0" :id="htmlElementIDs.timeRangeID" style="display: none;">
-            </label>
-
-            <div @click="restartAnimate();" class="btn btn-small"
-                 :class="{'btn-dark': !light, 'btn-light': light}"
-                 data-original-title="Reset back to start">
-                &#8617;&#65039; Restart
-            </div>
-            <div @click="toggleAnimate();" class="btn btn-small"
-                 :class="{'btn-dark': !light, 'btn-light': light}"
-                 data-original-title="Play / pause animation">
-                {{ animated ? "&#9208" : "&#9654" }} Play / Pause
+            <div v-else class="d-flex justify-content-center slidercontainer my-1">
+                <input style="min-width: 400px;" @input="updateTime($event.target.value)" type="range" :min="minTime"
+                       :max="maxTime" value="0" class="slider" :id="htmlElementIDs.timeRangeID"
+                       :style="{'background': getSliderGradient()}">
+                <div class="cr-slide-delimiter text-center" :style="{ width: (timelineWidth + 20) + 'px' }">
+                    {{ sliderDelimiter.name }}
+                </div>
             </div>
 
-            <div @click="toggleBackwards();" class="btn btn-small"
-                 :class="{'active': backwards, 'btn-dark': !light, 'btn-light': light}"
-                 data-original-title="Play animation backwards">
-                &#9664; Backwards
-            </div>
+            <div class="d-flex align-items-center justify-content-center">
+                <label class="mr-auto">
+                    Time :
+                    <input style="width: 100px;" class="form-control d-inline h-auto text-right" type="number" step="0.001"
+                           :id="htmlElementIDs.timeRangeDisplayID" value="0"
+                           @input="updateInputTime($event.target.value);">
+                    <input type="range" :min="minTime" :max="maxTime" value="0" :id="htmlElementIDs.timeRangeID" style="display: none;">
+                </label>
 
-            <label class="ml-auto">
-                Speed :
-                <select class="form-control d-inline w-auto h-auto" v-model="selectedSpeed">
-                    <option v-for="speed in speeds" :value="speed">
-                        {{speed}}x
-                    </option>
-                </select>
-            </label>
+                <div @click="restartAnimate();" class="btn btn-small"
+                     :class="{'btn-dark': !light, 'btn-light': light}"
+                     data-original-title="Reset back to start">
+                    &#8617;&#65039; Restart
+                </div>
+                <div @click="toggleAnimate();" class="btn btn-small"
+                     :class="{'btn-dark': !light, 'btn-light': light}"
+                     data-original-title="Play / pause animation">
+                    {{ animated ? "&#9208" : "&#9654" }} Play / Pause
+                </div>
+
+                <div @click="toggleBackwards();" class="btn btn-small"
+                     :class="{'active': backwards, 'btn-dark': !light, 'btn-light': light}"
+                     data-original-title="Play animation backwards">
+                    &#9664; Backwards
+                </div>
+
+                <label class="ml-auto">
+                    Speed :
+                    <select class="form-control d-inline w-auto h-auto" v-model="selectedSpeed">
+                        <option v-for="speed in speeds" :value="speed">
+                            {{speed}}x
+                        </option>
+                    </select>
+                </label>
+            </div>
         </div>
     </div>
 </template>
