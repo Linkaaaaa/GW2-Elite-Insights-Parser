@@ -410,6 +410,7 @@ internal class GreerTheBlightbringer : MountBalrior
                 AddScatteringSporeblast(target, log, replay);
                 break;
             case (int)TargetID.EmpoweringBeast:
+                AddEmpoweringBlast(target, log, replay);
                 // Blighting Stab - Indicator
                 if (log.CombatData.TryGetEffectEventsBySrcWithGUID(target.AgentItem, EffectGUIDs.GreerBlightingStabIndicator, out var blightingStabIndicator))
                 {

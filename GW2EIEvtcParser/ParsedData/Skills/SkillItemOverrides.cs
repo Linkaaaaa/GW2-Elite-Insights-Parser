@@ -14,6 +14,7 @@ public static class SkillItemOverrides
         { Bandage, "Bandage" },
         { WeaponStow, "Weapon Stow" },
         { WeaponDraw, "Weapon Draw" },
+        { PetRevive, "Revive (Pet)" },
 #region ArcDPS
         { ArcDPSDodge, "Dodge" },
         { ArcDPSDodge20220307, "Dodge" },
@@ -124,6 +125,8 @@ public static class SkillItemOverrides
         { HuntersVerdictPull, "Hunter's Verdict (Pull)" },
         { MantraOfSolace, "Mantra of Solace" },
         { RestoringReprieveOrRejunevatingRespite, "Restoring Reprieve or Rejunevating Respite" },
+        { FlameRushOrFlameSurge, "Flame Rush or Flame Surge" },
+        { EchoOfTruthOrVoiceOfTruth, "Echo of Truth or Voice of Truth" },
         { OpeningPassageOrClarifiedConclusion, "Opening Passage or Clarified Conclusion" },
         { PotentHasteOrOverwhelmingCelerity, "Potent Haste or Overwhelming Celerity" },
         { PortentOfFreedomOrUnhinderedDelivery, "Portent of Freedom or Unhindered Delivery" },
@@ -436,6 +439,7 @@ public static class SkillItemOverrides
         { ArcDPSDodge20220307, SkillImages.Dodge },
         { Poisoned, BuffImages.Poison },
         { RescueProtocol, SkillImages.RescueProtocol },
+        { PetRevive, SkillImages.LickWounds },
         #region ComboIcons
         // Combos
         { WaterBlastCombo1, ParserIcons.Healing },
@@ -702,6 +706,8 @@ public static class SkillItemOverrides
             { FlameSurgeOld, SkillImages.FlameSurge_Old },
             { MantraOfTruthDamage, SkillImages.EchoOfTruth },
             { RestoringReprieveOrRejunevatingRespite, SkillImages.RestoringReprieveOrRejunevatingRespite },
+            { FlameRushOrFlameSurge, SkillImages.FlameRushOrFlameSurge },
+            { EchoOfTruthOrVoiceOfTruth, SkillImages.EchoOfTruthOrVoiceOfTruth },
             { OpeningPassageOrClarifiedConclusion, SkillImages.OpeningPassageOrClarifiedConclusion },
             { PotentHasteOrOverwhelmingCelerity, SkillImages.PotentHasteOrOverwhelmingCelerity },
             { PortentOfFreedomOrUnhinderedDelivery, SkillImages.PortentOfFreedomOrUnhinderedDelivery },

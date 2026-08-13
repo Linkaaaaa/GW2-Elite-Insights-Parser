@@ -121,12 +121,12 @@ internal class Adina : TheKeyOfAhdashim
             hand.PositionAttachTo(atAgent);
             var attackOns = targetables.Where(x => x.Targetable);
             var attackOffs = targetables.Where(x => !x.Targetable);
-            CombatItem? posEvt = combatData.FirstOrDefault(x => x.SrcMatchesAgent(hand) && x.IsStateChange == StateChange.Position);
+            CombatItem? posEvt = combatData.FirstOrDefault(x => x.SrcMatchesAgent(hand) && x.IsPosition);
             var id = TargetID.HandOfErosion;
             if (posEvt != null)
             {
                 var pos = MovementEvent.GetPoint3D(posEvt);
-                if (handOfEruptionPositions.Any(x => (x - pos.XY()).Length() < InchDistanceThreshold))
+                if (handOfEruptionPositions.Any(x => (x - pos.XY()).LengthSquared() < InchDistanceThresholdSquared))
                 {
                     id = TargetID.HandOfEruption;
                 }
@@ -166,7 +166,7 @@ internal class Adina : TheKeyOfAhdashim
 
     internal static void FindPlatforms(AgentData agentData, List<CombatItem> combatData)
     {
-        var positionsDict = combatData.Where(x => x.IsStateChange == StateChange.Position).Select(x => new PositionEvent(x, agentData)).GroupBy(x => x.Src).ToDictionary(x => x.Key, x => x.ToList());
+        var positionsDict = combatData.Where(x => x.IsPosition).Select(x => new PositionEvent(x, agentData)).GroupBy(x => x.Src).ToDictionary(x => x.Key, x => x.ToList());
         var center = new Vector2(14909.3f, -1470.64f);
         foreach (var agent in agentData.GetAgentByType(AgentItem.AgentType.VolatileSpecies))
         {

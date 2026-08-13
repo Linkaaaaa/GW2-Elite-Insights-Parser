@@ -173,7 +173,7 @@ internal class FraenirOfJormag : Bjora
         var spawnedElementals = agentData.GetStableSpeciesByID(TargetID.IcebroodElemental).ToHashSet();
 
         var positionEvents = combatData
-            .Where(x => x.IsStateChange == StateChange.Position)
+            .Where(x => x.IsPosition)
             .GroupBy(x => agentData.GetAgent(x.SrcAgent, x.Time))
             .Where(x => boundElementals.Contains(x.Key) || x.Key.IsSpecies(TargetID.IcebroodElemental))
             .ToDictionary(x => x.Key, x => x.ToList());

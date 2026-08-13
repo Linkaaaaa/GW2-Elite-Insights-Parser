@@ -226,19 +226,19 @@ internal class Qadim : MythwrightGambit
         IReadOnlyList<AgentItem> pyres = agentData.GetStableSpeciesByID(TargetID.PyreGuardian);
         foreach (AgentItem pyre in pyres)
         {
-            CombatItem? positionEvt = combatData.FirstOrDefault(x => x.SrcMatchesAgent(pyre) && x.IsStateChange == StateChange.Position);
+            CombatItem? positionEvt = combatData.FirstOrDefault(x => x.SrcMatchesAgent(pyre) && x.IsPosition);
             if (positionEvt != null)
             {
                 var position = MovementEvent.GetPoint3D(positionEvt).XY();
-                if (ProtectPyrePositions.Any(x => (x - position).Length() < InchDistanceThreshold))
+                if (ProtectPyrePositions.Any(x => (x - position).LengthSquared() < InchDistanceThresholdSquared))
                 {
                     pyre.OverrideID(TargetID.PyreGuardianProtect, agentData);
                 }
-                else if (StabilityPyrePositions.Any(x => (x - position).Length() < InchDistanceThreshold))
+                else if (StabilityPyrePositions.Any(x => (x - position).LengthSquared() < InchDistanceThresholdSquared))
                 {
                     pyre.OverrideID(TargetID.PyreGuardianStab, agentData);
                 }
-                else if (ResolutionRetaliationPyrePositions.Any(x => (x - position).Length() < InchDistanceThreshold))
+                else if (ResolutionRetaliationPyrePositions.Any(x => (x - position).LengthSquared() < InchDistanceThresholdSquared))
                 {
                     pyre.OverrideID(gw2Build >= GW2Builds.May2021Balance ? TargetID.PyreGuardianResolution : TargetID.PyreGuardianRetal, agentData);
                 }

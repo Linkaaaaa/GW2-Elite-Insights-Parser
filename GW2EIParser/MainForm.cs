@@ -68,32 +68,6 @@ internal sealed partial class MainForm : Form
         VersionLabelUpdate(Application.ProductVersion, Settings.Default.UpdateAvailable);
     }
 
-    private void LoadSettingsWatcher(object sender, EventArgs e)
-    {
-        AddTraceMessage("Settings: Loaded settings");
-        ChkApplicationTraces.Checked = Settings.Default.ApplicationTraces;
-        ChkAutoDiscordBatch.Checked = Settings.Default.AutoDiscordBatch;
-        NumericCustomPopulateLimit.Value = Settings.Default.PopulateHourLimit;
-    }
-
-    private void UpdateStartedWatcher(object sender, EventArgs e)
-    {
-        if (sender is UpdaterForm updaterForm)
-        {
-            AddTraceMessage("Updater: Update started");
-            updaterForm.Close();
-            Close();
-        }
-    }
-
-    private void UpdateTracesWatcher(object sender, EventArgs e)
-    {
-        if (sender is List<string> traces)
-        {
-            traces.ForEach(x => AddTraceMessage("Updater: " + x));
-        }
-    }
-
     public MainForm(IEnumerable<string> filesArray, ProgramHelper programHelper) : this(programHelper)
     {
         Load += new EventHandler((send, e) => AddLogFiles(filesArray));
@@ -131,7 +105,7 @@ internal sealed partial class MainForm : Form
 
         BtnParse.Enabled = !_anyRunning && any;
     }
-
+    #region FILE HANDLING
     private void _RunOperation(FormOperationController operation)
     {
         _programHelper.ExecuteMemoryCheckTask();
@@ -275,7 +249,9 @@ internal sealed partial class MainForm : Form
             }
         }
     }
+    #endregion FILE HANDLING
 
+    #region PARSING
     /// <summary>
     /// Invoked when the 'Parse All' button is clicked. Begins processing of all files
     /// </summary>
@@ -335,18 +311,6 @@ internal sealed partial class MainForm : Form
     }
 
     /// <summary>
-    /// Invoked when the 'Settings' button is clicked. Opens the settings window
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void BtnSettingsClick(object sender, EventArgs e)
-    {
-        AddTraceMessage("Settings: Opening settings");
-        _settingsForm.Show();
-        BtnSettings.Enabled = false;
-    }
-
-    /// <summary>
     /// Invoked when the 'Clear All' button is clicked. Cancels pending operations and clears completed & un-started operations.
     /// </summary>
     /// <param name="sender"></param>
@@ -387,7 +351,9 @@ internal sealed partial class MainForm : Form
             }
         }
     }
+    #endregion PARSING
 
+    #region FILES UI
     /// <summary>
     /// Invoked when a file is dropped onto the datagridview
     /// </summary>
@@ -571,11 +537,6 @@ internal sealed partial class MainForm : Form
         }
     }
 
-    private void UpdateWatchDirectoryWatcher(object sender, EventArgs e)
-    {
-        UpdateWatchDirectory();
-    }
-
     private void BtnPopulateFromDirectory(object sender, EventArgs e)
     {
         string path = null;
@@ -598,31 +559,18 @@ internal sealed partial class MainForm : Form
         if (path != null)
         {
             AddTraceMessage("UI: Adding files from " + path);
-            var toAdd = new List<string>();
-            foreach (string format in ProgramHelper.SupportedFormats)
-            {
-                try
-                {
-                    if (Settings.Default.PopulateHourLimit > 0)
-                    {
-                        var fileList = new DirectoryInfo(path).EnumerateFiles("*" + format, SearchOption.AllDirectories);
-                        var toKeep = fileList.Where(x => (currentTime - x.CreationTime).TotalHours < Settings.Default.PopulateHourLimit);
-                        toAdd.AddRange(toKeep.Select(x => x.FullName));
-                    }
-                    else
-                    {
-                        toAdd.AddRange(Directory.EnumerateFiles(path, "*" + format, SearchOption.AllDirectories));
-                    }
-                }
-                catch
-                {
-                    // nothing to do
-                }
-            }
+            var toAdd = ProgramHelper.FetchSupportedFormatsFrom(path, Settings.Default.PopulateHourLimit, currentTime);
             AddLogFiles(toAdd);
         }
     }
 
+    #endregion FILES UI
+
+    #region FILE WATCHER
+    private void UpdateWatchDirectoryWatcher(object sender, EventArgs e)
+    {
+        UpdateWatchDirectory();
+    }
     /// <summary>
     /// Waits 3 seconds, checks if the file still exists and then adds it to the queue.
     /// This is neccessary because:
@@ -651,149 +599,54 @@ internal sealed partial class MainForm : Form
 
     private void LogFileWatcher_Created(object sender, FileSystemEventArgs e)
     {
-        AddTraceMessage("File Watcher: created " + e.FullPath);
         if (ProgramHelper.IsSupportedFormat(e.FullPath))
         {
+            AddTraceMessage("File Watcher: created " + e.FullPath);
             AddDelayed(e.FullPath);
         }
     }
 
     private void LogFileWatcher_Renamed(object sender, RenamedEventArgs e)
     {
-        AddTraceMessage("File Watcher: renamed " + e.OldFullPath + " to " + e.FullPath);
         if (ProgramHelper.IsTemporaryCompressedFormat(e.OldFullPath) && ProgramHelper.IsCompressedFormat(e.FullPath))
         {
+            AddTraceMessage("File Watcher: renamed " + e.OldFullPath + " to " + e.FullPath);
             AddDelayed(e.FullPath);
         }
         else if (ProgramHelper.IsTemporaryFormat(e.OldFullPath) && ProgramHelper.IsSupportedFormat(e.FullPath))
         {
+            AddTraceMessage("File Watcher: renamed " + e.OldFullPath + " to " + e.FullPath);
             AddDelayed(e.FullPath);
         }
     }
-
+    private void UpdateWatchDirectory()
+    {
+        if (Settings.Default.AutoAdd && Directory.Exists(Settings.Default.AutoAddPath))
+        {
+            LogFileWatcher.Path = Settings.Default.AutoAddPath;
+            LblWatchingDir.Text = "Watching for log files in " + Settings.Default.AutoAddPath;
+            LogFileWatcher.EnableRaisingEvents = true;
+            LblWatchingDir.Visible = true;
+            AddTraceMessage("Settings: Updated watch directory to " + Settings.Default.AutoAddPath);
+        }
+        else
+        {
+            Settings.Default.AutoAdd = false;
+            LblWatchingDir.Visible = false;
+            LogFileWatcher.EnableRaisingEvents = false;
+        }
+    }
+    #endregion FILE WATCHER
+    #region DISCORD
     private string DiscordBatch(out List<ulong> ids)
     {
         ids = [];
-        AddTraceMessage("Discord: Sending batch to Discord");
-        if (_programHelper.Settings.WebhookURL == null)
-        {
-            AddTraceMessage("Discord: No webhook url given");
-            return "Set a discord webhook url in settings first";
-        }
-        var fullDpsReportLogs = new List<FormOperationController>();
+        var operations = new List<FormOperationController>(OperatorBindingSource.Count);
         foreach (FormOperationController operation in OperatorBindingSource)
         {
-            if (operation.DPSReportLink != null && operation.DPSReportLink.Contains("https"))
-            {
-                fullDpsReportLogs.Add(operation);
-            }
+            operations.Add(operation);
         }
-        if (fullDpsReportLogs.Count == 0)
-        {
-            AddTraceMessage("Discord: Nothing to send");
-            return "Nothing to send";
-        }
-        // first sort by time
-        AddTraceMessage("Discord: Sorting logs by time");
-        fullDpsReportLogs.Sort((x, y) =>
-        {
-            return DateTime.Parse(x.BasicMetaData.LogStart).CompareTo(DateTime.Parse(y.BasicMetaData.LogStart));
-        });
-        AddTraceMessage("Discord: Splitting logs by start day");
-        var fullDpsReportsLogsByDate = fullDpsReportLogs.GroupBy(x => DateTime.Parse(x.BasicMetaData.LogStart).Date);
-        // split the logs so that a single embed does not reach the discord embed limit and also keep a reasonable size by embed
-        string message = "";
-        bool start = true;
-        foreach (var group in fullDpsReportsLogsByDate)
-        {
-            if (!start)
-            {
-                message += "\r\n";
-            }
-            start = false;
-            var splitDpsReportLogs = new List<List<FormOperationController>>() { new() };
-            message += group.Key.ToString("yyyy-MM-dd") + " - ";
-            List<FormOperationController> curListToFill = splitDpsReportLogs.First();
-            AddTraceMessage("Discord: Splitting message to avoid reaching discord's character limit");
-            foreach (FormOperationController controller in group)
-            {
-                if (curListToFill.Count < 40)
-                {
-                    curListToFill.Add(controller);
-                }
-                else
-                {
-                    curListToFill =
-                    [
-                        controller
-                    ];
-                    splitDpsReportLogs.Add(curListToFill);
-                }
-            }
-            foreach (List<FormOperationController> dpsReportLogs in splitDpsReportLogs)
-            {
-                EmbedBuilder embedBuilder = _programHelper.GetEmbedBuilder();
-                AddTraceMessage("Discord: Creating embed for " + dpsReportLogs.Count + " logs");
-                var first = DateTime.Parse(dpsReportLogs.First().BasicMetaData.LogStart);
-                var last = DateTime.Parse(dpsReportLogs.Last().BasicMetaData.LogEnd);
-                embedBuilder.WithFooter(group.Key.ToString("dd/MM/yyyy") + " - " + first.ToString("T") + " - " + last.ToString("T"));
-                AddTraceMessage("Discord: Sorting logs by category");
-                dpsReportLogs.Sort((x, y) =>
-                {
-                    int categoryCompare = x.BasicMetaData.LogCategory.CompareTo(y.BasicMetaData.LogCategory);
-                    if (categoryCompare == 0)
-                    {
-                        return DateTime.Parse(x.BasicMetaData.LogStart).CompareTo(DateTime.Parse(y.BasicMetaData.LogStart));
-                    }
-                    return categoryCompare;
-                });
-                string currentSubCategory = "";
-                var embedFieldBuilder = new EmbedFieldBuilder();
-                string fieldValue = "I can not be empty";
-                AddTraceMessage("Discord: Building embed body");
-                foreach (FormOperationController controller in dpsReportLogs)
-                {
-                    string subCategory = controller.BasicMetaData.LogCategory.GetSubCategoryName();
-                    string toAdd = "[" + controller.BasicMetaData.LogName + "](" + controller.DPSReportLink + ") " + (controller.BasicMetaData.Success ? " :white_check_mark: " : " :x: ") + ": " + controller.BasicMetaData.LogDuration;
-                    if (subCategory != currentSubCategory)
-                    {
-                        embedFieldBuilder.WithValue(fieldValue);
-                        embedFieldBuilder = new EmbedFieldBuilder();
-                        fieldValue = "";
-                        embedBuilder.AddField(embedFieldBuilder);
-                        embedFieldBuilder.WithName(subCategory);
-                        currentSubCategory = subCategory;
-                    }
-                    else if (fieldValue.Length + toAdd.Length > 1024)
-                    {
-                        embedFieldBuilder.WithValue(fieldValue);
-                        embedFieldBuilder = new EmbedFieldBuilder();
-                        fieldValue = "";
-                        embedBuilder.AddField(embedFieldBuilder);
-                        embedFieldBuilder.WithName(subCategory);
-                    }
-                    else
-                    {
-                        fieldValue += "\r\n";
-                    }
-                    fieldValue += toAdd;
-                }
-                embedFieldBuilder.WithValue(fieldValue);
-                AddTraceMessage("Discord: Sending embed");
-                try
-                {
-                    ids.Add(WebhookController.SendMessage(_programHelper.Settings.WebhookURL, embedBuilder.Build(), out string curMessage));
-                    AddTraceMessage("Discord: embed sent " + curMessage);
-                    message += curMessage + " - ";
-                }
-                catch (Exception ex)
-                {
-                    AddTraceMessage("Discord: couldn't send embed " + ex.Message);
-                    message += ex.Message + " - ";
-                }
-            }
-        }
-        return message;
+        return _programHelper.HandleBatchedDiscordEmbed(ids, operations, AddTraceMessage);
     }
 
     private void AutoUpdateDiscordBatch()
@@ -839,7 +692,8 @@ internal sealed partial class MainForm : Form
         ChkAutoDiscordBatch.Enabled = !_anyRunning;
         BtnParse.Enabled = !_anyRunning;
     }
-
+    #endregion DISCORD
+    #region TRACES
     private void _AddTraceMessage(string message)
     {
         if (!Settings.Default.ApplicationTraces)
@@ -877,24 +731,17 @@ internal sealed partial class MainForm : Form
             _AddTraceMessage(message);
         }
     }
-    // UI 
-    private void UpdateWatchDirectory()
+
+    private void UpdateTracesWatcher(object sender, EventArgs e)
     {
-        if (Settings.Default.AutoAdd && Directory.Exists(Settings.Default.AutoAddPath))
+        if (sender is List<string> traces)
         {
-            LogFileWatcher.Path = Settings.Default.AutoAddPath;
-            LblWatchingDir.Text = "Watching for log files in " + Settings.Default.AutoAddPath;
-            LogFileWatcher.EnableRaisingEvents = true;
-            LblWatchingDir.Visible = true;
-            AddTraceMessage("Settings: Updated watch directory to " + Settings.Default.AutoAddPath);
-        }
-        else
-        {
-            Settings.Default.AutoAdd = false;
-            LblWatchingDir.Visible = false;
-            LogFileWatcher.EnableRaisingEvents = false;
+            traces.ForEach(x => AddTraceMessage("Updater: " + x));
         }
     }
+    #endregion TRACES
+    #region SETTINGS
+    // UI 
     private void ChkApplicationTracesCheckedChanged(object sender, EventArgs e)
     {
         Settings.Default.ApplicationTraces = ChkApplicationTraces.Checked;
@@ -917,6 +764,29 @@ internal sealed partial class MainForm : Form
         AddTraceMessage("Settings: Closing settings");
         BtnSettings.Enabled = true;
     }
+
+    /// <summary>
+    /// Invoked when the 'Settings' button is clicked. Opens the settings window
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void BtnSettingsClick(object sender, EventArgs e)
+    {
+        AddTraceMessage("Settings: Opening settings");
+        _settingsForm.Show();
+        BtnSettings.Enabled = false;
+    }
+
+    private void LoadSettingsWatcher(object sender, EventArgs e)
+    {
+        AddTraceMessage("Settings: Loaded settings");
+        ChkApplicationTraces.Checked = Settings.Default.ApplicationTraces;
+        ChkAutoDiscordBatch.Checked = Settings.Default.AutoDiscordBatch;
+        NumericCustomPopulateLimit.Value = Settings.Default.PopulateHourLimit;
+    }
+    #endregion SETTINGS
+
+    #region AUTO UPDATE
 
     private void BtnCheckUpdates_Click(object sender, EventArgs e)
     {
@@ -964,4 +834,15 @@ internal sealed partial class MainForm : Form
     {
         LblVersion.Text = isAvailable ? version + " (Update Available)" : version;
     }
+
+    private void UpdateStartedWatcher(object sender, EventArgs e)
+    {
+        if (sender is UpdaterForm updaterForm)
+        {
+            AddTraceMessage("Updater: Update started");
+            updaterForm.Close();
+            Close();
+        }
+    }
+    #endregion AUTO UPDATE
 }

@@ -34,8 +34,15 @@ public abstract class OperationController : ParserController
     /// Status of the parse operation
     /// </summary>
     public string Status { get; protected set; }
-
+    /// <summary>
+    /// Wether file was successfully parsed or not.
+    /// Only relevant when <see cref="Executed"/> is true.
+    /// </summary>
     public bool Parsed { get; protected set; }
+    /// <summary>
+    /// Indicates that this operation has already executed.
+    /// </summary>
+    public bool Executed { get; protected set; }
 
     /// <summary>
     /// Location of the file being parsed
@@ -105,6 +112,7 @@ public abstract class OperationController : ParserController
         MistWarriorUploadTentative = false;
         MistWarriorUploadFailed = false;
         Elapsed = 0;
+        Executed = false;
         _GeneratedFiles.Clear();
         _OpenableFiles.Clear();
     }
@@ -138,6 +146,7 @@ public abstract class OperationController : ParserController
         StatusList.Insert(0, ("Elapsed " + Elapsed + " ms"));
         Status = StatusList.LastOrDefault() ?? "";
         Parsed = parsed;
+        Executed = true;
         string prefix = parsed ? "Parsing Successful - " : "Parsing Failure - ";
         foreach (string generatedFile in GeneratedFiles)
         {

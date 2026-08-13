@@ -8,33 +8,148 @@ using Tracing;
 
 namespace GW2EIParser;
 
-static class ConsoleProgram
+public class ConsoleProgram
 {
+    private readonly List<ulong> DiscordMessageIDs = [];
+
+    private readonly List<ConsoleOperationController> Operations = [];
+    private bool Executing = false;
+
+    private readonly ProgramHelper ProgramHelper;
+    private readonly bool BatchToDiscord;
+
+    private readonly FileSystemWatcher FileWatcher = new();
+
+    public ConsoleProgram(ProgramHelper programHelper, bool batchToDiscord, string pathToWatch)
+    {
+        ProgramHelper = programHelper;
+        BatchToDiscord = batchToDiscord;
+        ProgramHelper.ExecuteMemoryCheckTask();
+
+        if (pathToWatch != null && Directory.Exists(pathToWatch))
+        {
+            Console.WriteLine("File Watcher: watching " + pathToWatch + Environment.NewLine);
+            FileWatcher.Path = pathToWatch;
+
+            FileWatcher.IncludeSubdirectories = true;
+            FileWatcher.Created += LogFileWatcher_Created;
+            FileWatcher.Renamed += LogFileWatcher_Renamed;
+            FileWatcher.EnableRaisingEvents = true;
+        }
+    }
+
 
     /// <returns>0 on success, other value on error</returns>
-    public static int ParseAll(List<string> logFiles, ProgramHelper programHelper)
+    public int ParseAll(List<string> logFiles)
     {
         using var _t = new AutoTrace("ParseAll");
-        programHelper.ExecuteMemoryCheckTask();
-        if (programHelper.ParseMultipleLogs())
+        logFiles.ForEach(logFile => Operations.Add(new ConsoleOperationController(logFile)));
+        if (FileWatcher.EnableRaisingEvents)
         {
+            var exit = new AutoResetEvent(false);
+
+            HandleFiles();
+
+            Console.CancelKeyPress += (sender, e) =>
+            {
+                e.Cancel = true;
+                exit.Set();
+            };
+            exit.WaitOne();
+        }
+        else
+        {
+            HandleFiles();
+        }
+        return 0;
+    }
+
+    #region FILE WATCHER
+
+    /// <summary>
+    /// Waits 3 seconds, checks if the file still exists and then adds it to the queue.
+    /// This is neccessary because:
+    /// 1.) Arc needs some time to complete writing the log file. The watcher gets triggered as soon as the writing starts.
+    /// 2.) When Arc is configured to use ZIP compression, the log file is still created as usual, but after the file is written
+    ///     it is then zipped and deleted again. Therefore the watcher gets triggered twice, first for the .evtc and then for the .zip.
+    /// 3.) Zipping the file also needs time, so we have to wait a bit there too.
+    /// </summary>
+    /// <param name="path"></param>
+    private async void AddDelayed(string path)
+    {
+        await Task.Delay(3000).ConfigureAwait(false);
+        if (File.Exists(path))
+        {
+            if (Executing)
+            {
+                AddDelayed(path);
+            } 
+            else
+            {
+                Console.WriteLine("File Watcher: adding " + path);
+                Operations.Add(new ConsoleOperationController(path));
+                HandleFiles();
+            }
+        }
+    }
+
+    private void LogFileWatcher_Created(object sender, FileSystemEventArgs e)
+    {
+        if (ProgramHelper.IsSupportedFormat(e.FullPath))
+        {
+            Console.WriteLine("File Watcher: created " + e.FullPath + Environment.NewLine);
+            AddDelayed(e.FullPath);
+        }
+    }
+
+    private void LogFileWatcher_Renamed(object sender, RenamedEventArgs e)
+    {
+        if (ProgramHelper.IsTemporaryCompressedFormat(e.OldFullPath) && ProgramHelper.IsCompressedFormat(e.FullPath))
+        {
+            Console.WriteLine("File Watcher: renamed " + e.OldFullPath + " to " + e.FullPath + Environment.NewLine);
+            AddDelayed(e.FullPath);
+        }
+        else if (ProgramHelper.IsTemporaryFormat(e.OldFullPath) && ProgramHelper.IsSupportedFormat(e.FullPath))
+        {
+            Console.WriteLine("File Watcher: renamed " + e.OldFullPath + " to " + e.FullPath + Environment.NewLine);
+            AddDelayed(e.FullPath);
+        }
+    }
+    #endregion FILE WATCHER
+
+    private void HandleFiles()
+    {
+        if (Executing)
+        {
+            return;
+        }
+        Executing = true;
+        var operationsToExecute = Operations.Where(x => !x.Executed).ToList();
+        if (operationsToExecute.Count == 0)
+        {
+            Executing = false;
+            return;
+        }
+        if (ProgramHelper.ParseMultipleLogs())
+        {
+            Console.WriteLine("Parsing: Multi-threaded" + Environment.NewLine);
             var state = new ThreadingState()
             {
-                ProgramHelper = programHelper,
+                ProgramHelper = ProgramHelper,
                 NoMoreFiles = false,
                 FileQueue = new(),
             };
 
-            var parallelism = programHelper.GetMaxParallelRunning();
-            for(int i = 0; i < parallelism - 1; i++)
+            var parallelism = ProgramHelper.GetMaxParallelRunning();
+            for (int i = 0; i < parallelism - 1; i++)
             {
                 var t = new Thread(EnterParserThread);
                 t.Start(state);
             }
 
-            foreach(var file in logFiles)
+            foreach (var operation in operationsToExecute)
             {
-                state.FileQueue.Enqueue(file);
+                state.FileQueue.Enqueue(operation);
             }
 
             state.NoMoreFiles = true;
@@ -42,19 +157,27 @@ static class ConsoleProgram
         }
         else
         {
-            foreach (string file in logFiles)
+            Console.WriteLine("Parsing: Mono-threaded" + Environment.NewLine);
+            foreach (var operation in operationsToExecute)
             {
-                ParseLog(file, programHelper);
+                ParseLog(operation, ProgramHelper);
             }
         }
-        return 0;
+        if (BatchToDiscord)
+        {
+            Console.WriteLine("Discord: Preparing batch for discord" + Environment.NewLine);
+            ProgramHelper.HandleBatchedDiscordEmbed(DiscordMessageIDs, Operations, (message) => {
+                Console.WriteLine(message);
+            });
+        }
+        Executing = false;
     }
 
-    public class ThreadingState
+    private class ThreadingState
     {
         public ProgramHelper ProgramHelper;
         public volatile bool NoMoreFiles;
-        public ConcurrentQueue<string> FileQueue;
+        public ConcurrentQueue<ConsoleOperationController> FileQueue;
     }
 
     static void EnterParserThread(object state_)
@@ -62,23 +185,23 @@ static class ConsoleProgram
         var state = (ThreadingState)state_;
         while (true)
         {
-            string logFile;
-            while(!state.FileQueue.TryDequeue(out logFile)) {
-                if(state.NoMoreFiles && state.FileQueue.IsEmpty) { return; }
+            ConsoleOperationController operation;
+            while (!state.FileQueue.TryDequeue(out operation))
+            {
+                if (state.NoMoreFiles && state.FileQueue.IsEmpty) { return; }
                 //NOTE(Rennorb): Don't even bother with synchronizing. Just wait a bit.
                 Thread.Sleep(10);
             }
 
-            if(string.IsNullOrWhiteSpace(logFile)) { Debugger.Break(); }
+            if (string.IsNullOrWhiteSpace(operation.InputFile)) { Debugger.Break(); }
 
-            ParseLog(logFile, state.ProgramHelper);
+            ParseLog(operation, state.ProgramHelper);
         }
     }
 
-    private static void ParseLog(string logFile, ProgramHelper programHelper)
+    private static void ParseLog(ConsoleOperationController operation, ProgramHelper programHelper)
     {
         using var _t = new AutoTrace("Parse One");
-        var operation = new ConsoleOperationController(logFile);
         try
         {
             programHelper.DoWork(operation);
@@ -102,6 +225,6 @@ static class ConsoleProgram
         {
             programHelper.GenerateTraceFile(operation);
         }
-        Console.WriteLine("Processed - " + JsonSerializer.Serialize(new ConsoleResultObject(operation), ConsoleResultObject.Serializer));
+        Console.WriteLine("Processed - " + JsonSerializer.Serialize(new ConsoleResultObject(operation), ConsoleResultObject.Serializer) + Environment.NewLine);
     }
 }

@@ -2,9 +2,9 @@
     <div>
         <div v-if="actor !== null" class="mb-1 mt-1">
             <p style="display: table-row;">
-                {{ actor.name }} did {{ percentFormater3(barrierdist.contributedBarrier / barrierdist.totalBarrier) }}
+                {{ actor.name }} did {{ percentFormater3(healingdist.contributedHealing  / healingdist.totalHealing) }}
                 {{ isminion ? "of its master's total" : 'of their total' }}
-                {{ istarget ? 'Target' : '' }} healing ({{ numberFormater(barrierdist.contributedBarrier) }})
+                {{ istarget ? 'Target' : '' }} healing ({{ numberFormater(healingdist.contributedHealing) }})
             </p>
         </div>
         <table class="table table-sm table-striped table-hover" cellspacing="0" width="100%" :id="tableid">

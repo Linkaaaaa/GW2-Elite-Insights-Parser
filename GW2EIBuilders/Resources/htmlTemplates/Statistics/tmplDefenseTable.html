@@ -147,13 +147,13 @@
                     <td :class="getBodyClass('Data', 10)" :data-original-title="numberFormater(row.def[11]) + ' seconds'">
                         {{ numberFormater(row.def[10]) }}
                     </td>
-                    <td :class="getBodyClass('Data', 12)" :data-original-title="numberFormater(row.def[13])">
+                    <td :class="getBodyClass('Data', 12)" :data-original-title="row.def[13]">
                         {{ numberFormater(row.def[12]) }}
                     </td>
                     <td :class="getBodyClass('Data', 16)">
                         {{ numberFormater(row.def[16]) }}
                     </td>
-                    <td :class="getBodyClass('Data', 14)" :data-original-title="numberFormater(row.def[15])">
+                    <td :class="getBodyClass('Data', 14)" :data-original-title="row.def[15]">
                         {{ numberFormater(row.def[14]) }}
                     </td>
                 </tr>

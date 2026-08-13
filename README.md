@@ -52,9 +52,18 @@ Settings can be configured using .conf files (see Settings/sample.conf for an ex
 
 ### For console
 
+The -populate_from option will automatically fetch files from that path.
+
+Using -discord_batch, you can send dps.report links to a valid discord webhook.
+
+With the -watch option, the application will watch given path in order to parse logs files added under it.
+
 You can refresh the API caches using the -cache option.
 
-You can update EI to its latest version using the -update option. 
+You can update EI to its latest version using the -update option.
+
+Use -h to display the help message.
+
 ```
 GuildWars2EliteInsights-CLI.exe -c [config path] [logs]
 ```

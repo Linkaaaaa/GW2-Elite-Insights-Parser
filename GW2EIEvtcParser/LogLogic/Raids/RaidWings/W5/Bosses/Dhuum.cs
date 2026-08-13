@@ -380,9 +380,9 @@ internal class Dhuum : HallOfChains
             .Where(x => x.Type == AgentItem.AgentType.VolatileSpecies && x.HitboxWidth == 16)
             .Distinct()
             .ToHashSet();
-        var velocityOrPositionEvents = combatData.Where(x => x.IsStateChange == StateChange.Position || x.IsStateChange == StateChange.Velocity).ToList();
+        var velocityOrPositionEvents = combatData.Where(x => x.IsPosition || x.IsStateChange == StateChange.Velocity).ToList();
         var positionEvents = velocityOrPositionEvents
-            .Where(x => x.IsStateChange == StateChange.Position)
+            .Where(x => x.IsPosition)
             .GroupBy(x => agentData.GetAgent(x.SrcAgent, x.Time))
             .Where(x => candidates.Contains(x.Key))
             .ToDictionary(x => x.Key, x => x.Select(MovementEvent.GetPoint3D)

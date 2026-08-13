@@ -42,6 +42,20 @@ public class CombatReplay
         _Positions.Add(position);
     }
 
+    internal virtual void AddTeleport(ParametricPoint3D position)
+    {
+        var lastVelocity = _Velocities.LastOrNull();
+        var velocityInsertTime = lastVelocity?.Time;
+        if (velocityInsertTime.HasValue)
+        {
+            // Add zero velocity after latest event to make sure to stop interpolation ...
+            _Velocities.Add(new(0,0,0, velocityInsertTime.Value));
+            // ... and then restore previous
+            _Velocities.Add(new(lastVelocity!.Value.XYZ, position.Time));
+        }
+        _Positions.Add(position);
+    }
+
     internal virtual void AddVelocity(ParametricPoint3D velocity)
     {
         _Velocities.Add(velocity);

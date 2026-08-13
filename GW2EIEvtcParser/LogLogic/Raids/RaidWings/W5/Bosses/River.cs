@@ -112,7 +112,7 @@ internal class River : HallOfChains
         agentData.AddCustomNPCAgent(logData.LogStart, logData.LogEnd, "River of Souls", Spec.Gadget, TargetID.DummyTarget, true);
         foreach (var desmina in agentData.GetStableSpeciesByID(TargetID.Desmina))
         {
-            var positions = combatData.Where(x => x.IsStateChange == StateChange.Position && x.SrcMatchesAgent(desmina)).Take(5).Select(x => new PositionEvent(x, agentData).GetParametricPoint3D());
+            var positions = combatData.Where(x => x.IsPosition && x.SrcMatchesAgent(desmina)).Take(5).Select(x => new PositionEvent(x, agentData).GetParametricPoint3D());
             if (positions.Any(x => x.XYZ.X >= 7500))
             {
                 desmina.OverrideID(IgnoredSpecies, agentData);

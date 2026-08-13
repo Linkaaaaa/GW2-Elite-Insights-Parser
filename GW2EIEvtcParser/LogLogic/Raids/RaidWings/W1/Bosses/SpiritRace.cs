@@ -144,7 +144,7 @@ internal class SpiritRace : SpiritVale
             if (candidate.Type == AgentItem.AgentType.VolatileSpecies)
             {
                 needsDummy = false;
-                var positions = combatData.Where(x => x.IsStateChange == StateChange.Position && x.SrcMatchesAgent(candidate)).Select(MovementEvent.GetPointXY).ToList();
+                var positions = combatData.Where(x => x.IsPosition && x.SrcMatchesAgent(candidate)).Select(MovementEvent.GetPointXY).ToList();
                 if (positions.Any(x => (x - position1).Length() < 10))
                 {
                     candidate.OverrideID(TargetID._EtherealBarrier1, agentData);

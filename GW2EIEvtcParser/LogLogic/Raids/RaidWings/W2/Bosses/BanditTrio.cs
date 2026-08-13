@@ -139,7 +139,7 @@ internal class BanditTrio : SalvationPass
             // Thrash mob start check
             var boxStart = new Vector2(-2200, -11300);
             var boxEnd = new Vector2(1000, -7200);
-            var banditPositions = combatData.Where(x => x.IsStateChange == StateChange.Position && agentData.GetAgent(x.SrcAgent, x.Time).IsAnySpecies(TrashMobsToCheck))
+            var banditPositions = combatData.Where(x => x.IsPosition && agentData.GetAgent(x.SrcAgent, x.Time).IsAnySpecies(TrashMobsToCheck))
                 .Select(x => new PositionEvent(x, agentData));
             var banditsInBox = banditPositions.Where(x => x.Time < startToUse + 10000 && x.GetPointXY().IsInBoundingBox(boxStart, boxEnd))
                 .Select(x => x.Src)

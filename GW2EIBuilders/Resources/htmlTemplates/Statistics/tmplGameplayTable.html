@@ -107,8 +107,8 @@
                     <td :data-original-title="numberFormater(row.commons[1]) + ' cancels'">{{ numberFormater3(row.commons[0]) }}</td>
                     <td :data-original-title="numberFormater(row.commons[3]) + ' cancels'">{{ numberFormater3(row.commons[2]) }}</td>
                     <td>{{ numberFormater(row.commons[4]) }}</td>
-                    <td></td>
-                    <td></td>
+                    <td> {{ percentFormater3(row.commons[7] / 100 / row.count ) }}</td>
+                    <td> {{ percentFormater3(row.commons[8] / 100 / row.count )}}</td>
                     <td>{{ numberFormater2(row.commons[5] / row.count) }}</td>
                     <td v-if="hasCommander">{{ numberFormater2(row.commons[6] / row.count) }}</td>
                 </tr>

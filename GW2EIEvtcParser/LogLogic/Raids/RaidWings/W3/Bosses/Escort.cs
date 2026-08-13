@@ -183,7 +183,7 @@ internal class Escort : StrongholdOfTheFaithful
         var duplicateGlennaPosition = new Vector3(-4326.979f, 13687.298f, -5561.857f);
         foreach (var glenna in agentData.GetStableSpeciesByID(TargetID.Glenna))
         {
-            var positions = combatData.Where(x => x.IsStateChange == StateChange.Position && x.SrcMatchesAgent(glenna)).Take(5).Select(x => new PositionEvent(x, agentData).GetParametricPoint3D());
+            var positions = combatData.Where(x => x.IsPosition && x.SrcMatchesAgent(glenna)).Take(5).Select(x => new PositionEvent(x, agentData).GetParametricPoint3D());
             if (positions.Any(x => (duplicateGlennaPosition.XY() - x.XYZ.XY()).LengthSquared() < 10))
             {
                 glenna.OverrideID(IgnoredSpecies, agentData);

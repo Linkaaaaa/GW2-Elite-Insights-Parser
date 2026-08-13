@@ -97,7 +97,7 @@ partial class MainForm
         // BtnPopulate
         // 
         BtnPopulate.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-        BtnPopulate.Location = new Point(220, 386);
+        BtnPopulate.Location = new Point(220, 387);
         BtnPopulate.Margin = new Padding(4, 3, 4, 3);
         BtnPopulate.Name = "BtnPopulate";
         BtnPopulate.Size = new Size(155, 27);
@@ -248,7 +248,7 @@ partial class MainForm
         // BtnDiscordBatch
         // 
         BtnDiscordBatch.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-        BtnDiscordBatch.Location = new Point(383, 386);
+        BtnDiscordBatch.Location = new Point(383, 387);
         BtnDiscordBatch.Margin = new Padding(4, 3, 4, 3);
         BtnDiscordBatch.Name = "BtnDiscordBatch";
         BtnDiscordBatch.Size = new Size(125, 27);
@@ -315,7 +315,7 @@ partial class MainForm
         // BtnCheckUpdates
         // 
         BtnCheckUpdates.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-        BtnCheckUpdates.Location = new Point(105, 386);
+        BtnCheckUpdates.Location = new Point(105, 387);
         BtnCheckUpdates.Margin = new Padding(4, 3, 4, 3);
         BtnCheckUpdates.Name = "BtnCheckUpdates";
         BtnCheckUpdates.Size = new Size(108, 27);

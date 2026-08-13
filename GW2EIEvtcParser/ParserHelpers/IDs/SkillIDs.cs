@@ -77,6 +77,8 @@ public static class SkillIDs
     public const long DhuumEtherealSealInteract = -58;
     public const long RelicOfTheCruelOverseer = -59;
     public const long UraBloodstoneShardPickUp = -60;
+    public const long FlameRushOrFlameSurge = -61;
+    public const long EchoOfTruthOrVoiceOfTruth = -62;
     #endregion
     #region ArcDPS Hardcoded
     internal const long ArcDPSDodge = 65001;
@@ -168,6 +170,7 @@ public static class SkillIDs
     public const long Encumbered = 1159;
     public const long Bandage = 1175;
     public const long Quickness = 1187;
+    public const long PetRevive = 1196;
     public const long JacarandasEmbraceMinion = 1286; // Skill casted by Jacaranda's Embrace NPC
     public const long GraspingVinesDamage = 1290;
     public const long AimedShotWvW = 1421;

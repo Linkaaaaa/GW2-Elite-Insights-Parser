@@ -82,7 +82,7 @@ internal class ConjuredAmalgamate : MythwrightGambit
             .Where(x => x.IsStateChange == StateChange.AttackTarget)
             .Select(x => new AttackTargetEvent(x, agentData))
             .ToList();
-        var positionEvents = combatData.Where(x => x.IsStateChange == StateChange.Position);
+        var positionEvents = combatData.Where(x => x.IsPosition);
         var attackTargetPositions = positionEvents.Where(x => attackTargetEvents.Any(y => x.SrcMatchesAgent(y.AttackTarget)));
         foreach (var positionEvent in attackTargetPositions)
         {
