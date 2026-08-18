@@ -15,7 +15,7 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu p-2 font-weight-normal scrollabledropdown wd-200px">
-                <li v-for="(phase, index) in normalPhases" v-show="!phase.breakbarPhase" class="phase-selector-item" :key="index" :class="{ 'active': selectedPhase === phase }"
+                <li v-for="(phase, index) in normalPhases" class="phase-selector-item" :key="index" :class="{ 'active': selectedPhase === phase }"
                     @click="updatePhaseTime(phase)"
                     :data-original-title="phase.durationS + ' seconds <br /> Start: ' + phase.start + '<br /> End: ' + phase.end">
                     {{ getPhaseName(phase) }}
@@ -302,6 +302,7 @@
             this.updateAnimatorTimes(encounterPhase);
             this.resetViewpoint();
             this.selectedPhaseId = this.normalPhases[0].id;
+            animationControlComponent = this;
         },
         computed: {
             selectedPhase: function() {
