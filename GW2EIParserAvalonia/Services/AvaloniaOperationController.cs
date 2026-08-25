@@ -8,8 +8,7 @@ public sealed class AvaloniaOperationController : OperationController
 {
     public string ButtonText { get; private set; } = "Parse";
     public string ReParseText { get; private set; } = "N/A";
-    public OperationState State { get; private set; }
-        = OperationState.Ready;
+    public OperationState State { get; private set; } = OperationState.Ready;
     private CancellationTokenSource _cancellationTokenSource = new();
     public CancellationToken CancellationToken => _cancellationTokenSource.Token;
 
@@ -68,13 +67,6 @@ public sealed class AvaloniaOperationController : OperationController
         _cancellationTokenSource.Cancel();
     }
 
-    public void ToRemovalFromQueueState()
-    {
-        State = OperationState.Ready;
-        ButtonText = "Parse";
-        ReParseText = "N/A";
-    }
-
     public void ToCompleteState()
     {
         State = OperationState.Complete;
@@ -113,7 +105,6 @@ public sealed class AvaloniaOperationController : OperationController
     public override void Reset()
     {
         _cancellationTokenSource.Dispose();
-
         _cancellationTokenSource = new CancellationTokenSource();
 
         base.Reset();

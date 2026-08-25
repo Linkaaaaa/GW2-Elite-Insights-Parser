@@ -6,6 +6,11 @@ namespace GW2EIParserAvalonia.Views;
 
 public partial class SettingsWindow : Window
 {
+    public SettingsWindow()
+    {
+        InitializeComponent();
+    }
+
     public SettingsWindow(SettingsViewModel viewModel)
     {
         InitializeComponent();

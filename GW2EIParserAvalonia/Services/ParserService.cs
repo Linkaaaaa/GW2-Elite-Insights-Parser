@@ -12,7 +12,8 @@ public sealed class ParserService
     public ParserService(ProgramSettings settings)
     {
         Settings = settings;
-        _programHelper = new ProgramHelper(new Version(3, 26, 0, 0), Settings);
+        var version = typeof(App).Assembly.GetName().Version ?? new Version(0, 0, 0, 0);
+        _programHelper = new ProgramHelper(version, Settings);
     }
 
     public void ApplySettings()
@@ -23,5 +24,25 @@ public sealed class ParserService
     public Task ParseAsync(AvaloniaOperationController operation)
     {
         return Task.Run(() => _programHelper.DoWork(operation), operation.CancellationToken);
+    }
+
+    public bool ParseMultipleLogs()
+    {
+        return _programHelper.ParseMultipleLogs();
+    }
+
+    public int GetMaxParallelRunning()
+    {
+        return _programHelper.GetMaxParallelRunning();
+    }
+
+    public void ExecuteMemoryCheckTask()
+    {
+        _programHelper.ExecuteMemoryCheckTask();
+    }
+
+    public void GenerateTraceFile(AvaloniaOperationController operation)
+    {
+        _programHelper.GenerateTraceFile(operation);
     }
 }

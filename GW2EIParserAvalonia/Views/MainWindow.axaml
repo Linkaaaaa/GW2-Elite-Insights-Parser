@@ -49,64 +49,104 @@
             <Button
                 Content="Settings..."
                 Click="SettingsButton_Click"
-                MinWidth="110" />
+                MinWidth="110"
+                IsEnabled="{Binding SettingsEnabled}" />
+
+            <Button
+                Content="Populate from directory"
+                Click="PopulateButton_Click"
+                MinWidth="155" />
+
+            <Button
+                Content="Parse All"
+                Click="ParseAllButton_Click"
+                MinWidth="110"
+                IsEnabled="{Binding ParseEnabled}" />
+
+            <Button
+                Content="Cancel All"
+                Click="CancelAllButton_Click"
+                MinWidth="100"
+                IsEnabled="{Binding CancelAllEnabled}" />
+
+            <Button
+                Content="Clear Failed"
+                Click="ClearFailedButton_Click"
+                MinWidth="100"
+                IsEnabled="{Binding ClearFailedEnabled}" />
+
+            <Button
+                Content="Clear All"
+                Click="ClearAllButton_Click"
+                MinWidth="100"
+                IsEnabled="{Binding ClearAllEnabled}" />
 
         </StackPanel>
 
-        <DataGrid
+        <StackPanel
             Grid.Row="2"
             Margin="20,0,20,20"
-            ItemsSource="{Binding LogFiles}"
-            AutoGenerateColumns="False"
-            IsReadOnly="True"
-            CanUserResizeColumns="True"
-            GridLinesVisibility="All">
+            Spacing="4">
 
-            <DataGrid.Columns>
+            <TextBlock
+                Text="{Binding WatchingDirectory}"
+                IsVisible="{Binding WatchingDirectoryVisible}"
+                Opacity="0.7" />
 
-                <DataGridTextColumn
-                    Header="Input File"
-                    Binding="{Binding InputFile}"
-                    Width="6*" />
+            <DataGrid
+                ItemsSource="{Binding LogFiles}"
+                AutoGenerateColumns="False"
+                IsReadOnly="True"
+                CanUserResizeColumns="True"
+                GridLinesVisibility="All">
 
-                <DataGridTextColumn
-                    Header="Status"
-                    Binding="{Binding Status}"
-                    Width="3*" />
+                <DataGrid.Columns>
 
-                <DataGridTemplateColumn
-                    Header="Action"
-                    Width="100">
+                    <DataGridTextColumn
+                        Header="Input File"
+                        Binding="{Binding InputFile}"
+                        Width="6*" />
 
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button
-                                Content="{Binding ButtonText}"
-                                Command="{Binding ActionCommand}"
-                                HorizontalAlignment="Stretch" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTextColumn
+                        Header="Status"
+                        Binding="{Binding Status}"
+                        Width="3*" />
 
-                </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        Header="Action"
+                        Width="100">
 
-                <DataGridTemplateColumn
-                    Header="Re-Parse"
-                    Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                    Content="{Binding ButtonText}"
+                                    Command="{Binding ActionCommand}"
+                                    HorizontalAlignment="Stretch" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
 
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button
-                                Content="{Binding ReParseText}"
-                                Command="{Binding ReParseCommand}"
-                                HorizontalAlignment="Stretch" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
-                </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        Header="Re-Parse"
+                        Width="100">
 
-            </DataGrid.Columns>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                    Content="{Binding ReParseText}"
+                                    Command="{Binding ReParseCommand}"
+                                    HorizontalAlignment="Stretch" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
 
-        </DataGrid>
+                    </DataGridTemplateColumn>
+
+                </DataGrid.Columns>
+
+            </DataGrid>
+
+        </StackPanel>
 
     </Grid>
 

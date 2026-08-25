@@ -23,8 +23,9 @@ public partial class LogFileViewModel : ObservableObject
 
     [ObservableProperty]
     private OperationState state;
-
     public AvaloniaOperationController Operation { get; }
+    public event EventHandler? ParseRequested;
+    public event EventHandler? ReParseRequested;
 
     public LogFileViewModel(string fullPath)
     {
@@ -95,29 +96,6 @@ public partial class LogFileViewModel : ObservableObject
         }
     }
 
-    public void OpenInputLocation()
-    {
-        if (!File.Exists(InputFile))
-        {
-            return;
-        }
-
-        var directory = new FileInfo(InputFile).DirectoryName;
-
-        if (!string.IsNullOrWhiteSpace(directory) && Directory.Exists(directory))
-        {
-            OpenWithDefaultApplication(directory);
-        }
-    }
-
-    public void OpenOutputLocation()
-    {
-        if (Operation.OutLocation != null && Directory.Exists(Operation.OutLocation))
-        {
-            OpenWithDefaultApplication(Operation.OutLocation);
-        }
-    }
-
     private static void OpenWithDefaultApplication(string path)
     {
         Process.Start(
@@ -127,10 +105,6 @@ public partial class LogFileViewModel : ObservableObject
                 UseShellExecute = true
             });
     }
-
-    public event EventHandler? ParseRequested;
-
-    public event EventHandler? ReParseRequested;
 
     public void RequestParse()
     {

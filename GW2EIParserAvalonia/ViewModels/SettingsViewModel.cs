@@ -1,6 +1,7 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using GW2EIParserCommons;
+using GW2EIParserCommons.Properties;
 
 namespace GW2EIParserAvalonia.ViewModels;
 
@@ -107,6 +108,20 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private int memoryLimit;
 
+    // GUI
+    [ObservableProperty]
+    private bool autoAdd;
+    [ObservableProperty]
+    private string autoAddPath = string.Empty;
+    [ObservableProperty]
+    private bool autoParse;
+    [ObservableProperty]
+    private bool applicationTraces;
+    [ObservableProperty]
+    private long populateHourLimit;
+    [ObservableProperty]
+    private bool autoDiscordBatch;
+
     //
     public event EventHandler? SettingsApplied;
 
@@ -167,6 +182,14 @@ public partial class SettingsViewModel : ObservableObject
 
         // Other
         MemoryLimit = _settings.MemoryLimit;
+
+        // GUI
+        AutoAdd = Settings.Default.AutoAdd;
+        AutoAddPath = Settings.Default.AutoAddPath ?? string.Empty;
+        AutoParse = Settings.Default.AutoParse;
+        ApplicationTraces = Settings.Default.ApplicationTraces;
+        PopulateHourLimit = Settings.Default.PopulateHourLimit;
+        AutoDiscordBatch = Settings.Default.AutoDiscordBatch;
     }
 
     public void ApplyToSettings()
@@ -226,6 +249,16 @@ public partial class SettingsViewModel : ObservableObject
 
         // Other
         _settings.MemoryLimit = MemoryLimit;
+
+        // GUI
+        Settings.Default.AutoAdd = AutoAdd;
+        Settings.Default.AutoAddPath = AutoAddPath;
+        Settings.Default.AutoParse = AutoParse;
+        Settings.Default.ApplicationTraces = ApplicationTraces;
+        Settings.Default.PopulateHourLimit = PopulateHourLimit;
+        Settings.Default.AutoDiscordBatch = AutoDiscordBatch;
+
+        Settings.Default.Save();
 
         SettingsApplied?.Invoke(this, EventArgs.Empty);
     }

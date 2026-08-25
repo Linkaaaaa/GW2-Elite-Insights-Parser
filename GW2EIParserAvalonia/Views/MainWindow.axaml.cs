@@ -1,17 +1,27 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using GW2EIParserAvalonia.ViewModels;
+using GW2EIParserCommons.Properties;
 
 namespace GW2EIParserAvalonia.Views;
 
 public partial class MainWindow : Window
 {
+    private FileSystemWatcher? _logFileWatcher;
+
     public MainWindow()
     {
         InitializeComponent();
+
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            UpdateFileWatcher(viewModel);
+        }
     }
 
     private async void AddFilesButton_Click(object? sender, RoutedEventArgs e)
@@ -61,6 +71,112 @@ public partial class MainWindow : Window
 
         var window = new SettingsWindow(viewModel.SettingsViewModel);
         await window.ShowDialog(this);
+
+        UpdateFileWatcher(viewModel);
+    }
+
+    private void PopulateButton_Click(object? sender, RoutedEventArgs e)
+    {
+        _ = PopulateFromDirectoryAsync();
+    }
+
+    private async Task PopulateFromDirectoryAsync()
+    {
+        if (DataContext is not MainWindowViewModel viewModel)
+        {
+            return;
+        }
+
+        var folders = await StorageProvider.OpenFolderPickerAsync(
+            new FolderPickerOpenOptions
+            {
+                Title = "Select log directory",
+                AllowMultiple = false
+            });
+
+        var folder = folders.FirstOrDefault();
+
+        if (folder is null)
+        {
+            return;
+        }
+
+        var path = folder.TryGetLocalPath();
+
+        if (!string.IsNullOrWhiteSpace(path))
+        {
+            viewModel.AddFilesFromDirectory(path);
+        }
+    }
+
+    private void ParseAllButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            viewModel.ParseAll();
+        }
+    }
+
+    private void CancelAllButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            viewModel.CancelAll();
+        }
+    }
+
+    private void ClearAllButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            viewModel.ClearAll();
+        }
+    }
+
+    private void ClearFailedButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            viewModel.ClearFailed();
+        }
+    }
+
+    private void UpdateFileWatcher(MainWindowViewModel viewModel)
+    {
+        _logFileWatcher?.Dispose();
+        _logFileWatcher = null;
+
+        if (!Settings.Default.AutoAdd || !Directory.Exists(Settings.Default.AutoAddPath))
+        {
+            return;
+        }
+
+        _logFileWatcher = new FileSystemWatcher(Settings.Default.AutoAddPath)
+        {
+            IncludeSubdirectories = true,
+            EnableRaisingEvents = true
+        };
+
+        _logFileWatcher.Created += LogFileWatcher_Created;
+        _logFileWatcher.Renamed += LogFileWatcher_Renamed;
+    }
+
+    private void LogFileWatcher_Created(object sender, FileSystemEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            viewModel.HandleCreatedFile(e.FullPath);
+        }
+    }
+
+    private void LogFileWatcher_Renamed(object sender, RenamedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            viewModel.HandleRenamedFile(
+                e.OldFullPath,
+                e.FullPath);
+        }
     }
 
     private void MainWindow_DragOver(object? sender, DragEventArgs e)
