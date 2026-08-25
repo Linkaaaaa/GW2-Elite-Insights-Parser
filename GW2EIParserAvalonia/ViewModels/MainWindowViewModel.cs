@@ -93,11 +93,6 @@ public partial class MainWindowViewModel : ObservableObject
 
     public void AddFile(string path)
     {
-        if (!IsValidLogFile(path))
-        {
-            return;
-        }
-
         if (LogFiles.Any(x => string.Equals(x.InputFile, path, StringComparison.OrdinalIgnoreCase)))
         {
             return;
@@ -212,7 +207,7 @@ public partial class MainWindowViewModel : ObservableObject
         ParseEnabled = false;
         CancelAllEnabled = false;
         ClearAllEnabled = false;
-        ClearFailedEnabled = false;
+        ClearFailedEnabled = LogFiles.Any(x => x.State == OperationState.UnComplete);
     }
 
     public void ClearFailed()
@@ -226,8 +221,8 @@ public partial class MainWindowViewModel : ObservableObject
                 LogFiles.RemoveAt(i);
             }
         }
-
-        ClearFailedEnabled = LogFiles.Any(x => x.State == OperationState.UnComplete);
+        
+        ClearFailedEnabled = false;
     }
 
     public void UpdatePopulateHourLimit(decimal value)
@@ -379,13 +374,6 @@ public partial class MainWindowViewModel : ObservableObject
             AutoDiscordBatchEnabled = true;
             ClearFailedEnabled = LogFiles.Any(x => x.State == OperationState.UnComplete);
         }
-    }
-
-    private static bool IsValidLogFile(string path)
-    {
-        return path.EndsWith(".evtc", StringComparison.OrdinalIgnoreCase)
-               || path.EndsWith(".evtc.zip", StringComparison.OrdinalIgnoreCase)
-               || path.EndsWith(".zevtc", StringComparison.OrdinalIgnoreCase);
     }
 
     public async Task ParseFileAsync(LogFileViewModel logFile)

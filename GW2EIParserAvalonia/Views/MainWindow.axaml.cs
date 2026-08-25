@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using GW2EIEvtcParser.ParserHelpers;
 using GW2EIParserAvalonia.ViewModels;
 using GW2EIParserCommons.Properties;
 
@@ -18,10 +19,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        if (DataContext is MainWindowViewModel viewModel)
-        {
-            UpdateFileWatcher(viewModel);
-        }
+        UpdateFileWatcher();
     }
 
     private async void AddFilesButton_Click(object? sender, RoutedEventArgs e)
@@ -34,19 +32,13 @@ public partial class MainWindow : Window
         var files = await StorageProvider.OpenFilePickerAsync(
             new FilePickerOpenOptions
             {
-                Title = "Select GW2 combat logs",
+                Title = "Select GW2 EVTC Combat Logs",
                 AllowMultiple = true,
-
                 FileTypeFilter =
                 [
-                    new FilePickerFileType("GW2 Combat Logs")
+                    new FilePickerFileType("GW2 EVTC Combat Logs")
                     {
-                        Patterns =
-                        [
-                            "*.evtc",
-                            "*.evtc.zip",
-                            "*.zevtc"
-                        ]
+                        Patterns = SupportedFileFormats.SupportedFormats.Select(format => $"*{format}").ToList()
                     }
                 ]
             });
@@ -72,15 +64,10 @@ public partial class MainWindow : Window
         var window = new SettingsWindow(viewModel.SettingsViewModel);
         await window.ShowDialog(this);
 
-        UpdateFileWatcher(viewModel);
+        UpdateFileWatcher();
     }
 
-    private void PopulateButton_Click(object? sender, RoutedEventArgs e)
-    {
-        _ = PopulateFromDirectoryAsync();
-    }
-
-    private async Task PopulateFromDirectoryAsync()
+    private async void PopulateButton_Click(object? sender, RoutedEventArgs e)
     {
         if (DataContext is not MainWindowViewModel viewModel)
         {
@@ -141,7 +128,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void UpdateFileWatcher(MainWindowViewModel viewModel)
+    private void UpdateFileWatcher()
     {
         _logFileWatcher?.Dispose();
         _logFileWatcher = null;
@@ -173,9 +160,7 @@ public partial class MainWindow : Window
     {
         if (DataContext is MainWindowViewModel viewModel)
         {
-            viewModel.HandleRenamedFile(
-                e.OldFullPath,
-                e.FullPath);
+            viewModel.HandleRenamedFile(e.OldFullPath, e.FullPath);
         }
     }
 

@@ -11,16 +11,12 @@ public partial class LogFileViewModel : ObservableObject
 {
     [ObservableProperty]
     private string inputFile;
-
     [ObservableProperty]
     private string status;
-
     [ObservableProperty]
     private string buttonText;
-
     [ObservableProperty]
     private string reParseText;
-
     [ObservableProperty]
     private OperationState state;
     public AvaloniaOperationController Operation { get; }
