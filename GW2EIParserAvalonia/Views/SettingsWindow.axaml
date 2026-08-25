@@ -1,0 +1,403 @@
+﻿<Window
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:GW2EIParserAvalonia.ViewModels"
+    x:Class="GW2EIParserAvalonia.Views.SettingsWindow"
+    x:DataType="viewModels:SettingsViewModel"
+    mc:Ignorable="d"
+    Width="700"
+    Height="750"
+    MinWidth="600"
+    MinHeight="600"
+    Title="GW2 Elite Insights Settings">
+
+    <DockPanel>
+
+        <!-- ====================================================== -->
+        <!-- Bottom buttons                                         -->
+        <!-- ====================================================== -->
+
+        <StackPanel
+            DockPanel.Dock="Bottom"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            Margin="20"
+            Spacing="10">
+
+            <Button
+                Content="Cancel"
+                MinWidth="100"
+                Click="CancelButton_Click" />
+
+            <Button
+                Content="Apply"
+                MinWidth="100"
+                Click="ApplyButton_Click" />
+
+        </StackPanel>
+
+        <TabControl>
+
+            <!-- ================================================== -->
+            <!-- OUTPUT                                             -->
+            <!-- ================================================== -->
+
+            <TabItem Header="Output">
+
+                <ScrollViewer>
+                    <StackPanel
+                        Margin="20"
+                        Spacing="10">
+
+                        <TextBlock
+                            Text="Output Formats"
+                            FontSize="20"
+                            FontWeight="Bold" />
+
+                        <CheckBox
+                            Content="HTML"
+                            IsChecked="{Binding SaveOutHTML}" />
+
+                        <CheckBox
+                            Content="CSV"
+                            IsChecked="{Binding SaveOutCSV}" />
+
+                        <CheckBox
+                            Content="JSON"
+                            IsChecked="{Binding SaveOutJSON}" />
+
+                        <CheckBox
+                            Content="Trace"
+                            IsChecked="{Binding SaveOutTrace}" />
+
+                        <Separator />
+
+                        <TextBlock
+                            Text="Output Filename"
+                            FontSize="18"
+                            FontWeight="Bold" />
+
+                        <CheckBox
+                            Content="Add duration to filename"
+                            IsChecked="{Binding AddDuration}" />
+
+                        <CheckBox
+                            Content="Add POV profession to filename"
+                            IsChecked="{Binding AddPoVProf}" />
+
+                        <Separator />
+
+                        <TextBlock
+                            Text="Save Location"
+                            FontSize="18"
+                            FontWeight="Bold" />
+
+                        <CheckBox
+                            Content="Save files to output directory"
+                            IsChecked="{Binding SaveAtOut}" />
+
+                        <TextBox
+                            Text="{Binding OutLocation}"
+                            PlaceholderText="Output directory"
+                            IsEnabled="{Binding SaveAtOut}" />
+
+                    </StackPanel>
+                </ScrollViewer>
+
+            </TabItem>
+
+            <!-- ================================================== -->
+            <!-- PARSING                                             -->
+            <!-- ================================================== -->
+
+            <TabItem Header="Parsing">
+
+                <ScrollViewer>
+                    <StackPanel
+                        Margin="20"
+                        Spacing="10">
+
+                        <TextBlock
+                            Text="Parsing"
+                            FontSize="20"
+                            FontWeight="Bold" />
+
+                        <CheckBox
+                            Content="Anonymous"
+                            IsChecked="{Binding Anonymous}" />
+
+                        <CheckBox
+                            Content="Skip failed tries"
+                            IsChecked="{Binding SkipFailedTries}" />
+
+                        <CheckBox
+                            Content="Compute phases"
+                            IsChecked="{Binding ComputePhases}" />
+
+                        <CheckBox
+                            Content="Compute combat replay"
+                            IsChecked="{Binding ComputeCombatReplay}" />
+
+                        <CheckBox
+                            Content="Compute damage modifiers"
+                            IsChecked="{Binding ComputeDamageModifiers}" />
+
+                        <CheckBox
+                            Content="Parse extensions"
+                            IsChecked="{Binding ParseExtensions}" />
+
+                        <CheckBox
+                            Content="Compute damage"
+                            IsChecked="{Binding ComputeDamage}" />
+
+                        <CheckBox
+                            Content="Compute buffs"
+                            IsChecked="{Binding ComputeBuff}" />
+
+                        <CheckBox
+                            Content="Compute casts"
+                            IsChecked="{Binding ComputeCast}" />
+
+                        <CheckBox
+                            Content="Compute mechanics"
+                            IsChecked="{Binding ComputeMechanics}" />
+
+                        <CheckBox
+                            Content="Detailed WvW"
+                            IsChecked="{Binding DetailledWvW}" />
+
+                        <Separator />
+
+                        <TextBlock
+                            Text="Encounter Limits"
+                            FontSize="18"
+                            FontWeight="Bold" />
+
+                        <TextBlock
+                            Text="Minimum encounter duration" />
+
+                        <NumericUpDown
+                            Value="{Binding CustomTooShort}"
+                            Minimum="0"
+                            Maximum="86400"
+                            Increment="1" />
+
+                        <TextBlock
+                            Text="Maximum encounter duration" />
+
+                        <NumericUpDown
+                            Value="{Binding CustomTooBig}"
+                            Minimum="0"
+                            Maximum="86400"
+                            Increment="1" />
+
+                    </StackPanel>
+                </ScrollViewer>
+
+            </TabItem>
+
+            <!-- ================================================== -->
+            <!-- THREADING                                           -->
+            <!-- ================================================== -->
+
+            <TabItem Header="Threading">
+
+                <ScrollViewer>
+                    <StackPanel
+                        Margin="20"
+                        Spacing="10">
+
+                        <TextBlock
+                            Text="Processing"
+                            FontSize="20"
+                            FontWeight="Bold" />
+
+                        <CheckBox
+                            Content="Parse multiple logs"
+                            IsChecked="{Binding ParseMultipleLogs}" />
+
+                        <CheckBox
+                            Content="Single threaded"
+                            IsChecked="{Binding SingleThreaded}" />
+
+                        <TextBlock
+                            Margin="0,20,0,0"
+                            Text="Memory Limit"
+                            FontSize="18"
+                            FontWeight="Bold" />
+
+                        <TextBlock
+                            Text="Maximum memory limit in MB. Use 0 for no limit." />
+
+                        <NumericUpDown
+                            Value="{Binding MemoryLimit}"
+                            Minimum="0"
+                            Maximum="1048576"
+                            Increment="256" />
+
+                    </StackPanel>
+                </ScrollViewer>
+
+            </TabItem>
+
+            <!-- ================================================== -->
+            <!-- HTML                                                -->
+            <!-- ================================================== -->
+
+            <TabItem Header="HTML">
+
+                <ScrollViewer>
+                    <StackPanel
+                        Margin="20"
+                        Spacing="10">
+
+                        <TextBlock
+                            Text="HTML"
+                            FontSize="20"
+                            FontWeight="Bold" />
+
+                        <CheckBox
+                            Content="Light theme"
+                            IsChecked="{Binding LightTheme}" />
+
+                        <CheckBox
+                            Content="Use external scripts"
+                            IsChecked="{Binding HtmlExternalScripts}" />
+
+                        <TextBlock
+                            Text="External scripts path"
+                            Margin="0,10,0,0" />
+
+                        <TextBox
+                            Text="{Binding HtmlExternalScriptsPath}"
+                            PlaceholderText="Path to external scripts"
+                            IsEnabled="{Binding HtmlExternalScripts}" />
+
+                        <TextBlock
+                            Text="External scripts CDN"
+                            Margin="0,10,0,0" />
+
+                        <TextBox
+                            Text="{Binding HtmlExternalScriptsCdn}"
+                            PlaceholderText="CDN URL"
+                            IsEnabled="{Binding HtmlExternalScripts}" />
+
+                        <CheckBox
+                            Content="Compress JSON embedded in HTML"
+                            IsChecked="{Binding HtmlCompressJson}" />
+
+                    </StackPanel>
+                </ScrollViewer>
+
+            </TabItem>
+
+            <!-- ================================================== -->
+            <!-- JSON                                                 -->
+            <!-- ================================================== -->
+
+            <TabItem Header="JSON">
+
+                <ScrollViewer>
+                    <StackPanel
+                        Margin="20"
+                        Spacing="10">
+
+                        <TextBlock
+                            Text="JSON"
+                            FontSize="20"
+                            FontWeight="Bold" />
+
+                        <CheckBox
+                            Content="Use raw timeline arrays"
+                            IsChecked="{Binding RawTimelineArrays}" />
+
+                        <CheckBox
+                            Content="Compress raw data"
+                            IsChecked="{Binding CompressRaw}" />
+
+                        <CheckBox
+                            Content="Indent JSON"
+                            IsChecked="{Binding IndentJSON}" />
+
+                    </StackPanel>
+                </ScrollViewer>
+
+            </TabItem>
+
+            <!-- ================================================== -->
+            <!-- UPLOAD                                               -->
+            <!-- ================================================== -->
+
+            <TabItem Header="Upload">
+
+                <ScrollViewer>
+                    <StackPanel
+                        Margin="20"
+                        Spacing="10">
+
+                        <TextBlock
+                            Text="DPS Reports"
+                            FontSize="20"
+                            FontWeight="Bold" />
+
+                        <CheckBox
+                            Content="Upload to DPS Reports"
+                            IsChecked="{Binding UploadToDPSReports}" />
+
+                        <TextBlock
+                            Text="DPS Reports user token"
+                            Margin="0,10,0,0" />
+
+                        <TextBox
+                            Text="{Binding DPSReportUserToken}"
+                            PlaceholderText="User token"
+                            PasswordChar="•"
+                            IsEnabled="{Binding UploadToDPSReports}" />
+
+                        <Separator />
+
+                        <TextBlock
+                            Text="GW2 Wingman"
+                            FontSize="20"
+                            FontWeight="Bold" />
+
+                        <CheckBox
+                            Content="Upload to GW2 Wingman"
+                            IsChecked="{Binding UploadToWingman}" />
+
+                        <Separator />
+
+                        <TextBlock
+                            Text="Webhook"
+                            FontSize="20"
+                            FontWeight="Bold" />
+
+                        <CheckBox
+                            Content="Send embed to webhook"
+                            IsChecked="{Binding SendEmbedToWebhook}" />
+
+                        <CheckBox
+                            Content="Send simple message to webhook"
+                            IsChecked="{Binding SendSimpleMessageToWebhook}" />
+
+                        <TextBlock
+                            Text="Webhook URL"
+                            Margin="0,10,0,0" />
+
+                        <TextBox
+                            Text="{Binding WebhookURL}"
+                            PlaceholderText="Webhook URL"
+                            IsEnabled="{Binding SendEmbedToWebhook}" />
+
+                    </StackPanel>
+                </ScrollViewer>
+
+            </TabItem>
+
+        </TabControl>
+
+    </DockPanel>
+
+</Window>

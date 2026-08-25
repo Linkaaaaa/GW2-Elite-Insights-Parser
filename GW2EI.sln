@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.3.32901.215
+# Visual Studio Version 18
+VisualStudioVersion = 18.9.12112.369 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GW2EIParser", "GW2EIParser\GW2EIParser.csproj", "{6135677E-6C0E-42DE-925E-1995E52E5AC5}"
 EndProject
@@ -31,6 +31,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GW2EIParserCLI", "GW2EIParserCLI\GW2EIParserCLI.csproj", "{E7CBC0B6-2276-4143-9409-A3802491A1A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GW2EIUpdater", "GW2EIUpdater\GW2EIUpdater.csproj", "{DAB9EC8F-009A-41DD-8EC4-CD161DE56C68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GW2EIParserAvalonia", "GW2EIParserAvalonia\GW2EIParserAvalonia.csproj", "{6115C7F2-509A-44C2-9911-1D45EDE3A975}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -337,6 +339,30 @@ Global
 		{DAB9EC8F-009A-41DD-8EC4-CD161DE56C68}.Trace|x64.Build.0 = Trace|Any CPU
 		{DAB9EC8F-009A-41DD-8EC4-CD161DE56C68}.Trace|x86.ActiveCfg = Trace|Any CPU
 		{DAB9EC8F-009A-41DD-8EC4-CD161DE56C68}.Trace|x86.Build.0 = Trace|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Debug|x64.Build.0 = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Debug|x86.Build.0 = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.NoRewards|Any CPU.ActiveCfg = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.NoRewards|Any CPU.Build.0 = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.NoRewards|x64.ActiveCfg = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.NoRewards|x64.Build.0 = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.NoRewards|x86.ActiveCfg = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.NoRewards|x86.Build.0 = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Release|x64.ActiveCfg = Release|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Release|x64.Build.0 = Release|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Release|x86.ActiveCfg = Release|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Release|x86.Build.0 = Release|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Trace|Any CPU.ActiveCfg = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Trace|Any CPU.Build.0 = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Trace|x64.ActiveCfg = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Trace|x64.Build.0 = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Trace|x86.ActiveCfg = Debug|Any CPU
+		{6115C7F2-509A-44C2-9911-1D45EDE3A975}.Trace|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
