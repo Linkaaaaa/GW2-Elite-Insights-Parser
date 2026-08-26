@@ -22,6 +22,7 @@ public partial class LogFileViewModel : ObservableObject
     public AvaloniaOperationController Operation { get; }
     public event EventHandler? ParseRequested;
     public event EventHandler? ReParseRequested;
+    public event EventHandler? PendingCancellationRequested;
 
     public LogFileViewModel(string fullPath)
     {
@@ -57,8 +58,10 @@ public partial class LogFileViewModel : ObservableObject
                 UpdateFromOperation();
                 break;
             case OperationState.Pending:
+                PendingCancellationRequested?.Invoke(this, EventArgs.Empty);
+                break;
             case OperationState.Queued:
-                Operation.ToReadyState();
+                Operation.ToRemovalFromQueueState();
                 UpdateFromOperation();
                 break;
             case OperationState.Complete:

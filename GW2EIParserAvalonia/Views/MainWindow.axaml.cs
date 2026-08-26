@@ -24,34 +24,7 @@ public partial class MainWindow : Window
 
     private async void AddFilesButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is not MainWindowViewModel viewModel)
-        {
-            return;
-        }
-
-        var files = await StorageProvider.OpenFilePickerAsync(
-            new FilePickerOpenOptions
-            {
-                Title = "Select GW2 EVTC Combat Logs",
-                AllowMultiple = true,
-                FileTypeFilter =
-                [
-                    new FilePickerFileType("GW2 EVTC Combat Logs")
-                    {
-                        Patterns = SupportedFileFormats.SupportedFormats.Select(format => $"*{format}").ToList()
-                    }
-                ]
-            });
-
-        foreach (var file in files)
-        {
-            var path = file.TryGetLocalPath();
-
-            if (path is not null)
-            {
-                viewModel.AddFile(path);
-            }
-        }
+        FilePicker();
     }
 
     private async void SettingsButton_Click(object? sender, RoutedEventArgs e)
@@ -193,6 +166,43 @@ public partial class MainWindow : Window
         foreach (var file in files)
         {
             var path = file.TryGetLocalPath();
+
+            if (path is not null)
+            {
+                viewModel.AddFile(path);
+            }
+        }
+    }
+
+    private async void LogFilesGrid_DoubleTapped(object? sender, TappedEventArgs e)
+    {
+        FilePicker();
+    }
+
+    private async void FilePicker()
+    {
+        if (DataContext is not MainWindowViewModel viewModel)
+        {
+            return;
+        }
+
+        var files = await StorageProvider.OpenFilePickerAsync(
+            new FilePickerOpenOptions
+            {
+                Title = "Select GW2 EVTC Combat Logs",
+                AllowMultiple = true,
+                FileTypeFilter =
+                [
+                    new FilePickerFileType("GW2 EVTC Combat Logs")
+                    {
+                        Patterns = SupportedFileFormats.SupportedFormats.Select(format => $"*{format}").ToList()
+                    }
+                ]
+            });
+
+        foreach (IStorageFile file in files)
+        {
+            string? path = file.TryGetLocalPath();
 
             if (path is not null)
             {

@@ -187,6 +187,19 @@
                             Maximum="86400"
                             Increment="1" />
 
+                        <Separator/>
+
+                        <TextBox
+                            Text="{Binding AutoAddPath}"
+                            PlaceholderText="Auto-add directory"
+                            IsEnabled="{Binding AutoAdd}"
+                            HorizontalAlignment="Stretch" />
+
+                        <Button
+                            Content="Select..."
+                            Click="AutoAddPathButton_Click"
+                            IsEnabled="{Binding AutoAdd}" />
+
                     </StackPanel>
                 </ScrollViewer>
 

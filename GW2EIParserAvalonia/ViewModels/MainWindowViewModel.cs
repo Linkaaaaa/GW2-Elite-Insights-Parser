@@ -102,6 +102,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         logFile.ParseRequested += LogFile_ParseRequested;
         logFile.ReParseRequested += LogFile_ReParseRequested;
+        logFile.PendingCancellationRequested += LogFile_PendingCancellationRequested;
 
         LogFiles.Add(logFile);
 
@@ -225,12 +226,6 @@ public partial class MainWindowViewModel : ObservableObject
         ClearFailedEnabled = false;
     }
 
-    public void UpdatePopulateHourLimit(decimal value)
-    {
-        SettingsViewModel.PopulateHourLimit = (long)value;
-        SettingsViewModel.ApplyToSettings();
-    }
-
     public void AddFilesFromDirectory(string path)
     {
         var files = ProgramHelper.FetchSupportedFormatsFrom(path, SettingsViewModel.PopulateHourLimit, DateTime.Now);
@@ -321,6 +316,9 @@ public partial class MainWindowViewModel : ObservableObject
         logFile.Operation.ToQueuedState();
         logFile.UpdateFromOperation();
 
+        logFile.Operation.ToRunState();
+        logFile.UpdateFromOperation();
+
         try
         {
             await _parserService.ParseAsync(logFile.Operation);
@@ -376,20 +374,23 @@ public partial class MainWindowViewModel : ObservableObject
         }
     }
 
-    public async Task ParseFileAsync(LogFileViewModel logFile)
+    private void LogFile_PendingCancellationRequested(object? sender, EventArgs e)
     {
-        await RunOperationAsync(logFile);
-    }
+        if (sender is not LogFileViewModel logFile)
+        {
+            return;
+        }
 
-    public void ApplySettings()
-    {
-        SettingsViewModel.ApplyToSettings();
-    }
+        var operations = new HashSet<LogFileViewModel>(_logQueue);
+        _logQueue.Clear();
+        operations.Remove(logFile);
 
-    public void SetTraces(bool value)
-    {
-        Traces = value;
-        SettingsViewModel.ApplicationTraces = value;
-        SettingsViewModel.ApplyToSettings();
+        foreach (var operation in operations)
+        {
+            _logQueue.Enqueue(operation);
+        }
+
+        logFile.Operation.ToReadyState();
+        logFile.UpdateFromOperation();
     }
 }

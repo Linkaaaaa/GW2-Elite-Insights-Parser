@@ -98,7 +98,8 @@
                 AutoGenerateColumns="False"
                 IsReadOnly="True"
                 CanUserResizeColumns="True"
-                GridLinesVisibility="All">
+                GridLinesVisibility="All"
+                DoubleTapped="LogFilesGrid_DoubleTapped">
 
                 <DataGrid.Columns>
 

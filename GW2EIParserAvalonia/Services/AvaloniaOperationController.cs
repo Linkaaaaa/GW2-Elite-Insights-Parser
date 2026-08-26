@@ -41,12 +41,13 @@ public sealed class AvaloniaOperationController : OperationController
     public void ToRunState()
     {
         _cancellationTokenSource.Dispose();
-        _cancellationTokenSource =
-            new CancellationTokenSource();
+        _cancellationTokenSource = new CancellationTokenSource();
 
         State = OperationState.Parsing;
         ButtonText = "Cancel";
         ReParseText = "N/A";
+
+        UpdateProgress("Parsing");
     }
 
     public void ToCancelState()
@@ -117,5 +118,10 @@ public sealed class AvaloniaOperationController : OperationController
     protected override void ThrowIfCanceled()
     {
         _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+    }
+
+    public void ToRemovalFromQueueState()
+    {
+        ToCancelState();
     }
 }
