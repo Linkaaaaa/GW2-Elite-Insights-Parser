@@ -1,0 +1,668 @@
+﻿<template>
+    <!-- Desktop timeline -->
+    <svg v-if="!isTouchDevice"
+        ref="svg" :width="timelineWidth" :height="timelineHeight"
+        @mousemove="onTimelineMouseMove"
+        @mouseleave="onTimelineMouseLeave">
+
+        <!-- Invisible timeline click/drag area -->
+        <rect x="0" y="0" :width="timelineWidth" :height="10 * maxDepth + 30"
+            fill="transparent"
+            style="cursor: pointer;"
+            @mousedown="onTimelineMouseDown" />
+
+        <!-- Phase blocks -->
+        <g v-for="phaseBloc in phasesByDepth" :key="'phase-' + phaseBloc.phase.id">
+
+            <!-- Invisible grab area -->
+            <line :x1="timeOffsetedToX(phaseBloc.phase.start)" :x2="timeOffsetedToX(phaseBloc.phase.end)"
+                  :y1="20 + phaseBloc.depth * 10" :y2="20 + phaseBloc.depth * 10"
+                  stroke="transparent" stroke-width="10" stroke-linecap="butt"
+                  @mouseenter="hoverPhase(phaseBloc.phase)"
+                  @mouseleave="resetHoveredPhase"
+                  @mousedown="onPhaseMouseDown(phaseBloc.phase, $event)"
+                  @click="onPhaseClick(phaseBloc.phase, $event)"
+                  @mouseup="onPhaseMouseUp(phaseBloc.phase, $event)" />
+
+            <!-- Phase visible line -->
+            <line :x1="timeOffsetedToX(phaseBloc.phase.start)" :x2="timeOffsetedToX(phaseBloc.phase.end)"
+                  :y1="20 + phaseBloc.depth * 10" :y2="20 + phaseBloc.depth * 10"
+                  :stroke="phaseBloc.color" stroke-width="4" stroke-linecap="butt"
+                  :opacity="getPhaseOpacity(phaseBloc.phase)"
+                  style="pointer-events: none;" />
+
+            <!-- Start marker  -->
+            <line :x1="timeOffsetedToX(phaseBloc.phase.start)" :x2="timeOffsetedToX(phaseBloc.phase.start)"
+                  :y1="20 - 5 + phaseBloc.depth * 10" :y2="20 + 5 + phaseBloc.depth * 10"
+                  :stroke="phaseBloc.color" stroke-width="2"
+                  :opacity="getPhaseOpacity(phaseBloc.phase)"
+                  @mouseenter="hoverPhase(phaseBloc.phase)"
+                  @mouseleave="resetHoveredPhase"
+                  @mousedown="onPhaseMouseDown(phaseBloc.phase, $event)"
+                  @click="onPhaseClick(phaseBloc.phase, $event)"
+                  @mouseup="onPhaseMouseUp(phaseBloc.phase, $event)" />
+
+            <!-- End marker -->
+            <line :x1="timeOffsetedToX(phaseBloc.phase.end)" :x2="timeOffsetedToX(phaseBloc.phase.end)"
+                  :y1="20 - 5 + phaseBloc.depth * 10" :y2="20 + 5 + phaseBloc.depth * 10"
+                  :stroke="phaseBloc.color" stroke-width="2" :opacity="getPhaseOpacity(phaseBloc.phase)"
+                  @mouseenter="hoverPhase(phaseBloc.phase)"
+                  @mouseleave="resetHoveredPhase"
+                  @mousedown="onPhaseMouseDown(phaseBloc.phase, $event)"
+                  @click="onPhaseClick(phaseBloc.phase, $event)"
+                  @mouseup="onPhaseMouseUp(phaseBloc.phase, $event)" />
+        </g>
+
+        <!-- Large invisible cursor drag line -->
+        <line id="large-line-drag" :x1="timeOffsetedToX(time)" :x2="timeOffsetedToX(time)" y1="0" :y2="10 * maxDepth + 30"
+                stroke="transparent" stroke-width="10" style="pointer-events: stroke; cursor: grab;"
+                @mousedown="startDragCursorFromLine" />
+
+        <!-- Cursor visual -->
+        <line :x1="timeOffsetedToX(time)" :x2="timeOffsetedToX(time)" y1="0" :y2="10 * maxDepth + 30"
+                :stroke="timelineColors.cursor" stroke-width="2" stroke-dasharray="4 2"
+                style="pointer-events: none;" />
+
+        <!-- Cursor circle -->
+        <circle :cx="timeOffsetedToX(time)" :cy="10 * maxDepth + 25"  :fill="timelineColors.cursor" @mousedown="startDragCursor"
+                r="5" style="cursor: grab; pointer-events: all;" />
+
+        <!-- Fixed time ticks -->
+        <g v-for="tick in ticks" :key="'tick-' + tick.time">
+            <line :x1="tick.x" :x2="tick.x" y1="15" y2="25" :stroke="timelineColors.tick" />
+
+            <text :x="getTickX(tick)" y="10" :fill="timelineColors.text"
+                    style="font-size: 10px; text-anchor: middle;">
+                {{ tick.label }}
+            </text>
+        </g>
+
+        <!-- Mechanic ticks -->
+        <g v-for="(tick, index) in playerMechanicTicks" :key="'mechanic-' + index">
+            <line :x1="tick.x" :x2="tick.x" y1="15" y2="25" :stroke="timelineColors.mechanic" />
+
+            <!-- Top -->
+            <line :x1="tick.x - 1" :x2="tick.x + 1" y1="15" y2="15" :stroke="timelineColors.mechanic" />
+
+            <!-- Bottom -->
+            <line :x1="tick.x - 1" :x2="tick.x + 1" y1="25" y2="25" :stroke="timelineColors.mechanic" />
+        </g>
+
+        <!-- Moving hover time -->
+        <g v-if="isHoveringTimeline">
+            <rect :x="timeToX(hoverTime) - 18" y="-3"
+                    width="36" height="16" rx="3" fill="black"
+                    style="opacity: 0.5; pointer-events: none" />
+
+            <text :x="timeToX(hoverTime)" y="10" :fill="timelineColors.text"
+                    style="text-anchor: middle; font-size: 10px; pointer-events: none; font-weight: 600; ">
+                {{ formatTime(hoverTime) }}
+            </text>
+        </g>
+
+        <!-- Selected / hovered phase description -->
+        <text v-if="phaseDescription"
+                :x="timelineWidth / 2" :y="10 * maxDepth + 45" :fill="timelineColors.text"
+                style="text-anchor: middle; font-size: 12px; font-weight: 500; pointer-events: none;">
+            {{ getFormattedPhaseText(phaseDescription) }}
+        </text>
+    </svg>
+
+    <!-- Mobile timeline -->
+    <div v-else class="d-flex justify-content-center slidercontainer my-1">
+        <input style="min-width: 400px;" :style="{ background: getSliderGradient() }"
+                type="range" :min="minTime" :max="maxTime" :value="time"
+                class="slider" :id="htmlElementIds.timeRangeID" @input="updateSliderTime($event.target.value)">
+        <div class="cr-slide-delimiter text-center" :style="{ width: (timelineWidth + 20) + 'px' }">
+            {{ sliderDelimiter.name }}
+        </div>
+    </div>
+</template>
+
+<script>
+    const MaxPhaseDepth = 2;
+
+    // Last one breakbar, previous is remainings
+    const PhaseDepthColors = ["#2d9400", "#fffb00", "#ffa800", "#ff2200", "#007bff"];
+
+    function traversePhasesWithDepth(result, parentPhase, depth, remainingPhases, addedPhases) {
+        if (depth > MaxPhaseDepth) {
+            return depth;
+        }
+        let returnDepth = depth;
+        if (parentPhase.subPhases) {
+            const subPhases = parentPhase.subPhases;
+            remainingPhases.forEach((phase) => {
+                if (subPhases.indexOf(phase.id) > -1) {
+                    result.push({
+                        phase: phase,
+                        depth: depth,
+                        color: PhaseDepthColors[depth]
+                    });
+                    remainingPhases.delete(phase);
+                    addedPhases.add(phase);
+                    let finalDepth = traversePhasesWithDepth(result, phase, depth + 1, remainingPhases, addedPhases);
+                    returnDepth = Math.max(finalDepth, returnDepth);
+                }
+            });
+        }
+        return returnDepth;
+    }
+
+    Vue.component("combat-replay-timeline-component", { 
+        props: ["phases", "time", "light", "range", "timelineWidth", "selectedPhase", "minTime", "maxTime", "htmlElementIds"],
+        template: `${template}`,
+        mixins: [encounterPhaseComponent, numberComponent],
+        data() {
+            return {
+                isTouchDevice: isTouchDevice,
+                animationData: reactiveAnimationData,
+                hoveredPhaseId: null,
+
+                hoverTime: 0,
+                isHoveringTimeline: false,
+
+                draggingCursor: false,
+
+                clickThroughDragCursor: false,
+                blockDragCursor: false,
+
+                phaseDoubleClickTimeout: null,
+                dragThroughPhaseBlockTimeout: null,
+            };
+        },
+        computed: {
+           hoveredPhase() {
+               return logData.phases[this.hoveredPhaseId];
+           },
+            ticks() {
+                // up to 24h, max evtc length accepted
+                const steps = [5, 10, 15, 30, 60, 120, 300, 600, 900, 1800, 3600, 7200, 14400]; 
+
+                // pick smallest step >= interval
+                const interval = steps.find(step => this.fightDuration / 6 <= step);
+                const ticks = [];
+
+                // Ticks every set time based on max fight length
+                let t = 0;
+                for (; t <= this.fightDuration; t += interval) {
+                    ticks.push({
+                        time: t,
+                        x: this.timeToX(t),
+                        label: this.formatTime(t),
+                    });
+                }
+
+                // Always display the end tick
+                const end = this.fightDuration;
+                if (this.timeToX(end) - this.timeToX(t - interval) > 30) {
+                    ticks.push({
+                        time: end,
+                        x: this.timeToX(end),
+                        label: this.formatTime(end),
+                    });
+                }
+
+                return ticks;
+            },
+            timelineColors() {
+                if (this.light) {
+                    return {
+                        tick: "#343a40",
+                        text: "#343a40",
+                        cursor: "#ff6b6b",
+                        mechanic: "#ff8a9d",
+                    };
+                }
+
+                return {
+                    tick: "#e6e6e6",
+                    text: "#e6e6e6",
+                    cursor: "#ff6b6b",
+                    mechanic: "#ff8a9d",
+                };
+            },
+            phasesByDepth() {
+                const phase0 = this.phases[0];
+                const remainingPhases = new Set(this.phases.filter(phase => !phase.breakbarPhase && phase !== phase0));
+                const addedPhases = new Set([phase0]);
+                const phase0Result = [{
+                    phase: phase0,
+                    depth: 0,
+                    color: PhaseDepthColors[0]
+                }];
+
+                const depth = traversePhasesWithDepth(phase0Result, phase0, 1, remainingPhases, addedPhases);
+                const breakbarPhasesResult = this.phases
+                    .filter(phase => phase.breakbarPhase)
+                    .map(phase => ({
+                        phase,
+                        depth: remainingPhases.size > 0 ? depth + 1 : depth,
+                        color: PhaseDepthColors[PhaseDepthColors.length - 1]
+                    }));
+                const remainingPhasesResult = [...remainingPhases].map(phase => ({
+                    phase: phase,
+                    depth: depth,
+                    color: PhaseDepthColors[PhaseDepthColors.length - 2]
+                }));
+
+                return [...phase0Result, ...breakbarPhasesResult, ...remainingPhasesResult];
+            },
+            maxDepth() {
+                const depths = this.phasesByDepth.map(phaseBloc => phaseBloc.depth);
+                return Math.max(Math.max(...depths) + 1, 2);
+            },
+            playerMechanicTicks() {
+                return this.animationData.selectedMechanic.times.map(time => ({
+                    x: this.timeOffsetedToX(time / 1000),
+                    time: time
+                }));
+            },
+            hoveredPhase() {
+                if (this.hoveredPhaseId === null || this.hoveredPhaseId === -1) 
+                {
+                    return null;
+                }
+
+                return logData.phases[this.hoveredPhaseId];
+            },
+            fightDuration() {
+                return (this.maxTime - this.minTime) / 1000;
+            },
+            timelineHeight() {
+                return 20 + 10 * this.maxDepth + 30;
+            },
+            phaseDescription() {
+                return this.hoveredPhase || this.selectedPhase;
+            }
+        },
+
+        beforeDestroy() {
+            this.stopDragCursor();
+            this.clearPhaseMouseEvents();
+
+            window.removeEventListener("mousemove", this.onDragCursor);
+            window.removeEventListener("mouseup", this.stopDragCursor);
+        },
+
+        methods: {
+            getPhaseName(phase) {
+                return phase === this.encounterPhase ? phase.nameNoMode : phase.name;
+            },
+            getFormattedPhaseText(phase) {
+                const offset = this.range.min / 1000;
+                const result = this.getPhaseName(phase) +  " (" + this.round3(phase.start - offset) + "s - " + this.round3(phase.end - offset) + "s)";
+
+                if (this.animationData?.selectedMechanic?.name === null) 
+                {
+                    return result;
+                }
+
+                const mechanic = this.animationData.selectedMechanic;
+                return result + " | " + mechanic.name + " (" + mechanic.actorName + ")";
+            },
+            getPhaseOpacity(phase) {
+                if (phase?.id === this.hoveredPhaseId) {
+                    return 1.0;
+                }
+
+                if (this.selectedPhase && this.selectedPhase.id === phase?.id) {
+                    return 0.75;
+                }
+
+                return 0.4;
+            },
+            hoverPhase(phase) {
+                this.hoveredPhaseId = phase.id;
+
+                /*
+                 * This is used by the double-click behavior.
+                 *
+                 * When the cursor is double-clicked over a phase,
+                 * pointer events are temporarily disabled on the
+                 * cursor so the underlying phase receives the hover.
+                 */
+                if (this.clickThroughDragCursor) {
+                    this.clickThroughDragCursor = false;
+                    this.selectPhase(phase);
+                }
+            },
+            resetHoveredPhase() {
+                this.hoveredPhaseId = -1;
+            },
+            selectPhase(phase) {
+                this.$emit("phase-selected", phase);
+            },
+            /*
+             * ------------------------------------------------------------
+             * Time conversion
+             * ------------------------------------------------------------
+             */
+
+            timeToX(time) {
+                time = time || this.minTime;
+
+                const t = Math.max(this.minTime,  Math.min(this.fightDuration, time));
+
+                if (this.fightDuration <= 0) {
+                    return 0;
+                }
+
+                return (t / this.fightDuration) * this.timelineWidth;
+            },
+
+            timeOffsetedToX(time) {
+                return this.timeToX(time - this.range.min / 1000);
+            },
+
+            xToTime(x) {
+                if (this.timelineWidth <= 0) {
+                    return this.minTime;
+                }
+
+                return (
+                    (x / this.timelineWidth) *
+                    this.fightDuration
+                );
+            },
+
+            getTimeFromEvent(e) {
+                const svg = this.$refs.svg;
+
+                if (!svg) {
+                    return this.minTime;
+                }
+
+                const rect = svg.getBoundingClientRect();
+
+                const x = Math.max(
+                    0,
+                    Math.min(
+                        this.timelineWidth,
+                        e.clientX - rect.left
+                    )
+                );
+
+                return this.xToTime(x);
+            },
+
+            emitTime(time) {
+                /*
+                 * The timeline works with a time relative to range.min.
+                 *
+                 * The parent is responsible for adding range.min
+                 * before passing the value to animator.
+                 */
+                this.$emit(
+                    "time-changed",
+                    time * 1000
+                );
+            },
+
+            /*
+             * ------------------------------------------------------------
+             * Timeline mouse handling
+             * ------------------------------------------------------------
+             */
+
+            onTimelineMouseMove(e) {
+                this.hoverTime = this.getTimeFromEvent(e);
+                this.isHoveringTimeline = true;
+            },
+
+            onTimelineMouseLeave() {
+                this.isHoveringTimeline = false;
+                this.hoveredPhaseId = -1;
+            },
+
+            onTimelineMouseDown(e) {
+                const time = this.getTimeFromEvent(e);
+
+                this.emitTime(time);
+
+                if (e.detail === 1) {
+                    this.startDragCursor(e);
+                }
+            },
+
+            /*
+             * ------------------------------------------------------------
+             * Phase block interaction
+             * ------------------------------------------------------------
+             */
+
+            clearPhaseMouseEvents() {
+                clearTimeout(this.dragThroughPhaseBlockTimeout);
+                this.dragThroughPhaseBlockTimeout = null;
+
+                clearTimeout(this.phaseDoubleClickTimeout);
+                this.phaseDoubleClickTimeout = null;
+            },
+
+            onPhaseMouseDown(phase, e) {
+                /*
+                 * If we're waiting for the second click of a
+                 * double-click, don't start another interaction.
+                 */
+                if (this.phaseDoubleClickTimeout) {
+                    return;
+                }
+
+                /*
+                 * Visually select the phase immediately.
+                 */
+                this.$emit("phase-selected", phase);
+
+                /*
+                 * Delay starting a drag.
+                 *
+                 * This allows a normal click to remain a click,
+                 * while holding the mouse button allows dragging
+                 * through the phase.
+                 */
+                this.dragThroughPhaseBlockTimeout =
+                    this.dragThroughPhaseBlockTimeout ||
+                    setTimeout(() => {
+                        this.clearPhaseMouseEvents();
+
+                        const time = this.getTimeFromEvent(e);
+
+                        this.emitTime(time);
+
+                        this.startDragCursor(e);
+                    }, 150);
+            },
+
+            onPhaseClick(phase, e) {
+                /*
+                 * Second click = select the entire phase.
+                 */
+                if (this.phaseDoubleClickTimeout) {
+                    this.clearPhaseMouseEvents();
+
+                    this.selectPhase(phase);
+
+                    return;
+                }
+
+                /*
+                 * First click.
+                 *
+                 * Delay the action slightly to determine whether
+                 * another click follows.
+                 */
+                this.phaseDoubleClickTimeout =
+                    setTimeout(() => {
+                        this.clearPhaseMouseEvents();
+
+                        const time = this.getTimeFromEvent(e);
+
+                        this.emitTime(time);
+
+                        /*
+                         * Prevent the cursor from immediately starting
+                         * a drag after a click.
+                         */
+                        this.blockDragCursor = true;
+
+                        setTimeout(() => {
+                            this.blockDragCursor = false;
+                        }, 150);
+                    }, 200);
+            },
+
+            onPhaseMouseUp() {
+                clearTimeout(
+                    this.dragThroughPhaseBlockTimeout
+                );
+
+                this.dragThroughPhaseBlockTimeout = null;
+            },
+
+            /*
+             * ------------------------------------------------------------
+             * Cursor dragging
+             * ------------------------------------------------------------
+             */
+
+            startDragCursorFromLine(e) {
+                /*
+                 * A double click on the cursor should be able to
+                 * "click through" to the phase underneath it.
+                 */
+                if (this.blockDragCursor) {
+                    return;
+                }
+
+                if (e.detail > 1) {
+                    this.clickThroughDragCursor = true;
+
+                    const element = document.getElementById("large-line-drag");
+
+                    if (element) {
+                        element.style.pointerEvents = "none";
+
+                        setTimeout(() => {
+                            element.style.pointerEvents = "stroke";
+
+                            this.clickThroughDragCursor = false;
+                        }, 100);
+                    }
+
+                    return;
+                }
+
+                this.startDragCursor(e);
+            },
+
+            startDragCursor() {
+                if (this.draggingCursor) {
+                    return;
+                }
+
+                this.draggingCursor = true;
+
+                window.addEventListener(
+                    "mousemove",
+                    this.onDragCursor
+                );
+
+                window.addEventListener(
+                    "mouseup",
+                    this.stopDragCursor
+                );
+            },
+
+            onDragCursor(e) {
+                if (!this.draggingCursor) {
+                    return;
+                }
+
+                let time = this.getTimeFromEvent(e);
+
+                time = Math.max(
+                    this.minTime,
+                    Math.min(this.maxTime, time)
+                );
+
+                this.emitTime(time);
+            },
+
+            stopDragCursor() {
+                this.draggingCursor = false;
+
+                window.removeEventListener(
+                    "mousemove",
+                    this.onDragCursor
+                );
+
+                window.removeEventListener(
+                    "mouseup",
+                    this.stopDragCursor
+                );
+            },
+
+            /*
+             * ------------------------------------------------------------
+             * Mobile slider
+             * ------------------------------------------------------------
+             */
+
+            updateSliderTime(value) {
+                this.$emit(
+                    "time-changed",
+                    parseFloat(value)
+                );
+            },
+
+            /*
+             * ------------------------------------------------------------
+             * Slider gradient
+             * ------------------------------------------------------------
+             */
+
+            getSliderGradient() {
+                let startPercent;
+                let endPercent;
+
+                if (!sliderDelimiter || sliderDelimiter.min === -1) {
+                    startPercent = 0;
+                    endPercent = 100;
+                } 
+                else {
+                    const max = this.maxTime;
+                    startPercent = (this.sliderDelimiter.min / max) * 100;
+                    endPercent = (this.sliderDelimiter.max / max) * 100;
+                }
+
+                return computeSliderGradient(
+                    "#888888",
+                    "#F3F3F3",
+                    startPercent,
+                    endPercent
+                );
+            },
+
+            formatTime(t) {
+                const minutes = Math.floor(t / 60);
+                const seconds = Math.floor(t % 60);
+                return minutes + ":" + seconds.toString().padStart(2, "0");
+            },
+            getTickX(tick) {
+                const pad = 10;
+
+                if (tick.x <= pad) 
+                {
+                    return tick.x + pad;
+                }
+
+                if (tick.x >= this.timelineWidth - pad) 
+                {
+                    return tick.x - pad;
+                }
+
+                return tick.x;
+            }
+        }
+    });
+</script>

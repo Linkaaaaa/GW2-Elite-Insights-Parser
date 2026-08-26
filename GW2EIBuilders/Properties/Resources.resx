@@ -187,6 +187,18 @@
   <data name="tmplCombatReplayAnimationControl" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\combatReplayTemplates\tmplCombatReplayAnimationControl.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="tmplCombatReplayCanvas" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\combatReplayTemplates\CombatReplay\tmplCombatReplayCanvas.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="tmplCombatReplayPhaseSelector" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\combatReplayTemplates\CombatReplay\tmplCombatReplayPhaseSelector.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="tmplCombatReplayTimeline" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\combatReplayTemplates\CombatReplay\tmplCombatReplayTimeline.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+    <data name="tmplCombatReplayTimeManagement" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\combatReplayTemplates\CombatReplay\tmplCombatReplayTimeManagement.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="tmplCombatReplayDamageTable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\combatReplayTemplates\DamageTable\tmplCombatReplayDamageTable.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>

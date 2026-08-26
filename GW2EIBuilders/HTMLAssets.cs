@@ -168,6 +168,10 @@ public class HTMLAssets
             Properties.Resources.tmplCombatReplayUI,
             Properties.Resources.tmplCombatReplayExtraDecorations,
             Properties.Resources.tmplCombatReplayAnimationControl,
+            Properties.Resources.tmplCombatReplayCanvas,
+            Properties.Resources.tmplCombatReplayPhaseSelector,
+            Properties.Resources.tmplCombatReplayTimeline,
+            Properties.Resources.tmplCombatReplayTimeManagement,
             Properties.Resources.tmplCombatReplayMechanicsList
         ];
         var res = new List<string>();

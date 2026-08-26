@@ -1,0 +1,73 @@
+﻿<template>
+    <div class="position-relative mt-1"
+         :style="{
+                'min-width': canvasSize.x + 'px',
+                'height': canvasSize.y + 'px'
+            }">
+        <canvas class="replay"
+                :width="canvasSize.x + 'px'"
+                :height="canvasSize.y + 'px'"
+                :id="htmlElementIds.mainCanvasID"></canvas>
+
+        <canvas class="replay"
+                :width="canvasSize.x + 'px'"
+                :height="canvasSize.y + 'px'"
+                :id="htmlElementIds.bgCanvasID"></canvas>
+
+        <canvas class="replay"
+                :width="canvasSize.x + 'px'"
+                :height="canvasSize.y + 'px'"
+                :id="htmlElementIds.pickCanvasID"></canvas>
+
+        <div @click="resetViewpoint"
+             class="btn btn-small position-bottom-left opacity-90 top-of-canvas m-2"
+             :class="{
+                    'btn-dark': !light,
+                    'btn-light': light
+                }"
+             data-original-title="Reset canvas position">
+            &#9974; Reset Viewpoint
+        </div>
+
+        <div v-show="!isTouchDevice && isMechanicSelected"
+             @click="resetMechanic"
+             class="btn btn-small position-bottom-right opacity-90 top-of-canvas m-2"
+             :class="{
+                    'btn-dark': !light,
+                    'btn-light': light
+                }"
+             data-original-title="Remove mechanic ticks from timeline">
+            &#128295; Reset Mechanic
+        </div>
+    </div>
+</template>
+
+<script>
+    Vue.component("combat-replay-canvas-component", {
+        props: ["htmlElementIds", "light"],
+        template: `${template}`,
+        data() {
+            return {
+                isTouchDevice: isTouchDevice,
+                animationData: reactiveAnimationData,
+                canvasSize:  {
+                    x: crData.sizes[0],
+                    y: crData.sizes[1]
+                }
+            };
+        },
+        computed: {
+            isMechanicSelected() {
+                return this.animationData.selectedMechanic.name != null && this.animationData.selectedMechanic.actorId != null;
+            }
+        },
+        methods: {
+            resetViewpoint() {
+                this.$emit("reset-viewpoint");
+            },
+            resetMechanic() {
+                this.$emit("reset-mechanic");
+            }
+        },
+    });
+</script>
