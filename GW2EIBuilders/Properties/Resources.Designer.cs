@@ -870,6 +870,30 @@ namespace GW2EIBuilders.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;template&gt;
+        ///    &lt;label class=&quot;ml-auto&quot;&gt;
+        ///        Speed :
+        ///        &lt;select class=&quot;form-control d-inline w-auto h-auto&quot; :value=&quot;defaultSpeed&quot; 
+        ///                @change=&quot;updateSelectedSpeed($event.target.value)&quot;&gt;
+        ///            &lt;option v-for=&quot;speed in speeds&quot; :key=&quot;speed&quot; :value=&quot;speed&quot;&gt;
+        ///                {{ speed }}x
+        ///            &lt;/option&gt;
+        ///        &lt;/select&gt;
+        ///    &lt;/label&gt;
+        ///&lt;/template&gt;
+        ///
+        ///&lt;script&gt;
+        ///    Vue.component(&quot;combat-replay-time-speed-picker-component&quot;, {
+        ///        props: [],
+        ///        template: `${template} [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string tmplCombatReplaySpeedPicker {
+            get {
+                return ResourceManager.GetString("tmplCombatReplaySpeedPicker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;template&gt; 
         ///    &lt;div&gt;
         ///        &lt;ul v-if=&quot;showTabs&quot; class=&quot;nav nav-pills d-flex flex-row justify-content-center mb-1&quot;&gt;
@@ -893,19 +917,17 @@ namespace GW2EIBuilders.Properties {
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;!-- Desktop timeline --&gt;
         ///    &lt;svg v-if=&quot;!isTouchDevice&quot;
-        ///            ref=&quot;svg&quot;
-        ///            :width=&quot;timelineWidth&quot;
-        ///            :height=&quot;timelineHeight&quot;
-        ///            @mousemove=&quot;onTimelineMouseMove&quot;
-        ///            @mouseleave=&quot;onTimelineMouseLeave&quot;&gt;
+        ///        ref=&quot;svg&quot; :width=&quot;timelineWidth&quot; :height=&quot;timelineHeight&quot;
+        ///        @mousemove=&quot;onTimelineMouseMove&quot;
+        ///        @mouseleave=&quot;onTimelineMouseLeave&quot;&gt;
         ///
         ///        &lt;!-- Invisible timeline click/drag area --&gt;
-        ///        &lt;rect x=&quot;0&quot;
-        ///                y=&quot;0&quot;
-        ///                :width=&quot;timelineWidth&quot;
-        ///                :height=&quot;10 * maxDepth + 30&quot;
-        ///                fill=&quot;transparent&quot;
-        ///                style=&quot;c [rest of string was truncated]&quot;;.
+        ///        &lt;rect x=&quot;0&quot; y=&quot;0&quot; :width=&quot;timelineWidth&quot; :height=&quot;10 * maxDepth + 30&quot;
+        ///            fill=&quot;transparent&quot;
+        ///            style=&quot;cursor: pointer;&quot;
+        ///            @mousedown=&quot;onTimelineMouseDown&quot; /&gt;
+        ///
+        ///        &lt;!-- Phase blocks -- [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplCombatReplayTimeline {
             get {

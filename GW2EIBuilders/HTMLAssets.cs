@@ -172,6 +172,7 @@ public class HTMLAssets
             Properties.Resources.tmplCombatReplayPhaseSelector,
             Properties.Resources.tmplCombatReplayTimeline,
             Properties.Resources.tmplCombatReplayTimeManagement,
+            Properties.Resources.tmplCombatReplaySpeedPicker,
             Properties.Resources.tmplCombatReplayMechanicsList
         ];
         var res = new List<string>();

@@ -1,0 +1,29 @@
+﻿<template>
+    <label class="ml-auto">
+        Speed :
+        <select class="form-control d-inline w-auto h-auto" :value="defaultSpeed" 
+                @change="updateSelectedSpeed($event.target.value)">
+            <option v-for="speed in speeds" :key="speed" :value="speed">
+                {{ speed }}x
+            </option>
+        </select>
+    </label>
+</template>
+
+<script>
+    Vue.component("combat-replay-time-speed-picker-component", {
+        props: [],
+        template: `${template}`,
+        data() {
+            return {
+                defaultSpeed: 1,
+                speeds: [0.125, 0.25, 0.5, 1, 2, 4, 8, 16],
+            };
+        },
+        methods: {
+            updateSelectedSpeed(value) {
+                animator.setSpeed(Number(value));
+            },
+        }
+    });
+</script>

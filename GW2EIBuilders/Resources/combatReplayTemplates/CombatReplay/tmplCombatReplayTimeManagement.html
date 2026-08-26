@@ -37,15 +37,7 @@
             &#9664; Backwards
         </button>
 
-        <label class="ml-auto">
-            Speed :
-            <select class="form-control d-inline w-auto h-auto"
-                    :value="defaultSpeed" @change="updateSelectedSpeed($event.target.value)">
-                <option v-for="speed in speeds" :key="speed" :value="speed">
-                    {{ speed }}x
-                </option>
-            </select>
-        </label>
+        <combat-replay-time-speed-picker-component />
     </div>
 </template>
 
