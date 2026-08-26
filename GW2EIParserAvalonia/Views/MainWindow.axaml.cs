@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -208,6 +208,51 @@ public partial class MainWindow : Window
             {
                 viewModel.AddFile(path);
             }
+        }
+    }
+
+    private async void CheckUpdatesButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel viewModel)
+        {
+            return;
+        }
+
+        var traces = new List<string>();
+        var info = await GW2EIUpdater.Updater.CheckForUpdate("GW2EI.zip", traces);
+
+        foreach (var trace in traces)
+        {
+            //viewModel.AddTraceMessage("Updater: " + trace);
+        }
+
+        if (info is null)
+        {
+            return;
+        }
+
+        Settings.Default.UpdateAvailable = info.Value.UpdateAvailable;
+        Settings.Default.Save();
+
+        if (info.Value.UpdateAvailable)
+        {
+            var updaterWindow = new UpdaterWindow(info.Value, viewModel);
+            updaterWindow.UpdateStarted += (_, _) =>
+            {
+                updaterWindow.Close();
+                Close();
+            };
+
+            await updaterWindow.ShowDialog(this);
+        }
+        else
+        {
+            Settings.Default.UpdateAvailable = false;
+            Settings.Default.Save();
+
+            var messageWindow = new MessageWindow("GW2 Elite Insights Parser", "Elite Insights is up to date.");
+
+            await messageWindow.ShowDialog(this);
         }
     }
 }

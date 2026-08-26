@@ -33,6 +33,12 @@
                 Text="{Binding Status}"
                 Opacity="0.7" />
 
+            <Button
+                Content="Check EI Updates"
+                Click="CheckUpdatesButton_Click"
+                MinWidth="108"
+                IsEnabled="{Binding CheckUpdatesEnabled}" />
+
         </StackPanel>
 
         <StackPanel

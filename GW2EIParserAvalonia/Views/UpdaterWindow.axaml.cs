@@ -1,0 +1,75 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using GW2EIParserAvalonia.ViewModels;
+using GW2EIParserCommons.Properties;
+using GW2EIUpdater;
+
+namespace GW2EIParserAvalonia.Views;
+
+public partial class UpdaterWindow : Window
+{
+    private readonly Updater.UpdateInfo _info;
+
+    public event EventHandler? UpdateStarted;
+
+    public UpdaterWindow()
+    {
+        InitializeComponent();
+    }
+
+    public UpdaterWindow(Updater.UpdateInfo info, MainWindowViewModel viewModel)
+    {
+        InitializeComponent();
+
+        _info = info;
+
+        CurrentVersionText.Text = info.CurrentVersion;
+        LatestVersionText.Text = info.LatestVersion;
+        DownloadSizeText.Text = $"Download Size: {info.DownloadSize}";
+    }
+
+    private async void UpdateButton_Click(object? sender, RoutedEventArgs e)
+    {
+        var traces = new List<string>();
+
+        if (await Updater.DownloadAndUpdate(_info, traces))
+        {
+            Settings.Default.UpdateAvailable = false;
+
+            foreach (var trace in traces)
+            {
+                //_viewModel.AddTraceMessage("Updater: " + trace);
+            }
+
+            UpdateStarted?.Invoke(this, EventArgs.Empty);
+        }
+        else
+        {
+            foreach (var trace in traces)
+            {
+                //_viewModel.AddTraceMessage("Updater: " + trace);
+            }
+
+            var messageWindow = new MessageWindow("GW2 Elite Insights Parser", "Update Failed.");
+
+            await messageWindow.ShowDialog(this);
+        }
+    }
+
+    private void DismissButton_Click(object? sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
+    private void ReleaseNotesButton_Click(object? sender, RoutedEventArgs e)
+    {
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = _info.ReleasePageURL,
+            UseShellExecute = true
+        });
+    }
+}

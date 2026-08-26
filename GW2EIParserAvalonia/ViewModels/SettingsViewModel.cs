@@ -122,6 +122,10 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private bool autoDiscordBatch;
 
+    // Updater
+    [ObservableProperty]
+    private bool updateAvailable;
+
     //
     public event EventHandler? SettingsApplied;
 
@@ -190,6 +194,7 @@ public partial class SettingsViewModel : ObservableObject
         ApplicationTraces = Settings.Default.ApplicationTraces;
         PopulateHourLimit = Settings.Default.PopulateHourLimit;
         AutoDiscordBatch = Settings.Default.AutoDiscordBatch;
+        UpdateAvailable = Settings.Default.UpdateAvailable;
     }
 
     public void ApplyToSettings()
@@ -257,6 +262,9 @@ public partial class SettingsViewModel : ObservableObject
         Settings.Default.ApplicationTraces = ApplicationTraces;
         Settings.Default.PopulateHourLimit = PopulateHourLimit;
         Settings.Default.AutoDiscordBatch = AutoDiscordBatch;
+
+        // Updater
+        Settings.Default.UpdateAvailable = UpdateAvailable;
 
         Settings.Default.Save();
 
