@@ -54,7 +54,7 @@ public partial class LogFileViewModel : ObservableObject
                 RequestParse();
                 break;
             case OperationState.Parsing:
-                Operation.Cancel();
+                Operation.ToCancelState();
                 UpdateFromOperation();
                 break;
             case OperationState.Pending:

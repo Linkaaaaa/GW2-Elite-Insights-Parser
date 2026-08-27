@@ -12,7 +12,7 @@ public partial class MessageWindow : Window
         InitializeComponent();
     }
 
-    public MessageWindow(string title, string message)
+    public MessageWindow(string message, string title = "GW2 Elite Insights Parser")
     {
         InitializeComponent();
 

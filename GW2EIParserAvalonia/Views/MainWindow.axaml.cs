@@ -5,7 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using GW2EIEvtcParser.ParserHelpers;
+using GW2EIParserAvalonia.Services;
 using GW2EIParserAvalonia.ViewModels;
 using GW2EIParserCommons.Properties;
 
@@ -179,35 +179,20 @@ public partial class MainWindow : Window
         FilePicker();
     }
 
-    private async void FilePicker()
+    public async void FilePicker()
     {
         if (DataContext is not MainWindowViewModel viewModel)
         {
             return;
         }
 
-        var files = await StorageProvider.OpenFilePickerAsync(
-            new FilePickerOpenOptions
-            {
-                Title = "Select GW2 EVTC Combat Logs",
-                AllowMultiple = true,
-                FileTypeFilter =
-                [
-                    new FilePickerFileType("GW2 EVTC Combat Logs")
-                    {
-                        Patterns = SupportedFileFormats.SupportedFormats.Select(format => $"*{format}").ToList()
-                    }
-                ]
-            });
+        var picker = new FilePickerService(StorageProvider);
 
-        foreach (IStorageFile file in files)
+        var files = await picker.PickCombatLogsAsync();
+
+        foreach (var path in files)
         {
-            string? path = file.TryGetLocalPath();
-
-            if (path is not null)
-            {
-                viewModel.AddFile(path);
-            }
+            viewModel.AddFile(path);
         }
     }
 
@@ -236,7 +221,7 @@ public partial class MainWindow : Window
 
         if (info.Value.UpdateAvailable)
         {
-            var updaterWindow = new UpdaterWindow(info.Value, viewModel);
+            var updaterWindow = new UpdaterWindow(info.Value);
             updaterWindow.UpdateStarted += (_, _) =>
             {
                 updaterWindow.Close();

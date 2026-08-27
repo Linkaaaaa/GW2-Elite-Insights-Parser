@@ -44,6 +44,8 @@ public partial class MainWindowViewModel : ObservableObject
     private bool watchingDirectoryVisible;
     [ObservableProperty]
     private string version = string.Empty;
+    [ObservableProperty]
+    private string title = "GW2 Elite Insights";
     private readonly ParserService _parserService;
     private readonly SettingsService _settingsService;
     private readonly Queue<LogFileViewModel> _logQueue = new();
@@ -68,13 +70,14 @@ public partial class MainWindowViewModel : ObservableObject
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
         PopulateHourLimit = SettingsViewModel.PopulateHourLimit;
 
-        UpdateWatchDirectory();
-
         ClearAllEnabled = false;
         ParseEnabled = false;
         CancelAllEnabled = false;
 
         Version = typeof(MainWindowViewModel).Assembly.GetName().Version?.ToString() ?? string.Empty;
+        Title += $" v{Version}";
+
+        UpdateWatchDirectory();
     }
 
     public bool AnyRunning => _runningCount > 0;
@@ -222,7 +225,7 @@ public partial class MainWindowViewModel : ObservableObject
                 LogFiles.RemoveAt(i);
             }
         }
-        
+
         ClearFailedEnabled = false;
     }
 
@@ -240,8 +243,10 @@ public partial class MainWindowViewModel : ObservableObject
     {
         if (SettingsViewModel.AutoAdd && Directory.Exists(SettingsViewModel.AutoAddPath))
         {
-            WatchingDirectory = SettingsViewModel.AutoAddPath;
+            WatchingDirectory = $"Watching for log files in '{SettingsViewModel.AutoAddPath}'";
             WatchingDirectoryVisible = true;
+
+            AddFilesFromDirectory(SettingsViewModel.AutoAddPath);
         }
         else
         {
@@ -310,8 +315,8 @@ public partial class MainWindowViewModel : ObservableObject
 
     private async Task RunOperationAsync(LogFileViewModel logFile)
     {
-        _parserService.ExecuteMemoryCheckTask();
         _runningCount++;
+        _parserService.ExecuteMemoryCheckTask();
 
         logFile.Operation.ToQueuedState();
         logFile.UpdateFromOperation();

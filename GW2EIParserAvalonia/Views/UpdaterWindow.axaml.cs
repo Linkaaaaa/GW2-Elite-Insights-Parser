@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using GW2EIParserAvalonia.ViewModels;
 using GW2EIParserCommons.Properties;
 using GW2EIUpdater;
 
@@ -20,7 +19,7 @@ public partial class UpdaterWindow : Window
         InitializeComponent();
     }
 
-    public UpdaterWindow(Updater.UpdateInfo info, MainWindowViewModel viewModel)
+    public UpdaterWindow(Updater.UpdateInfo info)
     {
         InitializeComponent();
 
@@ -53,7 +52,7 @@ public partial class UpdaterWindow : Window
                 //_viewModel.AddTraceMessage("Updater: " + trace);
             }
 
-            var messageWindow = new MessageWindow("GW2 Elite Insights Parser", "Update Failed.");
+            var messageWindow = new MessageWindow("Update Failed.");
 
             await messageWindow.ShowDialog(this);
         }

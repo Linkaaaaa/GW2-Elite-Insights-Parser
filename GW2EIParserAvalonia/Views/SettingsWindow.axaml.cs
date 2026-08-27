@@ -1,13 +1,16 @@
-﻿using System.Linq;
+﻿using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Platform.Storage;
+using GW2EIParserAvalonia.Services;
 using GW2EIParserAvalonia.ViewModels;
+using GW2EIParserCommons;
 
 namespace GW2EIParserAvalonia.Views;
 
 public partial class SettingsWindow : Window
 {
+    public event EventHandler? AutoAddFolderRequested;
+
     public SettingsWindow()
     {
         InitializeComponent();
@@ -18,6 +21,7 @@ public partial class SettingsWindow : Window
         InitializeComponent();
 
         DataContext = viewModel;
+        viewModel.AutoAddFolderRequested += ViewModel_AutoAddFolderRequested;
     }
 
     private void ApplyButton_Click(object? sender, RoutedEventArgs e)
@@ -35,32 +39,51 @@ public partial class SettingsWindow : Window
         Close();
     }
 
-    private async void AutoAddPathButton_Click(object? sender, RoutedEventArgs e)
+    private async void ViewModel_AutoAddFolderRequested(object? sender, EventArgs e)
     {
         if (DataContext is not SettingsViewModel viewModel)
         {
             return;
         }
 
-        var folders = await StorageProvider.OpenFolderPickerAsync(
-            new FolderPickerOpenOptions
-            {
-                Title = "Select auto-add directory",
-                AllowMultiple = false
-            });
+        var picker = new FilePickerService(StorageProvider);
 
-        var folder = folders.FirstOrDefault();
+        var path = await picker.PickFolderAsync();
 
-        if (folder is null)
+        if (string.IsNullOrWhiteSpace(path))
         {
+            viewModel.AutoAdd = false;
             return;
         }
 
-        var path = folder.TryGetLocalPath();
+        viewModel.AutoAddPath = path;
+    }
 
-        if (!string.IsNullOrWhiteSpace(path))
-        {
-            viewModel.AutoAddPath = path;
-        }
+    private async void ResetMapButton_Click(object sender, RoutedEventArgs e)
+    {
+        ProgramHelper.APIController.WriteAPIMapsToFile(ProgramHelper.MapAPICacheLocation);
+        var messageWindow = new MessageWindow("Map List has been redone");
+        await messageWindow.ShowDialog(this);
+    }
+
+    private async void ResetSkillButton_Click(object sender, RoutedEventArgs e)
+    {
+        ProgramHelper.APIController.WriteAPISkillsToFile(ProgramHelper.SkillAPICacheLocation);
+        var messageWindow = new MessageWindow("Skill List has been redone");
+        await messageWindow.ShowDialog(this);
+    }
+
+    private async void ResetTraitButton_Click(object sender, RoutedEventArgs e)
+    {
+        ProgramHelper.APIController.WriteAPITraitsToFile(ProgramHelper.TraitAPICacheLocation);
+        var messageWindow = new MessageWindow("Trait List has been redone");
+        await messageWindow.ShowDialog(this);
+    }
+
+    private async void ResetSpecButton_Click(object sender, RoutedEventArgs e)
+    {
+        ProgramHelper.APIController.WriteAPISpecsToFile(ProgramHelper.SpecAPICacheLocation);
+        var messageWindow = new MessageWindow("Spec List has been redone");
+        await messageWindow.ShowDialog(this);
     }
 }

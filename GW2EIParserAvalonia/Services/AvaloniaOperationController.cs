@@ -93,16 +93,6 @@ public sealed class AvaloniaOperationController : OperationController
         ReParseText = "N/A";
     }
 
-    public void Cancel()
-    {
-        if (State != OperationState.Parsing)
-        {
-            return;
-        }
-
-        ToCancelState();
-    }
-
     public override void Reset()
     {
         _cancellationTokenSource.Dispose();
@@ -117,7 +107,10 @@ public sealed class AvaloniaOperationController : OperationController
 
     protected override void ThrowIfCanceled()
     {
-        _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+        if (_cancellationTokenSource.IsCancellationRequested)
+        {
+            _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+        }
     }
 
     public void ToRemovalFromQueueState()
