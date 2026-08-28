@@ -240,4 +240,18 @@ public partial class MainWindow : Window
             await messageWindow.ShowDialog(this);
         }
     }
+
+    private async void SendAllToDiscordButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel viewModel)
+        {
+            return;
+        }
+
+        var message = await viewModel.SendAllToDiscordAsync();
+
+        var messageWindow = new MessageWindow(message);
+
+        await messageWindow.ShowDialog(this);
+    }
 }

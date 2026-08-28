@@ -64,6 +64,11 @@ public abstract class OperationController : ParserController
     /// Location of the openable files
     /// </summary>
     public IReadOnlyList<string> OpenableFiles => _OpenableFiles;
+    private readonly List<string> _OpenableLogTracesFiles;
+    /// <summary>
+    /// Location of the openable log trace files
+    /// </summary>
+    public IReadOnlyList<string> OpenableLogTracesFiles => _OpenableLogTracesFiles;
     /// <summary>
     /// Link to dps.report
     /// </summary>
@@ -93,6 +98,7 @@ public abstract class OperationController : ParserController
         InputFile = location;
         _GeneratedFiles = [];
         _OpenableFiles = [];
+        _OpenableLogTracesFiles = [];
     }
 
     public override void Reset()
@@ -110,6 +116,7 @@ public abstract class OperationController : ParserController
         Executed = false;
         _GeneratedFiles.Clear();
         _OpenableFiles.Clear();
+        _OpenableLogTracesFiles.Clear();
     }
 
     public void Start()
@@ -129,6 +136,12 @@ public abstract class OperationController : ParserController
     {
         _GeneratedFiles.Add(path);
         _OpenableFiles.Add(path);
+    }
+
+    public void AddOpenableLogTraceFile(string path)
+    {
+        _GeneratedFiles.Add(path);
+        _OpenableLogTracesFiles.Add(path);
     }
 
     public void AddFile(string path)

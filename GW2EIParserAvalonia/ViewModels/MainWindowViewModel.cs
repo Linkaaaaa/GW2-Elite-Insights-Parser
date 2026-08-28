@@ -33,11 +33,11 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private bool settingsEnabled = true;
     [ObservableProperty]
-    private bool traces;
+    private bool applicationTraces;
     [ObservableProperty]
     private bool autoDiscordBatch;
     [ObservableProperty]
-    private decimal populateHourLimit;
+    private long populateHourLimit;
     [ObservableProperty]
     private string watchingDirectory = string.Empty;
     [ObservableProperty]
@@ -45,17 +45,21 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private string version = string.Empty;
     [ObservableProperty]
-    private string title = "GW2 Elite Insights";
+    private string title = "GW2 Elite Insights Parser";
+    private readonly string _applicationTraceFileName;
     private readonly ParserService _parserService;
     private readonly SettingsService _settingsService;
     private readonly Queue<LogFileViewModel> _logQueue = new();
     private int _runningCount;
     public ProgramSettings Settings { get; }
     public SettingsViewModel SettingsViewModel { get; }
+    public bool AnyRunning => _runningCount > 0;
 
     public MainWindowViewModel()
     {
         _settingsService = new SettingsService();
+
+        _applicationTraceFileName = $"{ProgramHelper.EILogPath}EILogs-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt";
 
         Settings = _settingsService.Load();
 
@@ -66,7 +70,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         SettingsViewModel.SettingsApplied += SettingsViewModel_SettingsApplied;
 
-        Traces = SettingsViewModel.ApplicationTraces;
+        ApplicationTraces = SettingsViewModel.ApplicationTraces;
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
         PopulateHourLimit = SettingsViewModel.PopulateHourLimit;
 
@@ -80,14 +84,12 @@ public partial class MainWindowViewModel : ObservableObject
         UpdateWatchDirectory();
     }
 
-    public bool AnyRunning => _runningCount > 0;
-
     private void SettingsViewModel_SettingsApplied(object? sender, EventArgs e)
     {
         _settingsService.Save(Settings);
         _parserService.ApplySettings();
 
-        Traces = SettingsViewModel.ApplicationTraces;
+        ApplicationTraces = SettingsViewModel.ApplicationTraces;
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
         PopulateHourLimit = SettingsViewModel.PopulateHourLimit;
 
@@ -96,18 +98,20 @@ public partial class MainWindowViewModel : ObservableObject
 
     public void AddFile(string path)
     {
-        if (LogFiles.Any(x => string.Equals(x.InputFile, path, StringComparison.OrdinalIgnoreCase)))
+        if (LogFiles.Any(x => string.Equals(x.InputFilePath, path, StringComparison.OrdinalIgnoreCase)))
         {
             return;
         }
 
-        var logFile = new LogFileViewModel(path);
+        var logFileViewModel = new LogFileViewModel(path);
 
-        logFile.ParseRequested += LogFile_ParseRequested;
-        logFile.ReParseRequested += LogFile_ReParseRequested;
-        logFile.PendingCancellationRequested += LogFile_PendingCancellationRequested;
+        logFileViewModel.ParseRequested += LogFile_ParseRequested;
+        logFileViewModel.ReParseRequested += LogFile_ReParseRequested;
+        logFileViewModel.PendingCancellationRequested += LogFile_PendingCancellationRequested;
+        logFileViewModel.RemoveRequested += LogFile_RemoveRequested;
 
-        LogFiles.Add(logFile);
+        LogFiles.Add(logFileViewModel);
+        AddApplicationTraceMessage("UI: Added " + logFileViewModel.InputFilePath);
 
         Status = $"{LogFiles.Count} log(s) queued";
         ParseEnabled = !AnyRunning;
@@ -116,7 +120,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         if (SettingsViewModel.AutoParse)
         {
-            QueueOrRunOperation(logFile);
+            QueueOrRunOperation(logFileViewModel);
         }
     }
 
@@ -397,5 +401,77 @@ public partial class MainWindowViewModel : ObservableObject
 
         logFile.Operation.ToReadyState();
         logFile.UpdateFromOperation();
+    }
+
+    private void LogFile_RemoveRequested(object? sender, EventArgs e)
+    {
+        if (sender is not LogFileViewModel logFile || logFile.IsBusy())
+        {
+            return;
+        }
+
+        LogFiles.Remove(logFile);
+        AddApplicationTraceMessage("UI: Removed " + logFile.InputFilePath);
+        ClearAllEnabled = LogFiles.Count > 0;
+        ClearFailedEnabled = LogFiles.Any(x => x.State == OperationState.UnComplete);
+        ParseEnabled = !AnyRunning && LogFiles.Count > 0;
+    }
+
+    private void AddApplicationTraceMessage(string message)
+    {
+        if (!GW2EIParserCommons.Properties.Settings.Default.ApplicationTraces)
+        {
+            return;
+        }
+        if (!Directory.Exists(ProgramHelper.EILogPath))
+        {
+            Directory.CreateDirectory(ProgramHelper.EILogPath);
+        }
+        if (!File.Exists(_applicationTraceFileName))
+        {
+            using (StreamWriter sw = File.CreateText(_applicationTraceFileName))
+            {
+                sw.WriteLine(message);
+            }
+        }
+        else
+        {
+            using (StreamWriter sw = File.AppendText(_applicationTraceFileName))
+            {
+                sw.WriteLine(message);
+            }
+        }
+    }
+
+    public async Task<string> SendAllToDiscordAsync()
+    {
+        AddApplicationTraceMessage("UI: Manual Discord Batch");
+
+        DiscordBatchEnabled = false;
+
+        try
+        {
+            var ids = new List<ulong>();
+            var operations = LogFiles
+                .Select(x => (OperationController)x.Operation)
+                .ToList();
+
+            return await Task.Run(() => "");
+            //return await Task.Run(() =>
+            //    _parserService.HandleBatchedDiscordEmbed(
+            //        ids,
+            //        operations,
+            //        AddTraceMessage));
+        }
+        finally
+        {
+            DiscordBatchEnabled = !AnyRunning;
+        }
+    }
+
+    partial void OnApplicationTracesChanged(bool value)
+    {
+        GW2EIParserCommons.Properties.Settings.Default.ApplicationTraces = value;
+        GW2EIParserCommons.Properties.Settings.Default.Save();
     }
 }

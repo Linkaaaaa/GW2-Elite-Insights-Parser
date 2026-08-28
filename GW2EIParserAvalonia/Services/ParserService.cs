@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GW2EIParserCommons;
+using static GW2EIParserCommons.ProgramHelper;
 
 namespace GW2EIParserAvalonia.Services;
 
@@ -44,5 +46,10 @@ public sealed class ParserService
     public void GenerateTraceFile(AvaloniaOperationController operation)
     {
         _programHelper.GenerateTraceFile(operation);
+    }
+
+    public void HandleBatchedDiscordEmbed(List<ulong> ids, List<OperationController> operations, BatchedDiscordTraceHandler traceHandler)
+    {
+        _programHelper.HandleBatchedDiscordEmbed(ids, operations, traceHandler);
     }
 }

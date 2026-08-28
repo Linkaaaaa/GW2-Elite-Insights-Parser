@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GW2EIParserAvalonia.Services;
+using GW2EIParserCommons;
 
 namespace GW2EIParserAvalonia.ViewModels;
 
 public partial class LogFileViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string inputFile;
+    private string inputFilePath;
     [ObservableProperty]
     private string status;
     [ObservableProperty]
@@ -18,20 +21,24 @@ public partial class LogFileViewModel : ObservableObject
     [ObservableProperty]
     private string reParseText;
     [ObservableProperty]
+    private bool removeEnabled;
+    [ObservableProperty]
     private OperationState state;
     public AvaloniaOperationController Operation { get; }
     public event EventHandler? ParseRequested;
     public event EventHandler? ReParseRequested;
     public event EventHandler? PendingCancellationRequested;
+    public event EventHandler? RemoveRequested;
 
     public LogFileViewModel(string fullPath)
     {
-        inputFile = fullPath;
+        inputFilePath = fullPath;
         Operation = new AvaloniaOperationController(fullPath);
         status = Operation.Status;
         buttonText = Operation.ButtonText;
         reParseText = Operation.ReParseText;
         state = Operation.State;
+        removeEnabled = true;
     }
 
     public bool IsBusy()
@@ -79,6 +86,23 @@ public partial class LogFileViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    private void Remove()
+    {
+        if (!RemoveEnabled)
+        {
+            return;
+        }
+
+        RemoveRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    [RelayCommand]
+    public void OpenTracesCommand()
+    {
+        OpenGeneratedLogTracesFiles();
+    }
+
     private void OpenGeneratedFiles()
     {
         foreach (var path in Operation.OpenableFiles)
@@ -90,6 +114,22 @@ public partial class LogFileViewModel : ObservableObject
         }
 
         if (Operation.OpenableFiles.Count < Operation.GeneratedFiles.Count && Operation.OutLocation != null && Directory.Exists(Operation.OutLocation))
+        {
+            OpenWithDefaultApplication(Operation.OutLocation);
+        }
+    }
+
+    private void OpenGeneratedLogTracesFiles()
+    {
+        foreach (var path in Operation.OpenableLogTracesFiles)
+        {
+            if (File.Exists(path))
+            {
+                OpenWithDefaultApplication(path);
+            }
+        }
+
+        if (Operation.OpenableLogTracesFiles.Count < Operation.OpenableLogTracesFiles.Count && Operation.OutLocation != null && Directory.Exists(Operation.OutLocation))
         {
             OpenWithDefaultApplication(Operation.OutLocation);
         }
@@ -121,5 +161,6 @@ public partial class LogFileViewModel : ObservableObject
         ButtonText = Operation.ButtonText;
         ReParseText = Operation.ReParseText;
         State = Operation.State;
+        RemoveEnabled = !IsBusy();
     }
 }
