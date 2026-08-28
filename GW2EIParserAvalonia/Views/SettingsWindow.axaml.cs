@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using GW2EIParserAvalonia.Services;
 using GW2EIParserAvalonia.ViewModels;
 using GW2EIParserCommons;
@@ -57,6 +59,28 @@ public partial class SettingsWindow : Window
         }
 
         viewModel.AutoAddPath = path;
+    }
+
+    private async void SelectFolder_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not SettingsViewModel viewModel)
+        {
+            return;
+        }
+
+        var folders = await StorageProvider.OpenFolderPickerAsync(
+            new FolderPickerOpenOptions
+            {
+                Title = "Select output directory",
+                AllowMultiple = false
+            });
+
+        var folder = folders.FirstOrDefault();
+
+        if (folder != null)
+        {
+            viewModel.OutLocation = folder.Path.LocalPath;
+        }
     }
 
     private async void ResetMapButton_Click(object sender, RoutedEventArgs e)

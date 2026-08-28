@@ -567,29 +567,26 @@ public sealed class ProgramHelper : IDisposable
 
     private DirectoryInfo GetSaveDirectory(FileInfo fInfo)
     {
-        if (Settings.SaveAtOut)
+        //save location
+        DirectoryInfo? saveDirectory;
+        if (Settings.SaveAtOut || Settings.OutLocation == null || string.IsNullOrWhiteSpace(Settings.OutLocation) || string.IsNullOrEmpty(Settings.OutLocation))
         {
-            if (string.IsNullOrWhiteSpace(Settings.OutLocation))
+            //Default save directory
+            saveDirectory = fInfo.Directory;
+            if (saveDirectory == null || !saveDirectory.Exists)
             {
-                throw new InvalidOperationException("Save output location is not configured");
+                throw new InvalidOperationException("Save directory does not exist");
             }
-
+        }
+        else
+        {
             if (!Directory.Exists(Settings.OutLocation))
             {
                 throw new InvalidOperationException("Save directory does not exist");
             }
-
-            return new DirectoryInfo(Settings.OutLocation);
+            saveDirectory = new DirectoryInfo(Settings.OutLocation);
         }
-
-        var inputDirectory = fInfo.Directory;
-
-        if (inputDirectory == null || !inputDirectory.Exists)
-        {
-            throw new InvalidOperationException("Save directory does not exist");
-        }
-
-        return inputDirectory;
+        return saveDirectory;
     }
 
     public void GenerateTraceFile(OperationController operation)

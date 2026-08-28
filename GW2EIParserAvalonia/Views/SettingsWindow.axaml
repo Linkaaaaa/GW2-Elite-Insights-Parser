@@ -165,10 +165,21 @@
                             Content="Add PoV profession to file name"
                             IsChecked="{Binding AddPoVProf}" />
 
-                        <TextBox
-                            Text="{Binding OutLocation}"
-                            PlaceholderText="Other output directory"
-                            IsEnabled="{Binding SaveAtOut}" />
+                        <TextBlock
+                            Text="Other output directory"
+                            FontSize="14" />
+
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <TextBox
+                                Grid.Column="0"
+                                Text="{Binding OutLocation}"
+                                PlaceholderText="C:\Users\User\Documents\Guild Wars 2\addons\arcdps\arcdps.cbtlogs" />
+
+                            <Button
+                                Grid.Column="1"
+                                Content="Select..."
+                                Click="SelectFolder_Click" />
+                        </Grid>
 
                         <CheckBox
                             Content="Save log traces"
