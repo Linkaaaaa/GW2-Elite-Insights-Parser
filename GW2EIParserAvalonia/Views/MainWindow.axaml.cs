@@ -235,7 +235,7 @@ public partial class MainWindow : Window
             Settings.Default.UpdateAvailable = false;
             Settings.Default.Save();
 
-            var messageWindow = new MessageWindow("GW2 Elite Insights Parser", "Elite Insights is up to date.");
+            var messageWindow = new MessageWindow("Elite Insights is up to date.");
 
             await messageWindow.ShowDialog(this);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using GW2EIParserCommons;
 using GW2EIParserCommons.Properties;
@@ -8,10 +9,12 @@ namespace GW2EIParserAvalonia.ViewModels;
 public partial class SettingsViewModel : ObservableObject
 {
     private readonly ProgramSettings _settings;
+    private readonly string _applicationTraceFileName;
 
     public SettingsViewModel(ProgramSettings settings)
     {
         _settings = settings;
+        _applicationTraceFileName = $"{ProgramHelper.EILogPath}EILogs-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt";
     }
 
     // General
@@ -232,6 +235,7 @@ public partial class SettingsViewModel : ObservableObject
         _settings.AddDuration = AddDuration;
         _settings.AddPoVProf = AddPoVProf;
         _settings.SaveOutTrace = SaveOutTrace;
+        Settings.Default.ApplicationTraces = ApplicationTraces;
 
         // HTML
         _settings.SaveOutHTML = SaveOutHTML;
@@ -257,17 +261,15 @@ public partial class SettingsViewModel : ObservableObject
         _settings.SendEmbedToWebhook = SendEmbedToWebhook;
         _settings.WebhookURL = WebhookURL;
         _settings.SendSimpleMessageToWebhook = SendSimpleMessageToWebhook;
+        Settings.Default.AutoDiscordBatch = AutoDiscordBatch;
 
         // GUI
-        Settings.Default.ApplicationTraces = ApplicationTraces;
         Settings.Default.PopulateHourLimit = PopulateHourLimit;
-        Settings.Default.AutoDiscordBatch = AutoDiscordBatch;
 
         // Updater
         Settings.Default.UpdateAvailable = UpdateAvailable;
 
         Settings.Default.Save();
-
         SettingsApplied?.Invoke(this, EventArgs.Empty);
     }
 
@@ -276,6 +278,32 @@ public partial class SettingsViewModel : ObservableObject
         if (value)
         {
             AutoAddFolderRequested?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public void AddApplicationTraceMessage(string message)
+    {
+        if (!Settings.Default.ApplicationTraces)
+        {
+            return;
+        }
+        if (!Directory.Exists(ProgramHelper.EILogPath))
+        {
+            Directory.CreateDirectory(ProgramHelper.EILogPath);
+        }
+        if (!File.Exists(_applicationTraceFileName))
+        {
+            using (StreamWriter sw = File.CreateText(_applicationTraceFileName))
+            {
+                sw.WriteLine(message);
+            }
+        }
+        else
+        {
+            using (StreamWriter sw = File.AppendText(_applicationTraceFileName))
+            {
+                sw.WriteLine(message);
+            }
         }
     }
 }

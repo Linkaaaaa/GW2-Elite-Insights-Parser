@@ -203,17 +203,6 @@
                     Height="24"
                     Opacity="0.3" />
 
-                <CheckBox
-                    Content="Application Traces"
-                    IsChecked="{Binding ApplicationTraces, Mode=TwoWay}"
-                    VerticalAlignment="Center" />
-
-                <CheckBox
-                    Content="Auto Discord Batch"
-                    IsChecked="{Binding AutoDiscordBatch, Mode=TwoWay}"
-                    IsEnabled="{Binding AutoDiscordBatchEnabled}"
-                    VerticalAlignment="Center" />
-
                 <Border
                     Width="1"
                     Height="24"

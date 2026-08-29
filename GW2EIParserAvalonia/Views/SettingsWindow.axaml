@@ -183,7 +183,13 @@
 
                         <CheckBox
                             Content="Save log traces"
-                            IsChecked="{Binding SaveOutTrace}" />
+                            IsChecked="{Binding SaveOutTrace}" 
+                            ToolTip.Tip="Creates a .log file for debug information on the parsed log" />
+
+                        <CheckBox
+                            Content="Save application traces"
+                            IsChecked="{Binding ApplicationTraces, Mode=TwoWay}" 
+                            ToolTip.Tip="Creates a .txt file for application usage information" />
 
                         <Separator/>
 
@@ -356,6 +362,10 @@
                         <CheckBox
                             Content="Send link only"
                             IsChecked="{Binding SendSimpleMessageToWebhook}" />
+
+                        <CheckBox
+                            Content="Auto Discord Batch"
+                            IsChecked="{Binding AutoDiscordBatch, Mode=TwoWay}" />
 
                     </StackPanel>
                 </ScrollViewer>
