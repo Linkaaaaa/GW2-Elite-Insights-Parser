@@ -11,7 +11,7 @@
     Height="700"
     MinWidth="900"
     MinHeight="500"
-    Title="GW2 Elite Insights"
+    Title="GW2 Elite Insights Parser"
     DragDrop.AllowDrop="True"
     DragDrop.DragOver="MainWindow_DragOver"
     DragDrop.Drop="MainWindow_Drop">
@@ -29,7 +29,7 @@
 
             <StackPanel Spacing="3">
                 <TextBlock
-                    Text="{Binding Title}"
+                    Text="GW2 Elite Insights Parser"
                     FontSize="26"
                     FontWeight="SemiBold" />
 
@@ -48,12 +48,12 @@
 
         </Grid>
 
-
         <!-- Main toolbar -->
         <StackPanel
             Grid.Row="1"
             Orientation="Horizontal"
-            Spacing="8">
+            Spacing="8"
+            VerticalAlignment="Center">
 
             <Button
                 Content="Add Files"
@@ -66,6 +66,25 @@
                 Click="PopulateButton_Click"
                 MinWidth="165"
                 Padding="16,9" />
+
+            <TextBlock
+                Text="Time:"
+                VerticalAlignment="Center"
+                Margin="12,0,0,0"
+                Opacity="0.7" />
+
+            <NumericUpDown
+                Value="{Binding PopulateHourLimit, Mode=TwoWay}"
+                Minimum="0"
+                Maximum="86400000"
+                Width="150"
+                HorizontalContentAlignment="Right"
+                ToolTip.Tip="Files older than this many hours will be ignored. Set to 0 for no limit." />
+
+            <TextBlock
+                Text="hours"
+                VerticalAlignment="Center"
+                Opacity="0.6" />
 
         </StackPanel>
 
@@ -87,6 +106,25 @@
                 DoubleTapped="LogFilesGrid_DoubleTapped">
 
                 <DataGrid.Columns>
+
+                    <!-- Remove row -->
+                    <DataGridTemplateColumn
+                        Header=""
+                        Width="33">
+
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                    Content="X"
+                                    Command="{Binding RemoveCommand}"
+                                    Margin="3"
+                                    HorizontalAlignment="Stretch"
+                                    IsEnabled="{Binding RemoveEnabled}"
+                                    ToolTip.Tip="Remove file from the list"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+
+                    </DataGridTemplateColumn>
 
                     <!-- Input file -->
                     <DataGridTextColumn
@@ -153,86 +191,15 @@
 
                     </DataGridTemplateColumn>
 
-
-                    <!-- Remove row -->
-                    <DataGridTemplateColumn
-                        Header=""
-                        Width="90">
-
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button
-                                    Content="X"
-                                    Command="{Binding RemoveCommand}"
-                                    Margin="3"
-                                    HorizontalAlignment="Stretch"
-                                    IsEnabled="{Binding RemoveEnabled}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-
-                    </DataGridTemplateColumn>
-
                 </DataGrid.Columns>
 
             </DataGrid>
 
         </Border>
 
-        <!-- Secondary options -->
-        <Grid
-            Grid.Row="3"
-            ColumnDefinitions="*,Auto"
-            VerticalAlignment="Center">
-
-            <!-- Options -->
-            <StackPanel
-                Orientation="Horizontal"
-                Spacing="14"
-                VerticalAlignment="Center">
-
-                <Button
-                    Content="Send all to Discord"
-                    Click="SendAllToDiscordButton_Click"
-                    MinWidth="145"
-                    Padding="16,9"
-                    IsEnabled="{Binding DiscordBatchEnabled}"
-                    ToolTip.Tip="Send currently parsed logs with dps.report links to the Discord webhook in a batch" />
-
-                <Border
-                    Width="1"
-                    Height="24"
-                    Opacity="0.3" />
-
-                <Border
-                    Width="1"
-                    Height="24"
-                    Opacity="0.3" />
-
-                <TextBlock
-                    Text="Time:"
-                    VerticalAlignment="Center"
-                    Opacity="0.7" />
-
-                <NumericUpDown
-                    Value="{Binding PopulateHourLimit, Mode=TwoWay}"
-                    Minimum="0"
-                    Maximum="86400000"
-                    Width="150"
-                    HorizontalContentAlignment="Right"
-                    ToolTip.Tip="Files older than this many hours will be ignored. Set to 0 for no limit." />
-
-                <TextBlock
-                    Text="hours"
-                    VerticalAlignment="Center"
-                    Opacity="0.6" />
-
-            </StackPanel>
-
-        </Grid>
-
         <!-- Bottom actions -->
         <Grid
-            Grid.Row="4"
+            Grid.Row="3"
             ColumnDefinitions="*,Auto">
 
             <!-- Application actions -->
@@ -253,6 +220,14 @@
                     MinWidth="130"
                     Padding="16,9"
                     IsEnabled="{Binding CheckUpdatesEnabled}" />
+
+                <Button 
+                    Content="Send all to Discord" 
+                    Click="SendAllToDiscordButton_Click" 
+                    MinWidth="145" 
+                    Padding="16,9" 
+                    IsEnabled="{Binding DiscordBatchEnabled}" 
+                    ToolTip.Tip="Send currently parsed logs with dps.report links to the Discord webhook in a batch" />
 
             </StackPanel>
 
@@ -293,6 +268,14 @@
             </StackPanel>
 
         </Grid>
+
+        <!-- Footer -->
+        <TextBlock
+            Grid.Row="4"
+            Text="{Binding Version}"
+            FontSize="13"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom" />
 
     </Grid>
 

@@ -32,8 +32,6 @@ public partial class MainWindowViewModel : ObservableObject
     private bool checkUpdatesEnabled = true;
     [ObservableProperty]
     private bool settingsEnabled = true;
-    //[ObservableProperty]
-    //private bool applicationTraces;
     [ObservableProperty]
     private bool autoDiscordBatch;
     [ObservableProperty]
@@ -44,8 +42,6 @@ public partial class MainWindowViewModel : ObservableObject
     private bool watchingDirectoryVisible;
     [ObservableProperty]
     private string version = string.Empty;
-    [ObservableProperty]
-    private string title = "GW2 Elite Insights Parser";
     private readonly ParserService _parserService;
     private readonly SettingsService _settingsService;
     private readonly Queue<LogFileViewModel> _logQueue = new();
@@ -58,8 +54,6 @@ public partial class MainWindowViewModel : ObservableObject
     {
         _settingsService = new SettingsService();
 
-        
-
         Settings = _settingsService.Load();
 
         SettingsViewModel = new SettingsViewModel(Settings);
@@ -69,7 +63,6 @@ public partial class MainWindowViewModel : ObservableObject
 
         SettingsViewModel.SettingsApplied += SettingsViewModel_SettingsApplied;
 
-        //ApplicationTraces = SettingsViewModel.ApplicationTraces;
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
         PopulateHourLimit = SettingsViewModel.PopulateHourLimit;
 
@@ -77,8 +70,7 @@ public partial class MainWindowViewModel : ObservableObject
         ParseEnabled = false;
         CancelAllEnabled = false;
 
-        Version = typeof(MainWindowViewModel).Assembly.GetName().Version?.ToString() ?? string.Empty;
-        Title += $" v{Version}";
+        Version = "v" + typeof(MainWindowViewModel).Assembly.GetName().Version?.ToString() ?? "v" + string.Empty;
 
         UpdateWatchDirectory();
     }
@@ -88,7 +80,6 @@ public partial class MainWindowViewModel : ObservableObject
         _settingsService.Save(Settings);
         _parserService.ApplySettings();
 
-        //ApplicationTraces = SettingsViewModel.ApplicationTraces;
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
         PopulateHourLimit = SettingsViewModel.PopulateHourLimit;
 
@@ -442,5 +433,8 @@ public partial class MainWindowViewModel : ObservableObject
         }
     }
 
-    
+    public void VersionLabelUpdate(bool isAvailable)
+    {
+        Version = isAvailable ? Version + " (Update Available)" : Version;
+    }
 }

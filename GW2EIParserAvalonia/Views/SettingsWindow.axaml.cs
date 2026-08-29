@@ -11,8 +11,6 @@ namespace GW2EIParserAvalonia.Views;
 
 public partial class SettingsWindow : Window
 {
-    public event EventHandler? AutoAddFolderRequested;
-
     public SettingsWindow()
     {
         InitializeComponent();

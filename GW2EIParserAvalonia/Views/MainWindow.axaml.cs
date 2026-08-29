@@ -4,10 +4,12 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.OpenGL;
 using Avalonia.Platform.Storage;
 using GW2EIParserAvalonia.Services;
 using GW2EIParserAvalonia.ViewModels;
 using GW2EIParserCommons.Properties;
+using GW2EIUpdater;
 
 namespace GW2EIParserAvalonia.Views;
 
@@ -203,37 +205,43 @@ public partial class MainWindow : Window
             return;
         }
 
+        viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: Checking for updates");
+
         var traces = new List<string>();
-        var info = await GW2EIUpdater.Updater.CheckForUpdate("GW2EI.zip", traces);
-
-        foreach (var trace in traces)
-        {
-            //viewModel.AddTraceMessage("Updater: " + trace);
-        }
-
+        Updater.UpdateInfo? info = await Updater.CheckForUpdate("GW2EI.zip", traces);
+        traces.ForEach(x => viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: " + x));
+#if DEBUG
+        var force = true;
+#else
+        var force = false;
+#endif
         if (info is null)
         {
+            viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: UpdateInfo is null");
             return;
         }
 
-        Settings.Default.UpdateAvailable = info.Value.UpdateAvailable;
-        Settings.Default.Save();
-
-        if (info.Value.UpdateAvailable)
+        if (info.Value.UpdateAvailable || force)
         {
+            viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: Update found, opening UI");
+            Settings.Default.UpdateAvailable = info.Value.UpdateAvailable;
+            Settings.Default.Save();
+            viewModel.VersionLabelUpdate(info.Value.UpdateAvailable);
+
             var updaterWindow = new UpdaterWindow(info.Value);
             updaterWindow.UpdateStarted += (_, _) =>
             {
                 updaterWindow.Close();
-                Close();
             };
 
             await updaterWindow.ShowDialog(this);
         }
         else
         {
+            viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: Up to date");
             Settings.Default.UpdateAvailable = false;
             Settings.Default.Save();
+            viewModel.VersionLabelUpdate(false);
 
             var messageWindow = new MessageWindow("Elite Insights is up to date.");
 

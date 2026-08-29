@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
+using GW2EIParserAvalonia.Views;
 using GW2EIParserCommons;
 using GW2EIParserCommons.Properties;
+using GW2EIUpdater;
 
 namespace GW2EIParserAvalonia.ViewModels;
 
