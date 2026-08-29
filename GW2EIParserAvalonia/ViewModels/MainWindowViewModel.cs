@@ -41,6 +41,8 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private bool watchingDirectoryVisible;
     [ObservableProperty]
+    private bool logTracesVisible;
+    [ObservableProperty]
     private string version = string.Empty;
     private readonly ParserService _parserService;
     private readonly SettingsService _settingsService;
@@ -69,6 +71,7 @@ public partial class MainWindowViewModel : ObservableObject
         ClearAllEnabled = false;
         ParseEnabled = false;
         CancelAllEnabled = false;
+        LogTracesVisible = SettingsViewModel.SaveOutTrace;
 
         Version = "v" + typeof(MainWindowViewModel).Assembly.GetName().Version?.ToString() ?? "v" + string.Empty;
 
@@ -82,6 +85,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
         PopulateHourLimit = SettingsViewModel.PopulateHourLimit;
+        LogTracesVisible = SettingsViewModel.SaveOutTrace;
 
         UpdateWatchDirectory();
     }
@@ -309,14 +313,16 @@ public partial class MainWindowViewModel : ObservableObject
 
     private async Task RunOperationAsync(LogFileViewModel logFile)
     {
-        _runningCount++;
         _parserService.ExecuteMemoryCheckTask();
+        _runningCount++;
 
         logFile.Operation.ToQueuedState();
         logFile.UpdateFromOperation();
+        SettingsViewModel.AddApplicationTraceMessage("Operation: Queued " + logFile.InputFilePath);
 
         logFile.Operation.ToRunState();
         logFile.UpdateFromOperation();
+        SettingsViewModel.AddApplicationTraceMessage("Operation: Parsing " + logFile.InputFilePath);
 
         try
         {
@@ -325,6 +331,7 @@ public partial class MainWindowViewModel : ObservableObject
             if (logFile.State != OperationState.ClearOnCancel)
             {
                 logFile.Operation.ToCompleteState();
+                SettingsViewModel.AddApplicationTraceMessage("Operation: Parsed " + logFile.InputFilePath);
             }
         }
         catch (OperationCanceledException)

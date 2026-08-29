@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GW2EIParserAvalonia.Services;
-using GW2EIParserCommons;
 
 namespace GW2EIParserAvalonia.ViewModels;
 
@@ -23,6 +20,10 @@ public partial class LogFileViewModel : ObservableObject
     [ObservableProperty]
     private bool removeEnabled;
     [ObservableProperty]
+    private bool reParseEnabled;
+    [ObservableProperty]
+    private bool logTracesEnabled;
+    [ObservableProperty]
     private OperationState state;
     public AvaloniaOperationController Operation { get; }
     public event EventHandler? ParseRequested;
@@ -33,12 +34,14 @@ public partial class LogFileViewModel : ObservableObject
     public LogFileViewModel(string fullPath)
     {
         inputFilePath = fullPath;
-        Operation = new AvaloniaOperationController(fullPath);
+        Operation = new AvaloniaOperationController(inputFilePath);
         status = Operation.Status;
         buttonText = Operation.ButtonText;
         reParseText = Operation.ReParseText;
         state = Operation.State;
         removeEnabled = true;
+        reParseEnabled = Operation.ReParseEnabled;
+        logTracesEnabled = Operation.LogTracesEnabled;
     }
 
     public bool IsBusy()
@@ -58,7 +61,7 @@ public partial class LogFileViewModel : ObservableObject
         {
             case OperationState.Ready:
             case OperationState.UnComplete:
-                RequestParse();
+                ParseRequested?.Invoke(this, EventArgs.Empty);
                 break;
             case OperationState.Parsing:
                 Operation.ToCancelState();
@@ -82,7 +85,7 @@ public partial class LogFileViewModel : ObservableObject
     {
         if (State == OperationState.Complete)
         {
-            RequestReParse();
+            ReParseRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -145,22 +148,14 @@ public partial class LogFileViewModel : ObservableObject
             });
     }
 
-    public void RequestParse()
-    {
-        ParseRequested?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void RequestReParse()
-    {
-        ReParseRequested?.Invoke(this, EventArgs.Empty);
-    }
-
     public void UpdateFromOperation()
     {
         Status = Operation.Status;
         ButtonText = Operation.ButtonText;
         ReParseText = Operation.ReParseText;
         State = Operation.State;
+        ReParseEnabled = Operation.ReParseEnabled;
+        LogTracesEnabled = Operation.LogTracesEnabled;
         RemoveEnabled = !IsBusy();
     }
 }

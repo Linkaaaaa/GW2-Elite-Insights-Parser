@@ -72,6 +72,8 @@ public partial class SettingsViewModel : ObservableObject
     private bool addPoVProf;
     [ObservableProperty]
     private bool saveOutTrace;
+    [ObservableProperty]
+    private bool applicationTraces;
 
     // HTML
     [ObservableProperty]
@@ -115,21 +117,14 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private string webhookURL = string.Empty;
     [ObservableProperty]
-    private bool sendSimpleMessageToWebhook;
-
-    // TODO ADD THESE vvvvvvvvvvvvvvvv
-
-    // GUI
-
-    [ObservableProperty]
-    private bool applicationTraces;
-    [ObservableProperty]
-    private long populateHourLimit;
+    private bool sendSimpleMessageToWebhook; 
     [ObservableProperty]
     private bool autoDiscordBatch;
 
-    // TODO ADD THESE ^^^^^^^^^^^^^^^^^
-
+    // GUI
+    [ObservableProperty]
+    private long populateHourLimit;
+    
     // Updater
     [ObservableProperty]
     private bool updateAvailable;
@@ -170,6 +165,7 @@ public partial class SettingsViewModel : ObservableObject
         AddDuration = _settings.AddDuration;
         AddPoVProf = _settings.AddPoVProf;
         SaveOutTrace = _settings.SaveOutTrace;
+        ApplicationTraces = Settings.Default.ApplicationTraces;
 
         // HTML
         SaveOutHTML = _settings.SaveOutHTML;
@@ -196,11 +192,10 @@ public partial class SettingsViewModel : ObservableObject
         SendEmbedToWebhook = _settings.SendEmbedToWebhook;
         WebhookURL = _settings.WebhookURL ?? string.Empty;
         SendSimpleMessageToWebhook = _settings.SendSimpleMessageToWebhook;
+        AutoDiscordBatch = Settings.Default.AutoDiscordBatch;
 
         // GUI
-        ApplicationTraces = Settings.Default.ApplicationTraces;
         PopulateHourLimit = Settings.Default.PopulateHourLimit;
-        AutoDiscordBatch = Settings.Default.AutoDiscordBatch;
 
         // Updater
         UpdateAvailable = Settings.Default.UpdateAvailable;

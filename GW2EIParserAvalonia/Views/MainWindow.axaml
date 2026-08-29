@@ -167,7 +167,8 @@
                                     Content="{Binding ReParseText}"
                                     Command="{Binding ReParseCommand}"
                                     Margin="3"
-                                    HorizontalAlignment="Stretch" />
+                                    HorizontalAlignment="Stretch"
+                                    IsEnabled="{Binding ReParseEnabled}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
 
@@ -177,7 +178,8 @@
                     <!-- Open traces -->
                     <DataGridTemplateColumn
                         Header="Traces"
-                        Width="100">
+                        Width="100"
+                        IsVisible="{Binding LogTracesVisible}">
 
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -185,7 +187,8 @@
                                     Content="Open"
                                     Command="{Binding OpenTracesCommand}"
                                     Margin="3"
-                                    HorizontalAlignment="Stretch" />
+                                    HorizontalAlignment="Stretch"
+                                    IsEnabled="{Binding LogTracesEnabled}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
 
@@ -221,12 +224,12 @@
                     Padding="16,9"
                     IsEnabled="{Binding CheckUpdatesEnabled}" />
 
-                <Button 
-                    Content="Send all to Discord" 
-                    Click="SendAllToDiscordButton_Click" 
-                    MinWidth="145" 
-                    Padding="16,9" 
-                    IsEnabled="{Binding DiscordBatchEnabled}" 
+                <Button
+                    Content="Send all to Discord"
+                    Click="SendAllToDiscordButton_Click"
+                    MinWidth="145"
+                    Padding="16,9"
+                    IsEnabled="{Binding DiscordBatchEnabled}"
                     ToolTip.Tip="Send currently parsed logs with dps.report links to the Discord webhook in a batch" />
 
             </StackPanel>

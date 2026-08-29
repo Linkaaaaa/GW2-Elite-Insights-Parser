@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.OpenGL;
 using Avalonia.Platform.Storage;
 using GW2EIParserAvalonia.Services;
 using GW2EIParserAvalonia.ViewModels;
@@ -15,13 +16,12 @@ namespace GW2EIParserAvalonia.Views;
 
 public partial class MainWindow : Window
 {
-    private FileSystemWatcher? _logFileWatcher;
-
     public MainWindow()
     {
         InitializeComponent();
 
         UpdateFileWatcher();
+        UpdaterInitialCheck();
     }
 
     private async void AddFilesButton_Click(object? sender, RoutedEventArgs e)
@@ -105,22 +105,19 @@ public partial class MainWindow : Window
 
     private void UpdateFileWatcher()
     {
-        _logFileWatcher?.Dispose();
-        _logFileWatcher = null;
-
         if (!Settings.Default.AutoAdd || !Directory.Exists(Settings.Default.AutoAddPath))
         {
             return;
         }
 
-        _logFileWatcher = new FileSystemWatcher(Settings.Default.AutoAddPath)
+        FileSystemWatcher logFileWatcher = new(Settings.Default.AutoAddPath)
         {
             IncludeSubdirectories = true,
             EnableRaisingEvents = true
         };
 
-        _logFileWatcher.Created += LogFileWatcher_Created;
-        _logFileWatcher.Renamed += LogFileWatcher_Renamed;
+        logFileWatcher.Created += LogFileWatcher_Created;
+        logFileWatcher.Renamed += LogFileWatcher_Renamed;
     }
 
     private void LogFileWatcher_Created(object sender, FileSystemEventArgs e)
@@ -196,6 +193,36 @@ public partial class MainWindow : Window
         {
             viewModel.AddFile(path);
         }
+    }
+
+    private void UpdaterInitialCheck()
+    {
+        if (DataContext is not MainWindowViewModel viewModel)
+        {
+            return;
+        }
+
+#if DEBUG
+        long time = 0;
+#else 
+        long time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+#endif
+        if (time - Settings.Default.UpdateLastChecked > 3600)
+        {
+            Settings.Default.UpdateLastChecked = time;
+            Task.Factory.StartNew(async () =>
+            {
+                List<string> traces = [];
+                Updater.UpdateInfo? info = await Updater.CheckForUpdate("GW2EI.zip", traces);
+                if (info != null)
+                {
+                    Settings.Default.UpdateAvailable = info.Value.UpdateAvailable;
+                    viewModel.VersionLabelUpdate(info.Value.UpdateAvailable);
+                }
+                traces.ForEach(x => viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: " + x));
+            }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        viewModel.VersionLabelUpdate(Settings.Default.UpdateAvailable);
     }
 
     private async void CheckUpdatesButton_Click(object? sender, RoutedEventArgs e)
