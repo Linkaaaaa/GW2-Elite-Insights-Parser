@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -37,6 +38,33 @@ public partial class SettingsWindow : Window
     private void CancelButton_Click(object? sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private async void LoadButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not SettingsViewModel viewModel)
+        {
+            return;
+        }
+
+        IReadOnlyList<IStorageFile> files = await StorageProvider.OpenFilePickerAsync(
+            new FilePickerOpenOptions
+            {
+                Title = "Load a Configuration file",
+                AllowMultiple = false,
+                FileTypeFilter = new[]
+                {
+                    new FilePickerFileType("Conf file")
+                    {
+                        Patterns = [ "*.conf" ]
+                    }
+                }
+            });
+
+        if (files.Count > 0)
+        {
+            viewModel.ApplyLoadedSettings(files[0].Path.LocalPath);
+        }
     }
 
     private async void ViewModel_AutoAddFolderRequested(object? sender, EventArgs e)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GW2EIParserAvalonia.Services;
@@ -12,7 +13,7 @@ public partial class LogFileViewModel : ObservableObject
     [ObservableProperty]
     private string inputFilePath;
     [ObservableProperty]
-    private string status;
+    private string logStatus;
     [ObservableProperty]
     private string buttonText;
     [ObservableProperty]
@@ -35,13 +36,14 @@ public partial class LogFileViewModel : ObservableObject
     {
         inputFilePath = fullPath;
         Operation = new AvaloniaOperationController(inputFilePath);
-        status = Operation.Status;
+        logStatus = Operation.Status;
         buttonText = Operation.ButtonText;
         reParseText = Operation.ReParseText;
         state = Operation.State;
         removeEnabled = true;
         reParseEnabled = Operation.ReParseEnabled;
         logTracesEnabled = Operation.LogTracesEnabled;
+        Operation.ProgressUpdated += Operation_ProgressUpdated;
     }
 
     public bool IsBusy()
@@ -150,12 +152,20 @@ public partial class LogFileViewModel : ObservableObject
 
     public void UpdateFromOperation()
     {
-        Status = Operation.Status;
+        LogStatus = Operation.Status;
         ButtonText = Operation.ButtonText;
         ReParseText = Operation.ReParseText;
         State = Operation.State;
         ReParseEnabled = Operation.ReParseEnabled;
         LogTracesEnabled = Operation.LogTracesEnabled;
         RemoveEnabled = !IsBusy();
+    }
+
+    private void Operation_ProgressUpdated(object? sender, EventArgs e)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            LogStatus = Operation.Status;
+        });
     }
 }

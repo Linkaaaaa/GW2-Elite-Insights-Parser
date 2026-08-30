@@ -25,6 +25,11 @@
             Spacing="10">
 
             <Button
+                Content="Load"
+                MinWidth="100"
+                Click="LoadButton_Click" />
+
+            <Button
                 Content="Cancel"
                 MinWidth="100"
                 Click="CancelButton_Click" />

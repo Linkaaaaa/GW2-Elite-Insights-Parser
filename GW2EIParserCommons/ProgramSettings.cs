@@ -91,4 +91,52 @@ public class ProgramSettings
         }
         return false;
     }
+
+    public void CopyFrom(ProgramSettings other)
+    {
+        ComputePhases = other.ComputePhases;
+        ComputeDamage = other.ComputeDamage;
+        ComputeBuff = other.ComputeBuff;
+        ComputeCast = other.ComputeCast;
+        ComputeDamageModifiers = other.ComputeDamageModifiers;
+        ComputeCombatReplay = other.ComputeCombatReplay;
+        ComputeMechanics = other.ComputeMechanics;
+        ParseExtensions = other.ParseExtensions;
+        DetailledWvW = other.DetailledWvW;
+
+        SingleThreaded = other.SingleThreaded;
+        ParseMultipleLogs = other.ParseMultipleLogs;
+        SkipFailedTries = other.SkipFailedTries;
+        CustomTooShort = other.CustomTooShort;
+        CustomTooBig = other.CustomTooBig;
+        MemoryLimit = other.MemoryLimit;
+
+        Anonymous = other.Anonymous;
+        SaveAtOut = other.SaveAtOut;
+        OutLocation = other.OutLocation;
+        AddDuration = other.AddDuration;
+        AddPoVProf = other.AddPoVProf;
+        SaveOutTrace = other.SaveOutTrace;
+
+        SaveOutHTML = other.SaveOutHTML;
+        LightTheme = other.LightTheme;
+        HtmlExternalScripts = other.HtmlExternalScripts;
+        HtmlExternalScriptsPath = other.HtmlExternalScriptsPath;
+        HtmlExternalScriptsCdn = other.HtmlExternalScriptsCdn;
+        HtmlCompressJson = other.HtmlCompressJson;
+
+        SaveOutCSV = other.SaveOutCSV;
+
+        SaveOutJSON = other.SaveOutJSON;
+        IndentJSON = other.IndentJSON;
+        RawTimelineArrays = other.RawTimelineArrays;
+        CompressRaw = other.CompressRaw;
+
+        UploadToDPSReports = other.UploadToDPSReports;
+        DPSReportUserToken = other.DPSReportUserToken;
+        UploadToWingman = other.UploadToWingman;
+        SendEmbedToWebhook = other.SendEmbedToWebhook;
+        WebhookURL = other.WebhookURL;
+        SendSimpleMessageToWebhook = other.SendSimpleMessageToWebhook;
+    }
 }

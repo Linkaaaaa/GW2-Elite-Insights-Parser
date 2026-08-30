@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using GW2EIParserAvalonia.ViewModels;
 using GW2EIParserCommons;
 
@@ -13,6 +14,7 @@ public sealed class AvaloniaOperationController : OperationController
     public OperationState State { get; private set; } = OperationState.Ready;
     private CancellationTokenSource _cancellationTokenSource = new();
     public CancellationToken CancellationToken => _cancellationTokenSource.Token;
+    public event EventHandler? ProgressUpdated;
 
     public AvaloniaOperationController(string location) : base(location, "Ready to parse")
     {
@@ -138,5 +140,12 @@ public sealed class AvaloniaOperationController : OperationController
     public void ToRemovalFromQueueState()
     {
         ToCancelState();
+    }
+
+    public override void UpdateProgress(string status)
+    {
+        base.UpdateProgress(status);
+        Status = status;
+        ProgressUpdated?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -15,7 +15,7 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<LogFileViewModel> logFiles = [];
     [ObservableProperty]
-    private string status = "Waiting";
+    private string queueStatus = "Waiting";
     [ObservableProperty]
     private bool parseEnabled;
     [ObservableProperty]
@@ -55,23 +55,20 @@ public partial class MainWindowViewModel : ObservableObject
     public MainWindowViewModel()
     {
         _settingsService = new SettingsService();
-
         Settings = _settingsService.Load();
+        _parserService = new ParserService(Settings);
 
         SettingsViewModel = new SettingsViewModel(Settings);
         SettingsViewModel.LoadFromSettings();
-
-        _parserService = new ParserService(Settings);
-
         SettingsViewModel.SettingsApplied += SettingsViewModel_SettingsApplied;
 
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
         PopulateHourLimit = SettingsViewModel.PopulateHourLimit;
+        LogTracesVisible = SettingsViewModel.SaveOutTrace;
 
         ClearAllEnabled = false;
         ParseEnabled = false;
         CancelAllEnabled = false;
-        LogTracesVisible = SettingsViewModel.SaveOutTrace;
 
         Version = "v" + typeof(MainWindowViewModel).Assembly.GetName().Version?.ToString() ?? "v" + string.Empty;
 
@@ -107,7 +104,7 @@ public partial class MainWindowViewModel : ObservableObject
         LogFiles.Add(logFileViewModel);
         SettingsViewModel.AddApplicationTraceMessage("UI: Added " + logFileViewModel.InputFilePath);
 
-        Status = $"{LogFiles.Count} log(s) queued";
+        QueueStatus = $"{LogFiles.Count} log(s) queued";
         ParseEnabled = !AnyRunning;
         ClearAllEnabled = true;
         ClearFailedEnabled = true;
@@ -423,16 +420,10 @@ public partial class MainWindowViewModel : ObservableObject
         try
         {
             var ids = new List<ulong>();
-            var operations = LogFiles
-                .Select(x => (OperationController)x.Operation)
-                .ToList();
+            var operations = LogFiles.Select(x => (OperationController)x.Operation).ToList();
 
-            return await Task.Run(() => "");
-            //return await Task.Run(() =>
-            //    _parserService.HandleBatchedDiscordEmbed(
-            //        ids,
-            //        operations,
-            //        AddTraceMessage));
+            return await Task.Run(() =>
+                _parserService.HandleBatchedDiscordEmbed(ids, operations, SettingsViewModel.AddApplicationTraceMessage));
         }
         finally
         {

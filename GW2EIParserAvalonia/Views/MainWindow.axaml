@@ -34,7 +34,7 @@
                     FontWeight="SemiBold" />
 
                 <TextBlock
-                    Text="{Binding Status}"
+                    Text="{Binding QueueStatus}"
                     FontSize="13"
                     Opacity="0.65" />
             </StackPanel>
@@ -135,7 +135,7 @@
                     <!-- Status -->
                     <DataGridTextColumn
                         Header="Status"
-                        Binding="{Binding Status}"
+                        Binding="{Binding LogStatus}"
                         Width="3*" />
 
                     <!-- Existing action -->

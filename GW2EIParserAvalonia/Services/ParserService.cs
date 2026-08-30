@@ -48,8 +48,8 @@ public sealed class ParserService
         _programHelper.GenerateTraceFile(operation);
     }
 
-    public void HandleBatchedDiscordEmbed(List<ulong> ids, List<OperationController> operations, BatchedDiscordTraceHandler traceHandler)
+    public string HandleBatchedDiscordEmbed(List<ulong> ids, List<OperationController> operations, BatchedDiscordTraceHandler traceHandler)
     {
-        _programHelper.HandleBatchedDiscordEmbed(ids, operations, traceHandler);
+        return _programHelper.HandleBatchedDiscordEmbed(ids, operations, traceHandler);
     }
 }
