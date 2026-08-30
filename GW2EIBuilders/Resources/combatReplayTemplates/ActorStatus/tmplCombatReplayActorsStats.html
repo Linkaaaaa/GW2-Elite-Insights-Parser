@@ -29,11 +29,13 @@
                 </fieldset>
             </div>
 
-            <fieldset class="combat-actor-status-container scrollable-y mt-2 border">
-                <combat-replay-actor-stats-component v-for="target in targets"
-                    :class="{active: selectedactorid === target.uniqueID}"
-                    :actorIndex="target.id" :time="time" :buffstoshow="buffsToShowTarget" :isTarget="true" :buffs="true" :rotation="true" />
-            </fieldset>
+            <div class="combat-actor-status-container scrollable-y mt-2 ">
+                <fieldset class="border">
+                    <combat-replay-actor-stats-component v-for="target in targets"
+                        :class="{active: selectedactorid === target.uniqueID}"
+                        :actorIndex="target.id" :time="time" :buffstoshow="buffsToShowTarget" :isTarget="true" :buffs="true" :rotation="true" />
+                </fieldset>
+            </div>
         </div>
     </div>
 </template>

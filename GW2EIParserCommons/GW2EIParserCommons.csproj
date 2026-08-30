@@ -4,7 +4,7 @@
         <TargetFramework>net8</TargetFramework>
         <LangVersion>12.0</LangVersion>
         <Nullable>enable</Nullable>
-        <Version>0.27.0</Version>
+        <Version>0.328.0</Version>
         <ImplicitUsings>enable</ImplicitUsings>
         <Configurations>Debug;Release;NoRewards;Trace</Configurations>
         <PackageId>GuildWars2EliteInsights.GW2EIParserCommons</PackageId>

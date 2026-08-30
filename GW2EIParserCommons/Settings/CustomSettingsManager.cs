@@ -126,52 +126,19 @@ public static class CustomSettingsManager
     }
 
     /// <summary>
-    /// Returns current program settings
+    /// Returns current program settings from Properties.Settings.Default. If input parameter is given, will edit it instead of creating a new instance.
     /// </summary>
     /// <returns></returns>
-    public static ProgramSettings GetProgramSettings()
+    public static ProgramSettings GetProgramSettings(ProgramSettings? settings = null)
     {
-        var settings = new ProgramSettings()
+        if (settings != null)
         {
-            SendEmbedToWebhook = Properties.Settings.Default.SendEmbedToWebhook,
-            SendSimpleMessageToWebhook = Properties.Settings.Default.SendSimpleMessageToWebhook,
-            WebhookURL = Properties.Settings.Default.WebhookURL,
-            UploadToDPSReports = Properties.Settings.Default.UploadToDPSReports,
-            DPSReportUserToken = Properties.Settings.Default.DPSReportUserToken,
-            UploadToWingman = Properties.Settings.Default.UploadToWingman,
-            SaveOutCSV = Properties.Settings.Default.SaveOutCSV,
-            SaveOutHTML = Properties.Settings.Default.SaveOutHTML,
-            SaveOutJSON = Properties.Settings.Default.SaveOutJSON,
-            SaveOutTrace = Properties.Settings.Default.SaveOutTrace,
-            ParseMultipleLogs = Properties.Settings.Default.ParseMultipleLogs,
-            SingleThreaded = Properties.Settings.Default.SingleThreaded,
-            Anonymous = Properties.Settings.Default.Anonymous,
-            SkipFailedTries = Properties.Settings.Default.SkipFailedTries,
-            CustomTooShort = Properties.Settings.Default.CustomTooShort,
-            CustomTooBig = Properties.Settings.Default.CustomTooBig,
-            DetailledWvW = Properties.Settings.Default.DetailledWvW,
-            ComputePhases = Properties.Settings.Default.ParsePhases,
-            ComputeCombatReplay = Properties.Settings.Default.ParseCombatReplay,
-            ComputeDamageModifiers = Properties.Settings.Default.ComputeDamageModifiers,
-            ParseExtensions = Properties.Settings.Default.ParseExtensions,
-            ComputeBuff = Properties.Settings.Default.ComputeBuff,
-            ComputeCast = Properties.Settings.Default.ComputeCast,
-            ComputeDamage = Properties.Settings.Default.ComputeDamage,
-            ComputeMechanics = Properties.Settings.Default.ComputeMechanics,
-            SaveAtOut = Properties.Settings.Default.SaveAtOut,
-            OutLocation = Properties.Settings.Default.OutLocation,
-            AddDuration = Properties.Settings.Default.AddDuration,
-            AddPoVProf = Properties.Settings.Default.AddPoVProf,
-            LightTheme = Properties.Settings.Default.LightTheme,
-            HtmlExternalScripts = Properties.Settings.Default.HtmlExternalScripts,
-            HtmlExternalScriptsPath = Properties.Settings.Default.HtmlExternalScriptsPath,
-            HtmlExternalScriptsCdn = Properties.Settings.Default.HtmlExternalScriptsCdn,
-            HtmlCompressJson = Properties.Settings.Default.HtmlCompressJson,
-            RawTimelineArrays = Properties.Settings.Default.RawTimelineArrays,
-            CompressRaw = Properties.Settings.Default.CompressRaw,
-            IndentJSON = Properties.Settings.Default.IndentJSON,
-            MemoryLimit = Properties.Settings.Default.MemoryLimit,
-        };
+            settings.FromSettings(Properties.Settings.Default);
+        } 
+        else
+        {
+            settings = new ProgramSettings(Properties.Settings.Default);
+        }
         return settings;
     }
 }

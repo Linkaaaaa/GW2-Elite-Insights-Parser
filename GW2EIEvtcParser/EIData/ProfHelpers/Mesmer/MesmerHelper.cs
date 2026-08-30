@@ -57,17 +57,21 @@ internal static class MesmerHelper
             .UsingSrcSpecsChecker([Spec.Mirage, Spec.Mesmer])
             .UsingNoSecondaryEffectSameSrcCheckerOnSamePosition(EffectGUIDs.MesmerThePrestigeDisappear2AndShatterAroundClonesAndChrono)
             .UsingChecker((evt, combatData, agentData, skillData) => !combatData.HasGainedBuff(DistortionBuff, evt.Src, evt.Time))
-            .UsingChecker((evt, combatData, agentData, skillData) => !combatData.GetDamageData(MindWrack).Any(x => x.CreditedFrom.Is(evt.Src) && Math.Abs(x.Time - evt.Time) < 2000) && !combatData.GetDamageData(MindWrackAmmo).Any(x => x.CreditedFrom.Is(evt.Src) && Math.Abs(x.Time - evt.Time) < 2000)),
+            .UsingChecker((evt, combatData, agentData, skillData) => {
+                var hasNormal = combatData.GetDamageData(MindWrack).Any(x => x.CreditedFrom.Is(evt.Src) && Math.Abs(x.Time - evt.Time) < 2000);
+                var hasAmmo = combatData.GetDamageData(MindWrackAmmo).Any(x => x.CreditedFrom.Is(evt.Src) && Math.Abs(x.Time - evt.Time) < 2000);
+                return (!hasNormal && !hasAmmo) || (hasNormal && hasAmmo);
+            }),
         new EffectCastFinder(MindWrack, EffectGUIDs.MesmerDistortionOrMindWrack)
             .UsingSrcSpecsChecker([Spec.Mirage, Spec.Mesmer])
             .UsingNoSecondaryEffectSameSrcCheckerOnSamePosition(EffectGUIDs.MesmerThePrestigeDisappear2AndShatterAroundClonesAndChrono)
             .UsingChecker((evt, combatData, agentData, skillData) => !combatData.HasGainedBuff(DistortionBuff, evt.Src, evt.Time))
-            .UsingChecker((evt, combatData, agentData, skillData) => combatData.GetDamageData(MindWrack).Any(x => x.CreditedFrom.Is(evt.Src) && Math.Abs(x.Time - evt.Time) < 2000)),
+            .UsingChecker((evt, combatData, agentData, skillData) => combatData.GetDamageData(MindWrack).Any(x => x.CreditedFrom.Is(evt.Src) && Math.Abs(x.Time - evt.Time) < 2000) && !combatData.GetDamageData(MindWrackAmmo).Any(x => x.CreditedFrom.Is(evt.Src) && Math.Abs(x.Time - evt.Time) < 2000)),
         new EffectCastFinder(MindWrackAmmo, EffectGUIDs.MesmerDistortionOrMindWrack)
             .UsingSrcSpecsChecker([Spec.Mirage, Spec.Mesmer])
             .UsingNoSecondaryEffectSameSrcCheckerOnSamePosition(EffectGUIDs.MesmerThePrestigeDisappear2AndShatterAroundClonesAndChrono)
             .UsingChecker((evt, combatData, agentData, skillData) => !combatData.HasGainedBuff(DistortionBuff, evt.Src, evt.Time))
-            .UsingChecker((evt, combatData, agentData, skillData) => combatData.GetDamageData(MindWrackAmmo).Any(x => x.CreditedFrom.Is(evt.Src) && Math.Abs(x.Time - evt.Time) < 2000)),
+            .UsingChecker((evt, combatData, agentData, skillData) => combatData.GetDamageData(MindWrackAmmo).Any(x => x.CreditedFrom.Is(evt.Src) && Math.Abs(x.Time - evt.Time) < 2000) && !combatData.GetDamageData(MindWrack).Any(x => x.CreditedFrom.Is(evt.Src) && Math.Abs(x.Time - evt.Time) < 2000)),
         new EffectCastFinder(CryOfFrustration, EffectGUIDs.MesmerCryOfFrustration)
             .UsingSrcSpecsChecker([Spec.Mirage, Spec.Mesmer])
             .UsingNoSecondaryEffectSameSrcCheckerOnSamePosition(EffectGUIDs.MesmerThePrestigeDisappear2AndShatterAroundClonesAndChrono),

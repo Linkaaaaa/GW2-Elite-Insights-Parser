@@ -6,12 +6,12 @@ namespace GW2EIDiscord;
 
 public static class WebhookController
 {
-    private static bool IsWebhookURLValid(string webhookURL)
+    private static bool IsWebhookURLValid(string? webhookURL)
     {
         return webhookURL != null && webhookURL.Length > 0;
     }
 
-    public static void DeleteMessage(string webhookURL, ulong id, out string message)
+    public static void DeleteMessage(string? webhookURL, ulong id, out string message)
     {
         if (IsWebhookURLValid(webhookURL))
         {
@@ -38,7 +38,7 @@ public static class WebhookController
         message = "Webhook url invalid";
     }
 
-    public static ulong SendMessage(string webhookURL, Embed embed, out string message)
+    public static ulong SendMessage(string? webhookURL, Embed embed, out string message)
     {
         if (IsWebhookURLValid(webhookURL))
         {
@@ -67,7 +67,7 @@ public static class WebhookController
         return 0;
     }
 
-    public static ulong SendMessage(string webhookURL, string embed, out string message)
+    public static ulong SendMessage(string? webhookURL, string embed, out string message)
     {
         if (IsWebhookURLValid(webhookURL))
         {

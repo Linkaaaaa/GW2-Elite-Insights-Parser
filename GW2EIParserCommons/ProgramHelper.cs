@@ -26,11 +26,6 @@ public sealed class ProgramHelper : IDisposable
         ParserVersion = parserVersion;
         Settings = settings;
     }
-
-    public void ApplySettings(ProgramSettings settings)
-    {
-        Settings = settings;
-    }
     #region FORMATS
     public static IReadOnlyList<string> SupportedFormats => SupportedFileFormats.SupportedFormats;
 
@@ -84,9 +79,9 @@ public sealed class ProgramHelper : IDisposable
     }
     #endregion FORMATS
 
-    internal readonly static HTMLAssets htmlAssets = new();
+    internal static readonly HTMLAssets htmlAssets = new();
 
-    public ProgramSettings Settings { get; private set; }
+    public readonly ProgramSettings Settings;
     private readonly Version ParserVersion;
 
 #pragma warning disable CA1823 // Avoid unused private fields

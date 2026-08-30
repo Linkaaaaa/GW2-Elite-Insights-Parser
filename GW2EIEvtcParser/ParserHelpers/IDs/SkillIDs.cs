@@ -2093,7 +2093,7 @@ public static class SkillIDs
     public const long Eat = 34408;
     public const long ShardsOfRageAbomination = 34411;
     public const long Surrender = 34413;
-    public const long Corruption1 = 34416;
+    public const long CorruptionBuff = 34416;
     public const long FlakShotNarella = 34417;
     public const long BloodFueledPlayer = 34422;
     public const long AbominationTransformation = 34427;
@@ -2113,7 +2113,7 @@ public static class SkillIDs
     public const long ShieldHuman = 34468;
     public const long ThrowOilKeg = 34471;
     public const long DownpourBuff = 34472;
-    public const long Corruption2 = 34473;
+    public const long CorruptionDamage = 34473;
     public const long TantrumDamage = 34479;
     public const long BloodShardsHuman = 34480;
     public const long VolatilePoisonSkill = 34481;
@@ -2487,7 +2487,7 @@ public static class SkillIDs
     public const long NovaLaunchBuff = 38929;
     public const long VaultArtsariiv = 38977;
     public const long FixatedBloom4 = 38985;
-    public const long StarbustCascade1 = 38982;
+    public const long StarburstCascade1 = 38982;
     public const long HorizonStrikeArkk2 = 39001;
     public const long CosmicStreaks = 39021;
     public const long RedMarble1 = 39029;
@@ -2531,7 +2531,7 @@ public static class SkillIDs
     public const long HorizonStrikeSkorvald1 = 39507;
     public const long Warp = 39514;
     public const long MistChargedChop2 = 39521;
-    public const long StarbustCascade2 = 39523;
+    public const long StarburstCascade2 = 39523;
     public const long SkorvaldsIre = 39531;
     public const long CranialCascadeAnomaly = 39534;
     public const long FixatedBloom3 = 39558;
@@ -5183,7 +5183,7 @@ public static class SkillIDs
     public const long LoftedCryoflash = 76402;
     public const long InevitableDarknessPlayer = 76412;
     public const long FallingIceCM = 76417;
-    public const long TerrestialCryoflash = 76420;
+    public const long TerrestrialCryoflash = 76420;
     public const long POV_HeartOfTheTitan = 76448;
     public const long FreezingVortex = 76444;
     public const long DeathlyRime = 76446;

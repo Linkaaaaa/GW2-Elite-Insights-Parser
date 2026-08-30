@@ -399,18 +399,16 @@ public partial class SettingsForm : Form
 
     private void BtnLoadSettingsClicked(object sender, EventArgs e)
     {
-        using (var loadFile = new OpenFileDialog())
+        using var loadFile = new OpenFileDialog();
+        loadFile.Filter = "Conf file|*.conf";
+        loadFile.Title = "Load a Configuration file";
+        DialogResult result = loadFile.ShowDialog();
+        if (loadFile.FileName.Length > 0)
         {
-            loadFile.Filter = "Conf file|*.conf";
-            loadFile.Title = "Load a Configuration file";
-            DialogResult result = loadFile.ShowDialog();
-            if (loadFile.FileName.Length > 0)
-            {
-                CustomSettingsManager.ReadConfig(loadFile.FileName);
-                _programHelper.ApplySettings(CustomSettingsManager.GetProgramSettings());
-                SetValues();
-                SettingsLoadedEvent(this, null);
-            }
+            CustomSettingsManager.ReadConfig(loadFile.FileName);
+            CustomSettingsManager.GetProgramSettings(_programHelper.Settings);
+            SetValues();
+            SettingsLoadedEvent(this, null);
         }
     }
 

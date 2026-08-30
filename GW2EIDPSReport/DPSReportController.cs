@@ -13,7 +13,7 @@ public static class DPSReportController
 
     public delegate void TraceHandler(string trace);
 
-    private static bool IsUserTokenValid(string userToken)
+    private static bool IsUserTokenValid(string? userToken)
     {
         return userToken != null && userToken.Length > 0;
     }
@@ -74,7 +74,7 @@ public static class DPSReportController
     }
     //
 
-    private static string GetURL(string baseURL, string userToken)
+    private static string GetURL(string baseURL, string? userToken)
     {
         string url = baseURL;
         if (IsUserTokenValid(userToken))
@@ -84,7 +84,7 @@ public static class DPSReportController
         return url;
     }
 
-    private static List<string> GetUploadContentURLs(string userToken, bool anonymous = false, bool detailedWvW = false)
+    private static List<string> GetUploadContentURLs(string? userToken, bool anonymous = false, bool detailedWvW = false)
     {
         string url = UploadContentURL + "?json=1";
         if (anonymous)
@@ -180,7 +180,7 @@ public static class DPSReportController
         return Shuffle(urls);
     }
     ///////////////// APIs
-    public static DPSReportUploadObject? UploadUsingEI(FileInfo fi, TraceHandler traceHandler, string userToken, bool anonymous = false, bool detailedWvW = false)
+    public static DPSReportUploadObject? UploadUsingEI(FileInfo fi, TraceHandler traceHandler, string? userToken, bool anonymous = false, bool detailedWvW = false)
     {
         string fileName = fi.Name;
         byte[] fileContents = File.ReadAllBytes(fi.FullName);
