@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using GW2EIParserAvalonia.ViewModels;
 using GW2EIParserCommons;
@@ -9,43 +10,54 @@ public sealed class AvaloniaOperationController : OperationController
 {
     public string ButtonText { get; private set; } = "Parse";
     public string ReParseText { get; private set; } = "N/A";
-    public bool ReParseEnabled {  get; private set; } = false;
+    public bool ReParseEnabled { get; private set; } = false;
     public bool LogTracesEnabled { get; private set; } = false;
     public OperationState State { get; private set; } = OperationState.Ready;
     private CancellationTokenSource _cancellationTokenSource = new();
     public CancellationToken CancellationToken => _cancellationTokenSource.Token;
     public event EventHandler? ProgressUpdated;
 
+    private static readonly Dictionary<OperationState, (string ActionButton, string ReParseButton, bool ReParseEnabled, bool LogTraces)> _states = new()
+    {
+        [OperationState.Ready] = ("Parse", "N/A", false, false),
+        [OperationState.Queued] = ("Cancel", "N/A", false, false),
+        [OperationState.Pending] = ("Cancel", "N/A", false, false),
+        [OperationState.Parsing] = ("Cancel", "N/A", false, false),
+        [OperationState.Cancelling] = ("Cancelling", "N/A", false, false),
+        [OperationState.ClearOnCancel] = ("Cancelling", "N/A", false, false),
+        [OperationState.Complete] = ("Open", "Re-Parse", true, true),
+        [OperationState.UnComplete] = ("Parse", "N/A", false, false),
+    };
+
     public AvaloniaOperationController(string location) : base(location, "Ready to parse")
     {
 
     }
 
-    public void ToQueuedState()
+    private void SetState(OperationState operationState)
     {
-        State = OperationState.Queued;
-        ButtonText = "Cancel";
-        ReParseText = "N/A";
-        ReParseEnabled = false;
-        LogTracesEnabled = false;
-    }
+        State = operationState;
+        var dictState = _states[operationState];
 
-    public void ToPendingState()
-    {
-        State = OperationState.Pending;
-        ButtonText = "Cancel";
-        ReParseText = "N/A";
-        ReParseEnabled = false;
-        LogTracesEnabled = false;
+        ButtonText = dictState.ActionButton;
+        ReParseText = dictState.ReParseButton;
+        ReParseEnabled = dictState.ReParseEnabled;
+        LogTracesEnabled = dictState.LogTraces;
     }
 
     public void ToReadyState()
     {
-        State = OperationState.Ready;
-        ButtonText = "Parse";
-        ReParseText = "N/A";
-        ReParseEnabled = false;
-        LogTracesEnabled = false;
+        SetState(OperationState.Ready);
+    }
+
+    public void ToQueuedState()
+    {
+        SetState(OperationState.Queued);
+    }
+
+    public void ToPendingState()
+    {
+        SetState(OperationState.Pending);
     }
 
     public void ToRunState()
@@ -53,66 +65,37 @@ public sealed class AvaloniaOperationController : OperationController
         _cancellationTokenSource.Dispose();
         _cancellationTokenSource = new CancellationTokenSource();
 
-        State = OperationState.Parsing;
-        ButtonText = "Cancel";
-        ReParseText = "N/A";
-        ReParseEnabled = false;
-        LogTracesEnabled = false;
-
+        SetState(OperationState.Parsing);
         UpdateProgress("Parsing");
     }
 
     public void ToCancelState()
     {
-        State = OperationState.Cancelling;
-        ButtonText = "Cancelling";
-        ReParseText = "N/A";
-        ReParseEnabled = false;
-        LogTracesEnabled = false;
-
+        SetState(OperationState.Cancelling);
         _cancellationTokenSource.Cancel();
     }
 
     public void ToCancelAndClearState()
     {
-        State = OperationState.ClearOnCancel;
-        ButtonText = "Cancelling";
-        ReParseText = "N/A";
-        ReParseEnabled = false;
-        LogTracesEnabled = false;
-
+        SetState(OperationState.ClearOnCancel);
         _cancellationTokenSource.Cancel();
     }
 
     public void ToCompleteState()
     {
-        State = OperationState.Complete;
-        ButtonText = "Open";
-        ReParseText = "Re-Parse";
-        ReParseEnabled = true;
-        LogTracesEnabled = true;
-
+        SetState(OperationState.Complete);
         FinalizeStatus(true);
     }
 
     public void ToUnCompleteState()
     {
-        State = OperationState.UnComplete;
-        ButtonText = "Parse";
-        ReParseText = "N/A";
-        ReParseEnabled = false;
-        LogTracesEnabled = false;
-
+        SetState(OperationState.UnComplete);
         FinalizeStatus(false);
     }
 
     public void ToCancelledState()
     {
-        State = OperationState.UnComplete;
-        ButtonText = "Parse";
-        ReParseText = "N/A";
-        ReParseEnabled = false;
-        LogTracesEnabled = false;
+        SetState(OperationState.UnComplete);
     }
 
     public override void Reset()
@@ -135,11 +118,6 @@ public sealed class AvaloniaOperationController : OperationController
         {
             _cancellationTokenSource.Token.ThrowIfCancellationRequested();
         }
-    }
-
-    public void ToRemovalFromQueueState()
-    {
-        ToCancelState();
     }
 
     public override void UpdateProgress(string status)

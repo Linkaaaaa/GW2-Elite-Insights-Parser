@@ -59,13 +59,17 @@
                 Content="Add Files"
                 Click="AddFilesButton_Click"
                 MinWidth="110"
-                Padding="16,9" />
+                Padding="16,9"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center" />
 
             <Button
                 Content="Populate from directory"
                 Click="PopulateButton_Click"
                 MinWidth="165"
-                Padding="16,9" />
+                Padding="16,9"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center" />
 
             <TextBlock
                 Text="Time:"
@@ -120,7 +124,9 @@
                                     Margin="3"
                                     HorizontalAlignment="Stretch"
                                     IsEnabled="{Binding RemoveEnabled}"
-                                    ToolTip.Tip="Remove file from the list"/>
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    ToolTip.Tip="Remove file from the list" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
 
@@ -149,7 +155,9 @@
                                     Content="{Binding ButtonText}"
                                     Command="{Binding ActionCommand}"
                                     Margin="3"
-                                    HorizontalAlignment="Stretch" />
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
 
@@ -168,7 +176,9 @@
                                     Command="{Binding ReParseCommand}"
                                     Margin="3"
                                     HorizontalAlignment="Stretch"
-                                    IsEnabled="{Binding ReParseEnabled}" />
+                                    IsEnabled="{Binding ReParseEnabled}"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
 
@@ -188,7 +198,9 @@
                                     Command="{Binding OpenTracesCommand}"
                                     Margin="3"
                                     HorizontalAlignment="Stretch"
-                                    IsEnabled="{Binding LogTracesEnabled}" />
+                                    IsEnabled="{Binding LogTracesEnabled}"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
 
@@ -215,14 +227,18 @@
                     Click="SettingsButton_Click"
                     MinWidth="110"
                     Padding="16,9"
-                    IsEnabled="{Binding SettingsEnabled}" />
+                    IsEnabled="{Binding SettingsEnabled}"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center" />
 
                 <Button
                     Content="Check EI Updates"
                     Click="CheckUpdatesButton_Click"
                     MinWidth="130"
                     Padding="16,9"
-                    IsEnabled="{Binding CheckUpdatesEnabled}" />
+                    IsEnabled="{Binding CheckUpdatesEnabled}"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center" />
 
                 <Button
                     Content="Send all to Discord"
@@ -230,6 +246,8 @@
                     MinWidth="145"
                     Padding="16,9"
                     IsEnabled="{Binding DiscordBatchEnabled}"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
                     ToolTip.Tip="Send currently parsed logs with dps.report links to the Discord webhook in a batch" />
 
             </StackPanel>
@@ -245,28 +263,36 @@
                     Click="ParseAllButton_Click"
                     MinWidth="110"
                     Padding="16,9"
-                    IsEnabled="{Binding ParseEnabled}" />
+                    IsEnabled="{Binding ParseEnabled}"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center" />
 
                 <Button
                     Content="Cancel All"
                     Click="CancelAllButton_Click"
                     MinWidth="110"
                     Padding="16,9"
-                    IsEnabled="{Binding CancelAllEnabled}" />
+                    IsEnabled="{Binding CancelAllEnabled}"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center" />
 
                 <Button
-                    Content="Clear Failed"
-                    Click="ClearFailedButton_Click"
+                    Content="Clear Uncompleted"
+                    Click="ClearUncompletedButton_Click"
                     MinWidth="110"
                     Padding="16,9"
-                    IsEnabled="{Binding ClearFailedEnabled}" />
+                    IsEnabled="{Binding ClearUncompletedEnabled}"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center" />
 
                 <Button
                     Content="Clear All"
                     Click="ClearAllButton_Click"
                     MinWidth="110"
                     Padding="16,9"
-                    IsEnabled="{Binding ClearAllEnabled}" />
+                    IsEnabled="{Binding ClearAllEnabled}"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center" />
 
             </StackPanel>
 

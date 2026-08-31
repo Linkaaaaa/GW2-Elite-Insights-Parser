@@ -15,15 +15,15 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<LogFileViewModel> logFiles = [];
     [ObservableProperty]
-    private string queueStatus = "Waiting";
+    private string queueStatus;
     [ObservableProperty]
-    private bool parseEnabled;
+    private bool parseEnabled = false;
     [ObservableProperty]
-    private bool cancelAllEnabled;
+    private bool cancelAllEnabled = false;
     [ObservableProperty]
-    private bool clearAllEnabled;
+    private bool clearAllEnabled = false;
     [ObservableProperty]
-    private bool clearFailedEnabled;
+    private bool clearUncompletedEnabled = false;
     [ObservableProperty]
     private bool discordBatchEnabled = true;
     [ObservableProperty]
@@ -66,13 +66,10 @@ public partial class MainWindowViewModel : ObservableObject
         PopulateHourLimit = SettingsViewModel.PopulateHourLimit;
         LogTracesVisible = SettingsViewModel.SaveOutTrace;
 
-        ClearAllEnabled = false;
-        ParseEnabled = false;
-        CancelAllEnabled = false;
-
-        Version = "v" + typeof(MainWindowViewModel).Assembly.GetName().Version?.ToString() ?? "v" + string.Empty;
+        Version = $"v{typeof(MainWindowViewModel).Assembly.GetName().Version?.ToString() ?? string.Empty}";
 
         UpdateWatchDirectory();
+        UpdateButtonStates();
     }
 
     private void SettingsViewModel_SettingsApplied(object? sender, EventArgs e)
@@ -96,7 +93,7 @@ public partial class MainWindowViewModel : ObservableObject
         var logFileViewModel = new LogFileViewModel(path);
 
         logFileViewModel.ParseRequested += LogFile_ParseRequested;
-        logFileViewModel.ReParseRequested += LogFile_ReParseRequested;
+        logFileViewModel.ReParseRequested += LogFile_ParseRequested;
         logFileViewModel.PendingCancellationRequested += LogFile_PendingCancellationRequested;
         logFileViewModel.RemoveRequested += LogFile_RemoveRequested;
 
@@ -106,32 +103,21 @@ public partial class MainWindowViewModel : ObservableObject
 
         ParseEnabled = !AnyRunning;
         ClearAllEnabled = true;
-        ClearFailedEnabled = true;
+        ClearUncompletedEnabled = LogFiles.Any(x => x.State == OperationState.UnComplete);
 
         if (SettingsViewModel.AutoParse)
         {
             QueueOrRunOperation(logFileViewModel);
         }
+        UpdateButtonStates();
     }
 
-    private async void LogFile_ParseRequested(object? sender, EventArgs e)
+    private void LogFile_ParseRequested(object? sender, EventArgs e)
     {
         if (sender is LogFileViewModel logFile)
         {
             QueueOrRunOperation(logFile);
         }
-
-        await Task.CompletedTask;
-    }
-
-    private async void LogFile_ReParseRequested(object? sender, EventArgs e)
-    {
-        if (sender is LogFileViewModel logFile)
-        {
-            QueueOrRunOperation(logFile);
-        }
-
-        await Task.CompletedTask;
     }
 
     public void ParseAll()
@@ -143,8 +129,7 @@ public partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        ParseEnabled = false;
-        CancelAllEnabled = true;
+        UpdateButtonStates();
 
         foreach (var logFile in LogFiles)
         {
@@ -175,12 +160,7 @@ public partial class MainWindowViewModel : ObservableObject
             }
         }
 
-        ClearAllEnabled = true;
-        ParseEnabled = true;
-        CancelAllEnabled = false;
-        DiscordBatchEnabled = true;
-        AutoDiscordBatchEnabled = true;
-        CheckUpdatesEnabled = true;
+        UpdateButtonStates();
     }
 
     public void ClearAll()
@@ -203,13 +183,10 @@ public partial class MainWindowViewModel : ObservableObject
             }
         }
 
-        ParseEnabled = false;
-        CancelAllEnabled = false;
-        ClearAllEnabled = false;
-        ClearFailedEnabled = LogFiles.Any(x => x.State == OperationState.UnComplete);
+        UpdateButtonStates();
     }
 
-    public void ClearFailed()
+    public void ClearUncompleted()
     {
         for (var i = LogFiles.Count - 1; i >= 0; i--)
         {
@@ -221,7 +198,7 @@ public partial class MainWindowViewModel : ObservableObject
             }
         }
 
-        ClearFailedEnabled = false;
+        UpdateButtonStates();
     }
 
     public void AddFilesFromDirectory(string path)
@@ -257,22 +234,22 @@ public partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        AddDelayed(path);
+        _ = AddDelayed(path);
     }
 
     public void HandleRenamedFile(string oldPath, string newPath)
     {
         if (ProgramHelper.IsTemporaryCompressedFormat(oldPath) && ProgramHelper.IsCompressedFormat(newPath))
         {
-            AddDelayed(newPath);
+            _ = AddDelayed(newPath);
         }
         else if (ProgramHelper.IsTemporaryFormat(oldPath) && ProgramHelper.IsSupportedFormat(newPath))
         {
-            AddDelayed(newPath);
+            _ = AddDelayed(newPath);
         }
     }
 
-    private async void AddDelayed(string path)
+    private async Task AddDelayed(string path)
     {
         await Task.Delay(3000);
 
@@ -284,27 +261,17 @@ public partial class MainWindowViewModel : ObservableObject
 
     private void QueueOrRunOperation(LogFileViewModel logFile)
     {
-        ClearAllEnabled = true;
-        ParseEnabled = false;
-        CancelAllEnabled = true;
-        DiscordBatchEnabled = false;
-        AutoDiscordBatchEnabled = false;
-        CheckUpdatesEnabled = false;
+        UpdateButtonStates();
 
-        if (_parserService.ParseMultipleLogs() && _runningCount < _parserService.GetMaxParallelRunning())
+        if (!AnyRunning || (_parserService.ParseMultipleLogs() && _runningCount < _parserService.GetMaxParallelRunning()))
         {
             _ = RunOperationAsync(logFile);
-        }
-        else if (AnyRunning)
-        {
-            _logQueue.Enqueue(logFile);
-
-            logFile.Operation.ToPendingState();
-            UpdateLogState(logFile);
         }
         else
         {
-            _ = RunOperationAsync(logFile);
+            _logQueue.Enqueue(logFile);
+            logFile.Operation.ToPendingState();
+            UpdateLogState(logFile);
         }
     }
 
@@ -367,15 +334,7 @@ public partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        if (!AnyRunning)
-        {
-            ParseEnabled = true;
-            ClearAllEnabled = true;
-            CancelAllEnabled = false;
-            DiscordBatchEnabled = true;
-            AutoDiscordBatchEnabled = true;
-            ClearFailedEnabled = LogFiles.Any(x => x.State == OperationState.UnComplete);
-        }
+        UpdateButtonStates();
     }
 
     private void LogFile_PendingCancellationRequested(object? sender, EventArgs e)
@@ -385,18 +344,16 @@ public partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        var operations = new HashSet<LogFileViewModel>(_logQueue);
+        var remainingOperations = _logQueue.Where(x => !ReferenceEquals(x, logFile)).ToList();
         _logQueue.Clear();
-        operations.Remove(logFile);
-        UpdateQueueStatus();
 
-        foreach (var operation in operations)
+        foreach (var operation in remainingOperations)
         {
             _logQueue.Enqueue(operation);
         }
 
         logFile.Operation.ToReadyState();
-        logFile.UpdateFromOperation();
+        UpdateLogState(logFile);
     }
 
     private void LogFile_RemoveRequested(object? sender, EventArgs e)
@@ -410,7 +367,7 @@ public partial class MainWindowViewModel : ObservableObject
         UpdateQueueStatus();
         SettingsViewModel.AddApplicationTraceMessage("UI: Removed " + logFile.InputFilePath);
         ClearAllEnabled = LogFiles.Count > 0;
-        ClearFailedEnabled = LogFiles.Any(x => x.State == OperationState.UnComplete);
+        ClearUncompletedEnabled = LogFiles.Any(x => x.State == OperationState.UnComplete);
         ParseEnabled = !AnyRunning && LogFiles.Count > 0;
     }
 
@@ -467,5 +424,22 @@ public partial class MainWindowViewModel : ObservableObject
         }
 
         QueueStatus = status.Count > 0 ? string.Join(", ", status) : "Waiting";
+    }
+
+    private void UpdateButtonStates()
+    {
+        bool hasLogs = LogFiles.Count > 0;
+        bool hasUncompleted = LogFiles.Any(x => x.State == OperationState.UnComplete);
+        bool running = AnyRunning;
+        bool queued = _logQueue.Count > 0;
+
+        ParseEnabled = hasLogs && !running;
+        CancelAllEnabled = running || queued;
+        ClearAllEnabled = hasLogs;
+        ClearUncompletedEnabled = hasUncompleted;
+
+        DiscordBatchEnabled = !running;
+        AutoDiscordBatchEnabled = !running;
+        CheckUpdatesEnabled = !running;
     }
 }

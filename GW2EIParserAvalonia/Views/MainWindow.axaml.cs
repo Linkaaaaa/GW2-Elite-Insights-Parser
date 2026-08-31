@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using GW2EIParserAvalonia.Services;
 using GW2EIParserAvalonia.ViewModels;
 using GW2EIParserCommons.Properties;
@@ -16,6 +17,8 @@ namespace GW2EIParserAvalonia.Views;
 
 public partial class MainWindow : Window
 {
+    private FileSystemWatcher? _logFileWatcher;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -95,45 +98,53 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ClearFailedButton_Click(object? sender, RoutedEventArgs e)
+    private void ClearUncompletedButton_Click(object? sender, RoutedEventArgs e)
     {
         if (DataContext is MainWindowViewModel viewModel)
         {
-            viewModel.ClearFailed();
+            viewModel.ClearUncompleted();
         }
     }
 
     private void UpdateFileWatcher()
     {
+        _logFileWatcher?.Dispose();
+
         if (!Settings.Default.AutoAdd || !Directory.Exists(Settings.Default.AutoAddPath))
         {
             return;
         }
 
-        FileSystemWatcher logFileWatcher = new(Settings.Default.AutoAddPath)
+        _logFileWatcher = new FileSystemWatcher(Settings.Default.AutoAddPath)
         {
             IncludeSubdirectories = true,
             EnableRaisingEvents = true
         };
 
-        logFileWatcher.Created += LogFileWatcher_Created;
-        logFileWatcher.Renamed += LogFileWatcher_Renamed;
+        _logFileWatcher.Created += LogFileWatcher_Created;
+        _logFileWatcher.Renamed += LogFileWatcher_Renamed;
     }
 
     private void LogFileWatcher_Created(object sender, FileSystemEventArgs e)
     {
-        if (DataContext is MainWindowViewModel viewModel)
+        Dispatcher.UIThread.Post(() =>
         {
-            viewModel.HandleCreatedFile(e.FullPath);
-        }
+            if (DataContext is MainWindowViewModel viewModel)
+            {
+                viewModel.HandleCreatedFile(e.FullPath);
+            }
+        });
     }
 
     private void LogFileWatcher_Renamed(object sender, RenamedEventArgs e)
     {
-        if (DataContext is MainWindowViewModel viewModel)
+        Dispatcher.UIThread.Post(() =>
         {
-            viewModel.HandleRenamedFile(e.OldFullPath, e.FullPath);
-        }
+            if (DataContext is MainWindowViewModel viewModel)
+            {
+                viewModel.HandleRenamedFile(e.OldFullPath, e.FullPath);
+            }
+        });
     }
 
     private void MainWindow_DragOver(object? sender, DragEventArgs e)

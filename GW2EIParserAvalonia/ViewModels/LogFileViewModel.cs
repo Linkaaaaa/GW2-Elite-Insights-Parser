@@ -73,7 +73,7 @@ public partial class LogFileViewModel : ObservableObject
                 PendingCancellationRequested?.Invoke(this, EventArgs.Empty);
                 break;
             case OperationState.Queued:
-                Operation.ToRemovalFromQueueState();
+                Operation.ToCancelState();
                 UpdateFromOperation();
                 break;
             case OperationState.Complete:

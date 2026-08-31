@@ -188,12 +188,12 @@
 
                         <CheckBox
                             Content="Save log traces"
-                            IsChecked="{Binding SaveOutTrace}" 
+                            IsChecked="{Binding SaveOutTrace}"
                             ToolTip.Tip="Creates a .log file for debug information on the parsed log" />
 
                         <CheckBox
                             Content="Save application traces"
-                            IsChecked="{Binding ApplicationTraces, Mode=TwoWay}" 
+                            IsChecked="{Binding ApplicationTraces, Mode=TwoWay}"
                             ToolTip.Tip="Creates a .txt file for application usage information" />
 
                         <Separator/>
@@ -216,15 +216,21 @@
                             Content="Output as HTML"
                             IsChecked="{Binding SaveOutHTML}" />
 
-                        <RadioButton
-                            Content="Light theme"
-                            GroupName="Theme"
-                            IsChecked="{Binding LightTheme}" />
+                        <StackPanel
+                            Orientation="Horizontal"
+                            Spacing="20">
 
-                        <RadioButton
-                            Content="Dark theme"
-                            GroupName="Theme"
-                            IsChecked="{Binding DarkTheme}" />
+                            <RadioButton
+                                Content="Light theme"
+                                GroupName="Theme"
+                                IsChecked="{Binding LightTheme}" />
+
+                            <RadioButton
+                                Content="Dark theme"
+                                GroupName="Theme"
+                                IsChecked="{Binding DarkTheme}" />
+
+                        </StackPanel>
 
                         <CheckBox
                             Content="External scripts"
@@ -393,7 +399,9 @@
                         <Button
                             Content="Reset Spec List"
                             MinWidth="100"
-                            Click="ResetSpecButton_Click" />
+                            Click="ResetSpecButton_Click"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center" />
 
                         <TextBlock
                             Text="Resets the local trait list and loads all traits from the GW2 API"
@@ -402,7 +410,9 @@
                         <Button
                             Content="Reset Trait List"
                             MinWidth="100"
-                            Click="ResetTraitButton_Click" />
+                            Click="ResetTraitButton_Click"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center" />
 
                         <TextBlock
                             Text="Resets the local skill list and loads all skills from the GW2 API"
@@ -411,7 +421,9 @@
                         <Button
                             Content="Reset Skill List"
                             MinWidth="100"
-                            Click="ResetSkillButton_Click" />
+                            Click="ResetSkillButton_Click"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center" />
 
                         <TextBlock
                             Text="Resets the local map list and loads all maps from the GW2 API"
@@ -420,7 +432,9 @@
                         <Button
                             Content="Reset Map List"
                             MinWidth="100"
-                            Click="ResetMapButton_Click" />
+                            Click="ResetMapButton_Click"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center" />
 
                     </StackPanel>
                 </ScrollViewer>
