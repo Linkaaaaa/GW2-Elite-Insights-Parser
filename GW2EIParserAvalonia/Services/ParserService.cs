@@ -18,11 +18,6 @@ public sealed class ParserService
         _programHelper = new ProgramHelper(version, Settings);
     }
 
-    public void ApplySettings()
-    {
-        _programHelper.ApplySettings(Settings);
-    }
-
     public Task ParseAsync(AvaloniaOperationController operation)
     {
         return Task.Run(() => _programHelper.DoWork(operation), operation.CancellationToken);

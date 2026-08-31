@@ -305,13 +305,9 @@ public partial class SettingsViewModel : ObservableObject
     public void ApplyLoadedSettings(string path)
     {
         CustomSettingsManager.ReadConfig(path);
-
         var loadedSettings = CustomSettingsManager.GetProgramSettings();
-
-        _settings.CopyFrom(loadedSettings);
-
+        _settings.LoadFromProgramSettings(loadedSettings);
         LoadFromSettings();
-
         SettingsApplied?.Invoke(this, EventArgs.Empty);
     }
 }

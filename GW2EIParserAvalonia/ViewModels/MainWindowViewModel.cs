@@ -78,7 +78,6 @@ public partial class MainWindowViewModel : ObservableObject
     private void SettingsViewModel_SettingsApplied(object? sender, EventArgs e)
     {
         _settingsService.Save(Settings);
-        _parserService.ApplySettings();
 
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
         PopulateHourLimit = SettingsViewModel.PopulateHourLimit;
@@ -102,9 +101,9 @@ public partial class MainWindowViewModel : ObservableObject
         logFileViewModel.RemoveRequested += LogFile_RemoveRequested;
 
         LogFiles.Add(logFileViewModel);
+        UpdateQueueStatus();
         SettingsViewModel.AddApplicationTraceMessage("UI: Added " + logFileViewModel.InputFilePath);
 
-        QueueStatus = $"{LogFiles.Count} log(s) queued";
         ParseEnabled = !AnyRunning;
         ClearAllEnabled = true;
         ClearFailedEnabled = true;
@@ -167,12 +166,12 @@ public partial class MainWindowViewModel : ObservableObject
             if (logFile.IsBusy())
             {
                 logFile.Operation.ToCancelState();
-                logFile.UpdateFromOperation();
+                UpdateLogState(logFile);
             }
             else if (queued.Contains(logFile))
             {
                 logFile.Operation.ToReadyState();
-                logFile.UpdateFromOperation();
+                UpdateLogState(logFile);
             }
         }
 
@@ -195,11 +194,12 @@ public partial class MainWindowViewModel : ObservableObject
             if (logFile.IsBusy())
             {
                 logFile.Operation.ToCancelAndClearState();
-                logFile.UpdateFromOperation();
+                UpdateLogState(logFile);
             }
             else
             {
                 LogFiles.RemoveAt(i);
+                UpdateQueueStatus();
             }
         }
 
@@ -300,7 +300,7 @@ public partial class MainWindowViewModel : ObservableObject
             _logQueue.Enqueue(logFile);
 
             logFile.Operation.ToPendingState();
-            logFile.UpdateFromOperation();
+            UpdateLogState(logFile);
         }
         else
         {
@@ -314,11 +314,11 @@ public partial class MainWindowViewModel : ObservableObject
         _runningCount++;
 
         logFile.Operation.ToQueuedState();
-        logFile.UpdateFromOperation();
+        UpdateLogState(logFile);
         SettingsViewModel.AddApplicationTraceMessage("Operation: Queued " + logFile.InputFilePath);
 
         logFile.Operation.ToRunState();
-        logFile.UpdateFromOperation();
+        UpdateLogState(logFile);
         SettingsViewModel.AddApplicationTraceMessage("Operation: Parsing " + logFile.InputFilePath);
 
         try
@@ -346,10 +346,11 @@ public partial class MainWindowViewModel : ObservableObject
             if (logFile.State == OperationState.ClearOnCancel)
             {
                 LogFiles.Remove(logFile);
+                UpdateQueueStatus();
             }
             else
             {
-                logFile.UpdateFromOperation();
+                UpdateLogState(logFile);
             }
 
             _parserService.GenerateTraceFile(logFile.Operation);
@@ -387,6 +388,7 @@ public partial class MainWindowViewModel : ObservableObject
         var operations = new HashSet<LogFileViewModel>(_logQueue);
         _logQueue.Clear();
         operations.Remove(logFile);
+        UpdateQueueStatus();
 
         foreach (var operation in operations)
         {
@@ -405,6 +407,7 @@ public partial class MainWindowViewModel : ObservableObject
         }
 
         LogFiles.Remove(logFile);
+        UpdateQueueStatus();
         SettingsViewModel.AddApplicationTraceMessage("UI: Removed " + logFile.InputFilePath);
         ClearAllEnabled = LogFiles.Count > 0;
         ClearFailedEnabled = LogFiles.Any(x => x.State == OperationState.UnComplete);
@@ -434,5 +437,35 @@ public partial class MainWindowViewModel : ObservableObject
     public void VersionLabelUpdate(bool isAvailable)
     {
         Version = isAvailable ? Version + " (Update Available)" : Version;
+    }
+
+    private void UpdateLogState(LogFileViewModel logFile)
+    {
+        logFile.UpdateFromOperation();
+        UpdateQueueStatus();
+    }
+
+    private void UpdateQueueStatus()
+    {
+        var status = new List<string>();
+
+        var queued = LogFiles.Count(x => x.State is OperationState.Pending or OperationState.Queued);
+        var parsing = LogFiles.Count(x => x.State == OperationState.Parsing);
+        var completed = LogFiles.Count(x => x.State == OperationState.Complete);
+
+        if (queued > 0)
+        {
+            status.Add($"{queued} log(s) queued");
+        }
+        if (parsing > 0)
+        {
+            status.Add($"{parsing} log(s) parsing");
+        }
+        if (completed > 0)
+        {
+            status.Add($"{completed} log(s) completed");
+        }
+
+        QueueStatus = status.Count > 0 ? string.Join(", ", status) : "Waiting";
     }
 }

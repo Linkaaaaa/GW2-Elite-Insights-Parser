@@ -63,7 +63,6 @@ public class ProgramSettings
 
     public void FromSettings(Settings settings)
     {
-
         SendEmbedToWebhook = settings.SendEmbedToWebhook;
         SendSimpleMessageToWebhook = settings.SendSimpleMessageToWebhook;
         WebhookURL = settings.WebhookURL;
@@ -88,6 +87,48 @@ public class ProgramSettings
         ComputeBuff = settings.ComputeBuff;
         ComputeCast = settings.ComputeCast;
         ComputeDamage = settings.ComputeDamage;
+        ComputeMechanics = settings.ComputeMechanics;
+        SaveAtOut = settings.SaveAtOut;
+        OutLocation = settings.OutLocation;
+        AddDuration = settings.AddDuration;
+        AddPoVProf = settings.AddPoVProf;
+        LightTheme = settings.LightTheme;
+        HtmlExternalScripts = settings.HtmlExternalScripts;
+        HtmlExternalScriptsPath = settings.HtmlExternalScriptsPath;
+        HtmlExternalScriptsCdn = settings.HtmlExternalScriptsCdn;
+        HtmlCompressJson = settings.HtmlCompressJson;
+        RawTimelineArrays = settings.RawTimelineArrays;
+        CompressRaw = settings.CompressRaw;
+        IndentJSON = settings.IndentJSON;
+        MemoryLimit = settings.MemoryLimit;
+    }
+
+    public void LoadFromProgramSettings(ProgramSettings settings)
+    {
+        SendEmbedToWebhook = settings.SendEmbedToWebhook;
+        SendSimpleMessageToWebhook = settings.SendSimpleMessageToWebhook;
+        WebhookURL = settings.WebhookURL;
+        UploadToDPSReports = settings.UploadToDPSReports;
+        DPSReportUserToken = settings.DPSReportUserToken;
+        UploadToWingman = settings.UploadToWingman;
+        SaveOutCSV = settings.SaveOutCSV;
+        SaveOutHTML = settings.SaveOutHTML;
+        SaveOutJSON = settings.SaveOutJSON;
+        SaveOutTrace = settings.SaveOutTrace;
+        ParseMultipleLogs = settings.ParseMultipleLogs;
+        SingleThreaded = settings.SingleThreaded;
+        Anonymous = settings.Anonymous;
+        SkipFailedTries = settings.SkipFailedTries;
+        CustomTooShort = settings.CustomTooShort;
+        CustomTooBig = settings.CustomTooBig;
+        DetailledWvW = settings.DetailledWvW;
+        ComputePhases = settings.ComputePhases;
+        ComputeCombatReplay = settings.ComputeCombatReplay;
+        ComputeDamageModifiers = settings.ComputeDamageModifiers;
+        ParseExtensions = settings.ParseExtensions;
+        ComputeDamage = settings.ComputeDamage;
+        ComputeBuff = settings.ComputeBuff;
+        ComputeCast = settings.ComputeCast;
         ComputeMechanics = settings.ComputeMechanics;
         SaveAtOut = settings.SaveAtOut;
         OutLocation = settings.OutLocation;
@@ -138,53 +179,5 @@ public class ProgramSettings
             return true;
         }
         return false;
-    }
-
-    public void CopyFrom(ProgramSettings other)
-    {
-        ComputePhases = other.ComputePhases;
-        ComputeDamage = other.ComputeDamage;
-        ComputeBuff = other.ComputeBuff;
-        ComputeCast = other.ComputeCast;
-        ComputeDamageModifiers = other.ComputeDamageModifiers;
-        ComputeCombatReplay = other.ComputeCombatReplay;
-        ComputeMechanics = other.ComputeMechanics;
-        ParseExtensions = other.ParseExtensions;
-        DetailledWvW = other.DetailledWvW;
-
-        SingleThreaded = other.SingleThreaded;
-        ParseMultipleLogs = other.ParseMultipleLogs;
-        SkipFailedTries = other.SkipFailedTries;
-        CustomTooShort = other.CustomTooShort;
-        CustomTooBig = other.CustomTooBig;
-        MemoryLimit = other.MemoryLimit;
-
-        Anonymous = other.Anonymous;
-        SaveAtOut = other.SaveAtOut;
-        OutLocation = other.OutLocation;
-        AddDuration = other.AddDuration;
-        AddPoVProf = other.AddPoVProf;
-        SaveOutTrace = other.SaveOutTrace;
-
-        SaveOutHTML = other.SaveOutHTML;
-        LightTheme = other.LightTheme;
-        HtmlExternalScripts = other.HtmlExternalScripts;
-        HtmlExternalScriptsPath = other.HtmlExternalScriptsPath;
-        HtmlExternalScriptsCdn = other.HtmlExternalScriptsCdn;
-        HtmlCompressJson = other.HtmlCompressJson;
-
-        SaveOutCSV = other.SaveOutCSV;
-
-        SaveOutJSON = other.SaveOutJSON;
-        IndentJSON = other.IndentJSON;
-        RawTimelineArrays = other.RawTimelineArrays;
-        CompressRaw = other.CompressRaw;
-
-        UploadToDPSReports = other.UploadToDPSReports;
-        DPSReportUserToken = other.DPSReportUserToken;
-        UploadToWingman = other.UploadToWingman;
-        SendEmbedToWebhook = other.SendEmbedToWebhook;
-        WebhookURL = other.WebhookURL;
-        SendSimpleMessageToWebhook = other.SendSimpleMessageToWebhook;
     }
 }
