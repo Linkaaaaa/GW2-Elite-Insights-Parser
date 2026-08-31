@@ -288,17 +288,13 @@ public partial class SettingsViewModel : ObservableObject
         }
         if (!File.Exists(_applicationTraceFileName))
         {
-            using (StreamWriter sw = File.CreateText(_applicationTraceFileName))
-            {
-                sw.WriteLine(message);
-            }
+            using StreamWriter sw = File.CreateText(_applicationTraceFileName);
+            sw.WriteLine(message);
         }
         else
         {
-            using (StreamWriter sw = File.AppendText(_applicationTraceFileName))
-            {
-                sw.WriteLine(message);
-            }
+            using StreamWriter sw = File.AppendText(_applicationTraceFileName);
+            sw.WriteLine(message);
         }
     }
 

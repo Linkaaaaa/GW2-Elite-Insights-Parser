@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using GW2EIEvtcParser;
 using GW2EIParserAvalonia.Services;
 using GW2EIParserCommons;
+using GW2EIParserCommons.Exceptions;
 
 namespace GW2EIParserAvalonia.ViewModels;
 
@@ -15,7 +17,7 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<LogFileViewModel> logFiles = [];
     [ObservableProperty]
-    private string queueStatus;
+    private string queueStatus = string.Empty;
     [ObservableProperty]
     private bool parseEnabled = false;
     [ObservableProperty]
@@ -219,6 +221,7 @@ public partial class MainWindowViewModel : ObservableObject
             WatchingDirectoryVisible = true;
 
             AddFilesFromDirectory(SettingsViewModel.AutoAddPath);
+            SettingsViewModel.AddApplicationTraceMessage("Settings: Updated watch directory to " + SettingsViewModel.AutoAddPath);
         }
         else
         {
@@ -241,10 +244,12 @@ public partial class MainWindowViewModel : ObservableObject
     {
         if (ProgramHelper.IsTemporaryCompressedFormat(oldPath) && ProgramHelper.IsCompressedFormat(newPath))
         {
+            SettingsViewModel.AddApplicationTraceMessage("File Watcher: renamed " + oldPath + " to " + newPath);
             _ = AddDelayed(newPath);
         }
         else if (ProgramHelper.IsTemporaryFormat(oldPath) && ProgramHelper.IsSupportedFormat(newPath))
         {
+            SettingsViewModel.AddApplicationTraceMessage("File Watcher: adding " + newPath);
             _ = AddDelayed(newPath);
         }
     }
@@ -255,6 +260,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         if (File.Exists(path))
         {
+            SettingsViewModel.AddApplicationTraceMessage("File Watcher: adding " + path);
             AddFile(path);
         }
     }
@@ -300,11 +306,19 @@ public partial class MainWindowViewModel : ObservableObject
         }
         catch (OperationCanceledException)
         {
-            logFile.Operation.ToCancelledState();
+            logFile.Operation.UpdateProgress("Program: Operation Aborted");
+            if (logFile.State != OperationState.ClearOnCancel)
+            {
+                logFile.Operation.ToUnCompleteState();
+            }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            logFile.Operation.ToUnCompleteState();
+            HandleOperationException(logFile.Operation, ex);
+            if (logFile.State != OperationState.ClearOnCancel)
+            {
+                logFile.Operation.ToUnCompleteState();
+            }
         }
         finally
         {
@@ -321,6 +335,12 @@ public partial class MainWindowViewModel : ObservableObject
             }
 
             _parserService.GenerateTraceFile(logFile.Operation);
+
+            if (logFile.State != OperationState.Complete)
+            {
+                logFile.Operation.Reset();
+                UpdateLogState(logFile);
+            }
 
             RunNextOperation();
         }
@@ -391,7 +411,7 @@ public partial class MainWindowViewModel : ObservableObject
         }
     }
 
-    public void VersionLabelUpdate(bool isAvailable)
+    public void UpdateVersionLabel(bool isAvailable)
     {
         Version = isAvailable ? Version + " (Update Available)" : Version;
     }
@@ -441,5 +461,26 @@ public partial class MainWindowViewModel : ObservableObject
         DiscordBatchEnabled = !running;
         AutoDiscordBatchEnabled = !running;
         CheckUpdatesEnabled = !running;
+    }
+
+    private static void HandleOperationException(OperationController operation, Exception exception)
+    {
+        if (exception is not ProgramException)
+        {
+            operation.UpdateProgress("Program: something terrible has happened");
+        }
+
+        if (exception is OperationCanceledException)
+        {
+            operation.UpdateProgress("Program: operation Aborted");
+            return;
+        }
+
+        var finalException = ParserHelper.GetFinalException(exception);
+
+        operation.UpdateProgress("Program: " + finalException.Source);
+        operation.UpdateProgress("Program: " + finalException.StackTrace);
+        operation.UpdateProgress("Program: " + finalException.TargetSite);
+        operation.UpdateProgress("Program: " + finalException.Message);
     }
 }

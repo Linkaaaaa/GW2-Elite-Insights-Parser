@@ -104,12 +104,7 @@ public sealed class AvaloniaOperationController : OperationController
         _cancellationTokenSource = new CancellationTokenSource();
 
         base.Reset();
-
-        State = OperationState.Ready;
-        ButtonText = "Parse";
-        ReParseText = "N/A";
-        ReParseEnabled = false;
-        LogTracesEnabled = false;
+        ToReadyState();
     }
 
     protected override void ThrowIfCanceled()

@@ -76,34 +76,46 @@ public partial class MainWindow : Window
 
     private void ParseAllButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is MainWindowViewModel viewModel)
+        if (DataContext is not MainWindowViewModel viewModel)
         {
-            viewModel.ParseAll();
+            return;
         }
+
+        viewModel.ParseAll();
+        viewModel.SettingsViewModel.AddApplicationTraceMessage("UI: Parse all files");
     }
 
     private void CancelAllButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is MainWindowViewModel viewModel)
+        if (DataContext is not MainWindowViewModel viewModel)
         {
-            viewModel.CancelAll();
+            return;
         }
+
+        viewModel.CancelAll();
+        viewModel.SettingsViewModel.AddApplicationTraceMessage("UI: Cancelling all pending and ongoing parsing operations");
     }
 
     private void ClearAllButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is MainWindowViewModel viewModel)
+        if (DataContext is not MainWindowViewModel viewModel)
         {
-            viewModel.ClearAll();
+            return;
         }
+
+        viewModel.ClearAll();
+        viewModel.SettingsViewModel.AddApplicationTraceMessage("UI: Clearing all logs");
     }
 
     private void ClearUncompletedButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is MainWindowViewModel viewModel)
+        if (DataContext is not MainWindowViewModel viewModel)
         {
-            viewModel.ClearUncompleted();
+            return;
         }
+
+        viewModel.ClearUncompleted();
+        viewModel.SettingsViewModel.AddApplicationTraceMessage("UI: Clearing uncompleted logs (failed to parse)");
     }
 
     private void UpdateFileWatcher()
@@ -228,12 +240,12 @@ public partial class MainWindow : Window
                 if (info != null)
                 {
                     Settings.Default.UpdateAvailable = info.Value.UpdateAvailable;
-                    viewModel.VersionLabelUpdate(info.Value.UpdateAvailable);
+                    viewModel.UpdateVersionLabel(info.Value.UpdateAvailable);
                 }
                 traces.ForEach(x => viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: " + x));
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
-        viewModel.VersionLabelUpdate(Settings.Default.UpdateAvailable);
+        viewModel.UpdateVersionLabel(Settings.Default.UpdateAvailable);
     }
 
     private async void CheckUpdatesButton_Click(object? sender, RoutedEventArgs e)
@@ -264,7 +276,7 @@ public partial class MainWindow : Window
             viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: Update found, opening UI");
             Settings.Default.UpdateAvailable = info.Value.UpdateAvailable;
             Settings.Default.Save();
-            viewModel.VersionLabelUpdate(info.Value.UpdateAvailable);
+            viewModel.UpdateVersionLabel(info.Value.UpdateAvailable);
 
             var updaterWindow = new UpdaterWindow(info.Value);
             updaterWindow.UpdateStarted += (_, _) =>
@@ -279,7 +291,7 @@ public partial class MainWindow : Window
             viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: Up to date");
             Settings.Default.UpdateAvailable = false;
             Settings.Default.Save();
-            viewModel.VersionLabelUpdate(false);
+            viewModel.UpdateVersionLabel(false);
 
             var messageWindow = new MessageWindow("Elite Insights is up to date.");
 
@@ -295,9 +307,7 @@ public partial class MainWindow : Window
         }
 
         var message = await viewModel.SendAllToDiscordAsync();
-
         var messageWindow = new MessageWindow(message);
-
         await messageWindow.ShowDialog(this);
     }
 }
