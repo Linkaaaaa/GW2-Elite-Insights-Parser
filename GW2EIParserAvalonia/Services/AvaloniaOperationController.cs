@@ -84,21 +84,21 @@ public sealed class AvaloniaOperationController : OperationController
     public void ToCompleteState()
     {
         SetState(OperationState.Complete);
-        FinalizeStatus(true);
+        FinalizeStatus(true, FailureReason.NotApplicable);
     }
 
-    public void ToUnCompleteState()
+    public void ToUnCompleteState(FailureReason reason)
     {
         SetState(OperationState.UnComplete);
-        FinalizeStatus(false);
+        FinalizeStatus(false, reason);
     }
 
-    public override void Reset()
+    public override void ResetContent()
     {
         _cancellationTokenSource.Dispose();
         _cancellationTokenSource = new CancellationTokenSource();
 
-        base.Reset();
+        base.ResetContent();
         ToReadyState();
     }
 

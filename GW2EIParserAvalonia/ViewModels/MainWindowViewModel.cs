@@ -307,15 +307,16 @@ public partial class MainWindowViewModel : ObservableObject
             logFile.Operation.UpdateProgress("Program: Operation Aborted");
             if (logFile.State != OperationState.ClearOnCancel)
             {
-                logFile.Operation.ToUnCompleteState();
+                logFile.Operation.ToUnCompleteState(OperationController.FailureReason.User);
             }
         }
         catch (Exception ex)
         {
+            OperationController.FailureReason reason = OperationController.GetReasonFromException(ex);
             HandleOperationException(logFile.Operation, ex);
             if (logFile.State != OperationState.ClearOnCancel)
             {
-                logFile.Operation.ToUnCompleteState();
+                logFile.Operation.ToUnCompleteState(reason);
             }
         }
         finally
