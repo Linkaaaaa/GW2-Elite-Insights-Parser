@@ -205,21 +205,22 @@ public class ConsoleProgram
         try
         {
             programHelper.DoWork(operation);
-            operation.FinalizeStatus(true);
+            operation.FinalizeStatus(true, OperationController.FailureReason.NotApplicable);
         }
-        catch (ProgramException ex)
+        catch (ProgramException prgEx)
         {
-            var finalException = ParserHelper.GetFinalException(ex);
+            var finalException = ParserHelper.GetFinalException(prgEx);
+            OperationController.FailureReason reason = OperationController.GetReasonFromException(finalException);
             operation.UpdateProgress("Program: " + finalException.Source);
             operation.UpdateProgress("Program: " + finalException.StackTrace);
             operation.UpdateProgress("Program: " + finalException.TargetSite);
             operation.UpdateProgress("Program: " + finalException.Message);
-            operation.FinalizeStatus(false);
+            operation.FinalizeStatus(false, reason);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             operation.UpdateProgress("Program: something terrible has happened");
-            operation.FinalizeStatus(false);
+            operation.FinalizeStatus(false, OperationController.GetReasonFromException(ex));
         }
         finally
         {

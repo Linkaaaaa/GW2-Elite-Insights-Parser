@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using GW2EIEvtcParser;
+using GW2EIEvtcParser.Exceptions;
 using GW2EIEvtcParser.LogLogic;
 
 namespace GW2EIParserCommons;
@@ -30,6 +31,41 @@ public abstract class OperationController : ParserController
         public readonly string LogEnd;
     }
 
+    public enum FailureReason
+    {
+        NotApplicable,
+        // Parsing settings related
+        Setting,
+        // User interaction related
+        User,
+        // Evtc file content related
+        FileContent,
+        Fatal,
+    }
+
+    public static FailureReason GetReasonFromException(Exception? exception)
+    {
+        if (exception == null)
+        {
+            return FailureReason.Fatal;
+        }
+        var finalException = ParserHelper.GetFinalException(exception);
+        FailureReason reason = FailureReason.Fatal;
+        if (finalException is EINonFatalException)
+        {
+            reason = FailureReason.Setting;
+        }
+        else if (finalException is OperationCanceledException)
+        {
+            reason = FailureReason.User;
+        }
+        else if (finalException is EvtcContentException)
+        {
+            reason = FailureReason.FileContent;
+        }
+        return reason;
+    }
+
     /// <summary>
     /// Status of the parse operation
     /// </summary>
@@ -39,6 +75,11 @@ public abstract class OperationController : ParserController
     /// Only relevant when <see cref="Executed"/> is true.
     /// </summary>
     public bool Parsed { get; protected set; }
+    /// <summary>
+    /// The reason for which parsing could not finish.
+    /// Only relevant when <see cref="Executed"/> is true && <see cref="Parsed" is false/>.
+    /// </summary>
+    public FailureReason Reason { get; protected set; }
     /// <summary>
     /// Indicates that this operation has already executed.
     /// </summary>
@@ -100,10 +141,9 @@ public abstract class OperationController : ParserController
         _OpenableFiles = [];
         _OpenableLogTracesFiles = [];
     }
-
-    public override void Reset()
+    public override void ResetContent()
     {
-        base.Reset();
+        base.ResetContent();
         BasicMetaData = null;
         DPSReportLink = null;
         OutLocation = null;
@@ -112,11 +152,18 @@ public abstract class OperationController : ParserController
         WingmanUploadTentative = false;
         WingmanUploadFailed = false;
         WingmanUploadRefused = false;
-        Elapsed = 0;
-        Executed = false;
         _GeneratedFiles.Clear();
         _OpenableFiles.Clear();
         _OpenableLogTracesFiles.Clear();
+    }
+
+    public override void ResetState()
+    {
+        base.ResetState();
+        Elapsed = 0;
+        Executed = false;
+        Parsed = false;
+        Reason = FailureReason.NotApplicable;
     }
 
     public void Start()
@@ -149,11 +196,12 @@ public abstract class OperationController : ParserController
         _GeneratedFiles.Add(path);
     }
 
-    public void FinalizeStatus(bool parsed)
+    public void FinalizeStatus(bool parsed, FailureReason reason)
     {
         StatusList.Insert(0, ("Elapsed " + Elapsed + " ms"));
         Status = StatusList.LastOrDefault() ?? "";
         Parsed = parsed;
+        Reason = reason;
         Executed = true;
         string prefix = parsed ? "Parsing Successful - " : "Parsing Failure - ";
         foreach (string generatedFile in GeneratedFiles)

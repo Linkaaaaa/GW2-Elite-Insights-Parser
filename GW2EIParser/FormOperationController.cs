@@ -138,16 +138,16 @@ internal sealed class FormOperationController : OperationController
         State = OperationState.Complete;
         ButtonText = "Open";
         SetReparseButtonState(true);
-        FinalizeStatus(true);
+        FinalizeStatus(true, FailureReason.NotApplicable);
         InvalidateDataView();
     }
 
-    public void ToUnCompleteState()
+    public void ToUnCompleteState(FailureReason reason)
     {
         State = OperationState.UnComplete;
         ButtonText = "Parse";
         SetReparseButtonState(false);
-        FinalizeStatus(false);
+        FinalizeStatus(false, reason);
         InvalidateDataView();
     }
 

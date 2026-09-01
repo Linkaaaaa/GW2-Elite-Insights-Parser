@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Runtime.Versioning;
-using Discord;
 using GW2EIDiscord;
 using GW2EIEvtcParser;
 using GW2EIParserCommons;
@@ -167,12 +166,13 @@ internal sealed partial class MainForm : Form
             {
                 if (t.IsFaulted)
                 {
-                    operation.ToUnCompleteState();
+                    OperationController.FailureReason reason = OperationController.GetReasonFromException(t.Exception);
+                    operation.ToUnCompleteState(reason);
                 }
                 else if (t.IsCanceled)
                 {
                     operation.UpdateProgress("Program: operation Aborted");
-                    operation.ToUnCompleteState();
+                    operation.ToUnCompleteState(OperationController.FailureReason.User);
                 }
                 else if (t.IsCompleted)
                 {
@@ -181,13 +181,13 @@ internal sealed partial class MainForm : Form
                 else
                 {
                     operation.UpdateProgress("Program: something terrible has happened");
-                    operation.ToUnCompleteState();
+                    operation.ToUnCompleteState(OperationController.FailureReason.Fatal);
                 }
             }
             _programHelper.GenerateTraceFile(operation);
             if (operation.State != OperationState.Complete)
             {
-                operation.Reset();
+                operation.ResetContent();
             }
             _RunNextOperation();
         }, TaskScheduler.FromCurrentSynchronizationContext());
