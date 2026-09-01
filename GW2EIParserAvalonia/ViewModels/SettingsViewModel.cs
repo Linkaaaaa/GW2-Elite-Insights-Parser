@@ -306,4 +306,10 @@ public partial class SettingsViewModel : ObservableObject
         LoadFromSettings();
         SettingsApplied?.Invoke(this, EventArgs.Empty);
     }
+
+    public void OnPopulateHourChange()
+    {
+        Settings.Default.PopulateHourLimit = PopulateHourLimit;
+        Settings.Default.Save();
+    }
 }

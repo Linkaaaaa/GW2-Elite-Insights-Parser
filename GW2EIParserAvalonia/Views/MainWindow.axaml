@@ -72,23 +72,20 @@
                 VerticalContentAlignment="Center" />
 
             <TextBlock
-                Text="Time:"
+                Text="Time (hours):"
                 VerticalAlignment="Center"
                 Margin="12,0,0,0"
                 Opacity="0.7" />
 
             <NumericUpDown
-                Value="{Binding PopulateHourLimit, Mode=TwoWay}"
+                Value="{Binding SettingsViewModel.PopulateHourLimit, Mode=TwoWay}"
                 Minimum="0"
-                Maximum="86400000"
+                Maximum="24"
                 Width="150"
+                FormatString="0"
                 HorizontalContentAlignment="Right"
+                VerticalContentAlignment="Center" 
                 ToolTip.Tip="Files older than this many hours will be ignored. Set to 0 for no limit." />
-
-            <TextBlock
-                Text="hours"
-                VerticalAlignment="Center"
-                Opacity="0.6" />
 
         </StackPanel>
 
@@ -259,20 +256,11 @@
                 Spacing="8">
 
                 <Button
-                    Content="Parse All"
-                    Click="ParseAllButton_Click"
+                    Content="Clear All"
+                    Click="ClearAllButton_Click"
                     MinWidth="110"
                     Padding="16,9"
-                    IsEnabled="{Binding ParseEnabled}"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center" />
-
-                <Button
-                    Content="Cancel All"
-                    Click="CancelAllButton_Click"
-                    MinWidth="110"
-                    Padding="16,9"
-                    IsEnabled="{Binding CancelAllEnabled}"
+                    IsEnabled="{Binding ClearAllEnabled}"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center" />
 
@@ -286,11 +274,20 @@
                     VerticalContentAlignment="Center" />
 
                 <Button
-                    Content="Clear All"
-                    Click="ClearAllButton_Click"
+                    Content="Cancel All"
+                    Click="CancelAllButton_Click"
                     MinWidth="110"
                     Padding="16,9"
-                    IsEnabled="{Binding ClearAllEnabled}"
+                    IsEnabled="{Binding CancelAllEnabled}"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center" />
+
+                <Button
+                    Content="Parse All"
+                    Click="ParseAllButton_Click"
+                    MinWidth="110"
+                    Padding="16,9"
+                    IsEnabled="{Binding ParseEnabled}"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center" />
 

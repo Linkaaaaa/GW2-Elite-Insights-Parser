@@ -85,10 +85,12 @@ public partial class LogFileViewModel : ObservableObject
     [RelayCommand]
     private void ReParse()
     {
-        if (State == OperationState.Complete)
+        if (State != OperationState.Complete)
         {
-            ReParseRequested?.Invoke(this, EventArgs.Empty);
+            return;
         }
+
+        ReParseRequested?.Invoke(this, EventArgs.Empty);
     }
 
     [RelayCommand]

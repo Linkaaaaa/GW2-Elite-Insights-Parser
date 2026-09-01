@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<LogFileViewModel> logFiles = [];
     [ObservableProperty]
-    private string queueStatus = string.Empty;
+    private string queueStatus = "Waiting";
     [ObservableProperty]
     private bool parseEnabled = false;
     [ObservableProperty]
@@ -36,8 +37,6 @@ public partial class MainWindowViewModel : ObservableObject
     private bool settingsEnabled = true;
     [ObservableProperty]
     private bool autoDiscordBatch;
-    [ObservableProperty]
-    private long populateHourLimit;
     [ObservableProperty]
     private string watchingDirectory = string.Empty;
     [ObservableProperty]
@@ -63,9 +62,9 @@ public partial class MainWindowViewModel : ObservableObject
         SettingsViewModel = new SettingsViewModel(Settings);
         SettingsViewModel.LoadFromSettings();
         SettingsViewModel.SettingsApplied += SettingsViewModel_SettingsApplied;
+        SettingsViewModel.PropertyChanged += SettingsViewModel_PropertyChanged;
 
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
-        PopulateHourLimit = SettingsViewModel.PopulateHourLimit;
         LogTracesVisible = SettingsViewModel.SaveOutTrace;
 
         Version = $"v{typeof(MainWindowViewModel).Assembly.GetName().Version?.ToString() ?? string.Empty}";
@@ -79,7 +78,6 @@ public partial class MainWindowViewModel : ObservableObject
         _settingsService.Save(Settings);
 
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
-        PopulateHourLimit = SettingsViewModel.PopulateHourLimit;
         LogTracesVisible = SettingsViewModel.SaveOutTrace;
 
         UpdateWatchDirectory();
@@ -482,5 +480,14 @@ public partial class MainWindowViewModel : ObservableObject
         operation.UpdateProgress("Program: " + finalException.StackTrace);
         operation.UpdateProgress("Program: " + finalException.TargetSite);
         operation.UpdateProgress("Program: " + finalException.Message);
+    }
+
+    private void SettingsViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SettingsViewModel.PopulateHourLimit))
+        {
+            SettingsViewModel.OnPopulateHourChange();
+            SettingsViewModel.AddApplicationTraceMessage("Settings: Updated populate function hour limit to " + SettingsViewModel.PopulateHourLimit);
+        }
     }
 }

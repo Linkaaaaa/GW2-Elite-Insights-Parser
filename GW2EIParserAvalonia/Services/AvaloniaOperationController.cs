@@ -93,11 +93,6 @@ public sealed class AvaloniaOperationController : OperationController
         FinalizeStatus(false);
     }
 
-    public void ToCancelledState()
-    {
-        SetState(OperationState.UnComplete);
-    }
-
     public override void Reset()
     {
         _cancellationTokenSource.Dispose();
