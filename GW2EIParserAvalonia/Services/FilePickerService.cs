@@ -15,7 +15,7 @@ public class FilePickerService
         _storageProvider = storageProvider;
     }
 
-    public async Task<IReadOnlyList<string>> PickCombatLogsAsync()
+    public async Task<IReadOnlyList<string>> PickLogFilesAsync()
     {
         var files = await _storageProvider.OpenFilePickerAsync(
             new FilePickerOpenOptions
@@ -31,7 +31,7 @@ public class FilePickerService
                 ]
             });
 
-        return files.Select(file => file.TryGetLocalPath()).Where(path => !string.IsNullOrWhiteSpace(path)).Cast<string>().ToList();
+        return files.Select(file => file.TryGetLocalPath()).OfType<string>().ToList();
     }
 
     public async Task<string?> PickFolderAsync()

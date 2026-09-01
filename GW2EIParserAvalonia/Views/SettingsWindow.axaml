@@ -27,17 +27,23 @@
             <Button
                 Content="Load"
                 MinWidth="100"
-                Click="LoadButton_Click" />
+                Click="LoadButton_Click"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center" />
 
             <Button
                 Content="Cancel"
                 MinWidth="100"
-                Click="CancelButton_Click" />
+                Click="CancelButton_Click"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center" />
 
             <Button
                 Content="Apply"
                 MinWidth="100"
-                Click="ApplyButton_Click" />
+                Click="ApplyButton_Click"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center" />
 
         </StackPanel>
 
@@ -125,27 +131,28 @@
 
                         <NumericUpDown
                             Value="{Binding CustomTooShort}"
-                            Minimum="0"
-                            Maximum="86400"
+                            Minimum="2200"
+                            Maximum="86400000"
                             Increment="1" />
 
                         <TextBlock
                             Text="Maximum log size (MegaBytes uncompressed)" />
 
                         <NumericUpDown
-                            Value="{Binding CustomTooBig}"
-                            Minimum="0"
-                            Maximum="86400"
+                            Value="{Binding CustomTooBig, FallbackValue=400}"
+                            Minimum="100"
+                            Maximum="10000"
                             Increment="1" />
 
                         <TextBlock
-                            Text="Kill application if using >= MegaBytes of memory. Use 0 if uncapped." />
+                            Text="Kill application if using >= MegaBytes of memory." />
 
                         <NumericUpDown
-                            Value="{Binding MemoryLimit}"
-                            Minimum="0"
-                            Maximum="1048576"
-                            Increment="256" />
+                            Value="{Binding MemoryLimit, FallbackValue=0}"
+                            Minimum="-1"
+                            Maximum="2147483647"
+                            Increment="1"
+                            ToolTip.Tip="Keep default value if unsure. 0 will default to 90% of total RAM. Use negative values for no limit." />
 
                         <Separator />
 
@@ -182,8 +189,10 @@
 
                             <Button
                                 Grid.Column="1"
-                                Content="Select..."
-                                Click="SelectFolder_Click" />
+                                Content="Select"
+                                Click="SelectFolder_Click"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center" />
                         </Grid>
 
                         <CheckBox

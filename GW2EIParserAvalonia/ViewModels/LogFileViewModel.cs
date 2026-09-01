@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Avalonia.Threading;
@@ -77,7 +78,7 @@ public partial class LogFileViewModel : ObservableObject
                 UpdateFromOperation();
                 break;
             case OperationState.Complete:
-                OpenGeneratedFiles();
+                OpenGeneratedFiles(Operation.OpenableFiles);
                 break;
         }
     }
@@ -107,12 +108,12 @@ public partial class LogFileViewModel : ObservableObject
     [RelayCommand]
     public void OpenTracesCommand()
     {
-        OpenGeneratedLogTracesFiles();
+        OpenGeneratedFiles(Operation.OpenableLogTracesFiles);
     }
 
-    private void OpenGeneratedFiles()
+    private void OpenGeneratedFiles(IReadOnlyList<string> paths)
     {
-        foreach (var path in Operation.OpenableFiles)
+        foreach (string path in paths)
         {
             if (File.Exists(path))
             {
@@ -120,23 +121,7 @@ public partial class LogFileViewModel : ObservableObject
             }
         }
 
-        if (Operation.OpenableFiles.Count < Operation.GeneratedFiles.Count && Operation.OutLocation != null && Directory.Exists(Operation.OutLocation))
-        {
-            OpenWithDefaultApplication(Operation.OutLocation);
-        }
-    }
-
-    private void OpenGeneratedLogTracesFiles()
-    {
-        foreach (var path in Operation.OpenableLogTracesFiles)
-        {
-            if (File.Exists(path))
-            {
-                OpenWithDefaultApplication(path);
-            }
-        }
-
-        if (Operation.OpenableLogTracesFiles.Count < Operation.OpenableLogTracesFiles.Count && Operation.OutLocation != null && Directory.Exists(Operation.OutLocation))
+        if (paths.Count < Operation.GeneratedFiles.Count && Operation.OutLocation != null && Directory.Exists(Operation.OutLocation))
         {
             OpenWithDefaultApplication(Operation.OutLocation);
         }

@@ -211,7 +211,7 @@ public partial class MainWindow : Window
 
         var picker = new FilePickerService(StorageProvider);
 
-        var files = await picker.PickCombatLogsAsync();
+        var files = await picker.PickLogFilesAsync();
 
         foreach (var path in files)
         {
