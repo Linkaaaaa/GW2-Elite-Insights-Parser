@@ -1,7 +1,6 @@
 <template>
     <div>
-        <div class="d-flex flex-row justify-content-center my-2 align-items-center">
-            <span class="mr-1">TYPE</span>
+        <div class="d-flex flex-row justify-content-center align-items-center">
             <ul class="nav nav-pills" :class="{'flex-row': !column, 'flex-column': column}">
                 <li class="nav-item" data-original-title="Power + Condition">
                     <a class="nav-link" @click="data.damagemode = damageModeEnum.All" :class="{active: data.damagemode === damageModeEnum.All}">
@@ -26,42 +25,46 @@
             </ul>
         </div>
 
-        <div class="d-flex flex-row justify-content-center my-2 align-items-center">
-            <span class="mr-1">WINDOW</span>
-            <ul class="nav nav-pills scale75" :class="{'flex-row': !column, 'flex-column': column}">
-                <li class="nav-item">
-                    <a class="nav-link" @click="data.dpsmode = 0" :class="{active: data.dpsmode === 0}">Full</a>
-                </li>
-                <li v-if="phaseduration > 4" class="nav-item">
-                    <a class="nav-link" @click="data.dpsmode = 4" :class="{active: data.dpsmode === 4}">4s</a>
-                </li>
-                <li v-if="phaseduration > 10" class="nav-item">
-                    <a class="nav-link" @click="data.dpsmode = 10" :class="{active: data.dpsmode === 10}">10s</a>
-                </li>
-                <li v-if="phaseduration > 20" class="nav-item">
-                    <a class="nav-link" @click="data.dpsmode = 20" :class="{active: data.dpsmode === 20}">20s</a>
-                </li>
-                <li v-if="phaseduration > 30" class="nav-item">
-                    <a class="nav-link" @click="data.dpsmode = 30" :class="{active: data.dpsmode === 30}">30s</a>
-                </li>
-                <li v-if="phasehassubphases" class="nav-item">
-                    <a class="nav-link" @click="data.dpsmode = -1" :class="{active: data.dpsmode === -1}">Phase</a>
-                </li>
-            </ul>
-            <custom-numberform-component class="ml-2 w-auto" :minValue="0" :maxValue="Math.floor(phaseduration / 2) * 2" :id="'customDPS'" :placeholderValue="0" />
-
-            <span class="ml-auto mr-1">VIEW</span>
-            <ul class="nav nav-pills d-flex flex-wrap justify-content-center scale75" :class="{'flex-row': !column, 'flex-column': column}">
-                <li class="nav-item">
-                    <a class="nav-link" @click="data.graphmode = graphModeEnum.DPS" :class="{active: data.graphmode === graphModeEnum.DPS}">PS</a>
-                </li>
-                <li class="nav-item" data-original-title="Centered">
-                    <a class="nav-link" @click="data.graphmode = graphModeEnum.CenteredDPS" :class="{active: data.graphmode === graphModeEnum.CenteredDPS}">Ctrd.PS</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" @click="data.graphmode = graphModeEnum.Damage" :class="{active: data.graphmode === graphModeEnum.Damage}">Cumulative</a>
-                </li>
-            </ul>
+        <div class="d-flex flex-row justify-content-between mb-2 align-items-center">
+            <fieldset class="border-0 d-flex">
+                <legend class="scale85 mb-0 ml-3">Window</legend>
+                <ul class="nav nav-pills scale75" :class="{'flex-row': !column, 'flex-column': column}">
+                    <li class="nav-item">
+                        <a class="nav-link" @click="data.dpsmode = 0" :class="{active: data.dpsmode === 0}">Full</a>
+                    </li>
+                    <li v-if="phaseduration > 4" class="nav-item">
+                        <a class="nav-link" @click="data.dpsmode = 4" :class="{active: data.dpsmode === 4}">4s</a>
+                    </li>
+                    <li v-if="phaseduration > 10" class="nav-item">
+                        <a class="nav-link" @click="data.dpsmode = 10" :class="{active: data.dpsmode === 10}">10s</a>
+                    </li>
+                    <li v-if="phaseduration > 20" class="nav-item">
+                        <a class="nav-link" @click="data.dpsmode = 20" :class="{active: data.dpsmode === 20}">20s</a>
+                    </li>
+                    <li v-if="phaseduration > 30" class="nav-item">
+                        <a class="nav-link" @click="data.dpsmode = 30" :class="{active: data.dpsmode === 30}">30s</a>
+                    </li>
+                    <li v-if="phasehassubphases" class="nav-item">
+                        <a class="nav-link" @click="data.dpsmode = -1" :class="{active: data.dpsmode === -1}">Phase</a>
+                    </li>
+                </ul>
+                <custom-numberform-component class="ml-2 w-auto" :minValue="0" :maxValue="Math.floor(phaseduration / 2) * 2" :id="'customDPS'" :placeholderValue="0" />
+            </fieldset>
+            
+            <fieldset class="border-0 d-flex">
+                <legend class="scale85 mb-0 ml-3">View</legend>
+                <ul class="nav nav-pills d-flex flex-wrap justify-content-center scale75" :class="{'flex-row': !column, 'flex-column': column}">
+                    <li class="nav-item">
+                        <a class="nav-link" @click="data.graphmode = graphModeEnum.DPS" :class="{active: data.graphmode === graphModeEnum.DPS}">PS</a>
+                    </li>
+                    <li class="nav-item" data-original-title="Centered">
+                        <a class="nav-link" @click="data.graphmode = graphModeEnum.CenteredDPS" :class="{active: data.graphmode === graphModeEnum.CenteredDPS}">Ctrd.PS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" @click="data.graphmode = graphModeEnum.Damage" :class="{active: data.graphmode === graphModeEnum.Damage}">Cumulative</a>
+                    </li>
+                </ul>
+            </fieldset>
         </div>
     </div>
 </template>
