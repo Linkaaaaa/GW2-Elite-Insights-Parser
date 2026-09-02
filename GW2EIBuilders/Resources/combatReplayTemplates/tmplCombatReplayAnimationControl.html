@@ -195,17 +195,16 @@
                     <input type="range" :min="minTime" :max="maxTime" value="0" :id="htmlElementIDs.timeRangeID" style="display: none;">
                 </label>
 
-                <div @click="restartAnimate();" class="btn btn-small"
-                     :class="{'btn-dark': !light, 'btn-light': light}"
-                     data-original-title="Reset back to start">
-                    &#8617;&#65039; Restart
-                </div>
                 <div @click="toggleAnimate();" class="btn btn-small"
                      :class="{'btn-dark': !light, 'btn-light': light}"
                      data-original-title="Play / pause animation">
                     {{ animated ? "&#9208" : "&#9654" }} Play / Pause
                 </div>
-
+                <div @click="restartAnimate();" class="btn btn-small"
+                     :class="{'btn-dark': !light, 'btn-light': light}"
+                     data-original-title="Reset back to start">
+                    &#8617;&#65039; Restart
+                </div>
                 <div @click="toggleBackwards();" class="btn btn-small"
                      :class="{'active': backwards, 'btn-dark': !light, 'btn-light': light}"
                      data-original-title="Play animation backwards">
@@ -254,8 +253,6 @@
         mixins: [encounterPhaseComponent, numberComponent, UIIconsComponent],
         data: function () {
             return {
-                selectedSpeed: 1,
-                speeds: [0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0],
                 isTouchDevice: isTouchDevice,
                 backwards: false,
                 sliderDelimiter: sliderDelimiter,
@@ -283,9 +280,6 @@
                     }
                 },
                 deep: true
-            },
-            selectedSpeed: function (speed) {
-                animator.setSpeed(speed);
             }
         },
         mounted() {
