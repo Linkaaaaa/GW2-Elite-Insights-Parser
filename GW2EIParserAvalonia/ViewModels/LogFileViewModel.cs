@@ -26,6 +26,8 @@ public partial class LogFileViewModel : ObservableObject
     [ObservableProperty]
     private bool logTracesEnabled;
     [ObservableProperty]
+    private long elapsed;
+    [ObservableProperty]
     private OperationState state;
     public AvaloniaOperationController Operation { get; }
     public event EventHandler? ParseRequested;
@@ -40,6 +42,7 @@ public partial class LogFileViewModel : ObservableObject
         logStatus = Operation.Status;
         buttonText = Operation.ButtonText;
         reParseText = Operation.ReParseText;
+        elapsed = Operation.Elapsed;
         state = Operation.State;
         removeEnabled = true;
         reParseEnabled = Operation.ReParseEnabled;
@@ -145,6 +148,7 @@ public partial class LogFileViewModel : ObservableObject
         State = Operation.State;
         ReParseEnabled = Operation.ReParseEnabled;
         LogTracesEnabled = Operation.LogTracesEnabled;
+        Elapsed = Operation.Elapsed;
         RemoveEnabled = !IsBusy();
     }
 
