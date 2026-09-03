@@ -102,48 +102,7 @@ public class ProgramSettings
         IndentJSON = settings.IndentJSON;
         MemoryLimit = settings.MemoryLimit;
     }
-
-    public void LoadFromProgramSettings(ProgramSettings settings)
-    {
-        SendEmbedToWebhook = settings.SendEmbedToWebhook;
-        SendSimpleMessageToWebhook = settings.SendSimpleMessageToWebhook;
-        WebhookURL = settings.WebhookURL;
-        UploadToDPSReports = settings.UploadToDPSReports;
-        DPSReportUserToken = settings.DPSReportUserToken;
-        UploadToWingman = settings.UploadToWingman;
-        SaveOutCSV = settings.SaveOutCSV;
-        SaveOutHTML = settings.SaveOutHTML;
-        SaveOutJSON = settings.SaveOutJSON;
-        SaveOutTrace = settings.SaveOutTrace;
-        ParseMultipleLogs = settings.ParseMultipleLogs;
-        SingleThreaded = settings.SingleThreaded;
-        Anonymous = settings.Anonymous;
-        SkipFailedTries = settings.SkipFailedTries;
-        CustomTooShort = settings.CustomTooShort;
-        CustomTooBig = settings.CustomTooBig;
-        DetailledWvW = settings.DetailledWvW;
-        ComputePhases = settings.ComputePhases;
-        ComputeCombatReplay = settings.ComputeCombatReplay;
-        ComputeDamageModifiers = settings.ComputeDamageModifiers;
-        ParseExtensions = settings.ParseExtensions;
-        ComputeDamage = settings.ComputeDamage;
-        ComputeBuff = settings.ComputeBuff;
-        ComputeCast = settings.ComputeCast;
-        ComputeMechanics = settings.ComputeMechanics;
-        SaveAtOut = settings.SaveAtOut;
-        OutLocation = settings.OutLocation;
-        AddDuration = settings.AddDuration;
-        AddPoVProf = settings.AddPoVProf;
-        LightTheme = settings.LightTheme;
-        HtmlExternalScripts = settings.HtmlExternalScripts;
-        HtmlExternalScriptsPath = settings.HtmlExternalScriptsPath;
-        HtmlExternalScriptsCdn = settings.HtmlExternalScriptsCdn;
-        HtmlCompressJson = settings.HtmlCompressJson;
-        RawTimelineArrays = settings.RawTimelineArrays;
-        CompressRaw = settings.CompressRaw;
-        IndentJSON = settings.IndentJSON;
-        MemoryLimit = settings.MemoryLimit;
-    }
+    
 
     public int GetMaxParallelRunning()
     {
