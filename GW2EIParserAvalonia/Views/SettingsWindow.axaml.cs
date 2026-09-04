@@ -12,16 +12,14 @@ namespace GW2EIParserAvalonia.Views;
 
 public partial class SettingsWindow : Window
 {
-    public SettingsWindow()
-    {
-        InitializeComponent();
-    }
+    private readonly IApplicationTrace _trace;
 
-    public SettingsWindow(SettingsViewModel viewModel)
+    public SettingsWindow(SettingsViewModel viewModel, IApplicationTrace trace)
     {
         InitializeComponent();
 
         DataContext = viewModel;
+        _trace = trace;
         viewModel.AutoAddFolderRequested += ViewModel_AutoAddFolderRequested;
     }
 
@@ -31,12 +29,14 @@ public partial class SettingsWindow : Window
         {
             viewModel.ApplyToSettings();
         }
-
+        
+        _trace.Add("UI: Settings applied");
         Close();
     }
 
     private void CancelButton_Click(object? sender, RoutedEventArgs e)
     {
+        _trace.Add("UI: Settings cancelled");
         Close();
     }
 
@@ -64,6 +64,7 @@ public partial class SettingsWindow : Window
         if (files.Count > 0)
         {
             viewModel.ApplyLoadedSettings(files[0].Path.LocalPath);
+            _trace.Add($"UI: Settings loaded from {files[0].Path.LocalPath}");
         }
     }
 
@@ -112,28 +113,28 @@ public partial class SettingsWindow : Window
     private async void ResetMapButton_Click(object sender, RoutedEventArgs e)
     {
         ProgramHelper.APIController.WriteAPIMapsToFile(ProgramHelper.MapAPICacheLocation);
-        var messageWindow = new MessageWindow("Map List has been redone");
+        var messageWindow = new MessageWindow("Map List has been redone", _trace);
         await messageWindow.ShowDialog(this);
     }
 
     private async void ResetSkillButton_Click(object sender, RoutedEventArgs e)
     {
         ProgramHelper.APIController.WriteAPISkillsToFile(ProgramHelper.SkillAPICacheLocation);
-        var messageWindow = new MessageWindow("Skill List has been redone");
+        var messageWindow = new MessageWindow("Skill List has been redone", _trace);
         await messageWindow.ShowDialog(this);
     }
 
     private async void ResetTraitButton_Click(object sender, RoutedEventArgs e)
     {
         ProgramHelper.APIController.WriteAPITraitsToFile(ProgramHelper.TraitAPICacheLocation);
-        var messageWindow = new MessageWindow("Trait List has been redone");
+        var messageWindow = new MessageWindow("Trait List has been redone", _trace);
         await messageWindow.ShowDialog(this);
     }
 
     private async void ResetSpecButton_Click(object sender, RoutedEventArgs e)
     {
         ProgramHelper.APIController.WriteAPISpecsToFile(ProgramHelper.SpecAPICacheLocation);
-        var messageWindow = new MessageWindow("Spec List has been redone");
+        var messageWindow = new MessageWindow("Spec List has been redone", _trace);
         await messageWindow.ShowDialog(this);
     }
 }

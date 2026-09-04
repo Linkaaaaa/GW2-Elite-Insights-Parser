@@ -19,10 +19,13 @@ namespace GW2EIParserAvalonia.Views;
 public partial class MainWindow : Window
 {
     private FileSystemWatcher? _logFileWatcher;
+    private readonly IApplicationTrace _trace;
 
-    public MainWindow()
+    public MainWindow(IApplicationTrace trace)
     {
         InitializeComponent();
+
+        _trace = trace;
 
         UpdateFileWatcher();
         UpdaterInitialCheck();
@@ -40,7 +43,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        var window = new SettingsWindow(viewModel.SettingsViewModel);
+        var window = new SettingsWindow(viewModel.SettingsViewModel, _trace);
         await window.ShowDialog(this);
 
         UpdateFileWatcher();
@@ -83,7 +86,7 @@ public partial class MainWindow : Window
         }
 
         viewModel.ParseAll();
-        viewModel.SettingsViewModel.AddApplicationTraceMessage("UI: Parse all files");
+        _trace.Add("UI: Parse all files");
     }
 
     private void CancelAllButton_Click(object? sender, RoutedEventArgs e)
@@ -94,7 +97,7 @@ public partial class MainWindow : Window
         }
 
         viewModel.CancelAll();
-        viewModel.SettingsViewModel.AddApplicationTraceMessage("UI: Cancelling all pending and ongoing parsing operations");
+        _trace.Add("UI: Cancelling all pending and ongoing parsing operations");
     }
 
     private void ClearAllButton_Click(object? sender, RoutedEventArgs e)
@@ -105,7 +108,7 @@ public partial class MainWindow : Window
         }
 
         viewModel.ClearAll();
-        viewModel.SettingsViewModel.AddApplicationTraceMessage("UI: Clearing all logs");
+        _trace.Add("UI: Clearing all logs");
     }
 
     private void ClearUncompletedButton_Click(object? sender, RoutedEventArgs e)
@@ -116,7 +119,7 @@ public partial class MainWindow : Window
         }
 
         viewModel.ClearUncompleted();
-        viewModel.SettingsViewModel.AddApplicationTraceMessage("UI: Clearing uncompleted logs (failed to parse)");
+        _trace.Add("UI: Clearing uncompleted logs (failed to parse)");
     }
 
     private void UpdateFileWatcher()
@@ -243,7 +246,7 @@ public partial class MainWindow : Window
                     Settings.Default.UpdateAvailable = info.Value.UpdateAvailable;
                     viewModel.UpdateVersionLabel(info.Value.UpdateAvailable);
                 }
-                traces.ForEach(x => viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: " + x));
+                traces.ForEach(x => _trace.Add("Updater: " + x));
             }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
         viewModel.UpdateVersionLabel(Settings.Default.UpdateAvailable);
@@ -256,11 +259,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: Checking for updates");
+        _trace.Add("Updater: Checking for updates");
 
         var traces = new List<string>();
         Updater.UpdateInfo? info = await Updater.CheckForUpdate("GW2EI.zip", traces);
-        traces.ForEach(x => viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: " + x));
+        traces.ForEach(x => _trace.Add("Updater: " + x));
 #if DEBUG
         var force = true;
 #else
@@ -268,18 +271,18 @@ public partial class MainWindow : Window
 #endif
         if (info is null)
         {
-            viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: UpdateInfo is null");
+            _trace.Add("Updater: UpdateInfo is null");
             return;
         }
 
         if (info.Value.UpdateAvailable || force)
         {
-            viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: Update found, opening UI");
+            _trace.Add("Updater: Update found, opening UI");
             Settings.Default.UpdateAvailable = info.Value.UpdateAvailable;
             Settings.Default.Save();
             viewModel.UpdateVersionLabel(info.Value.UpdateAvailable);
 
-            var updaterWindow = new UpdaterWindow(info.Value);
+            var updaterWindow = new UpdaterWindow(info.Value, _trace);
             updaterWindow.UpdateStarted += (_, _) =>
             {
                 updaterWindow.Close();
@@ -289,12 +292,12 @@ public partial class MainWindow : Window
         }
         else
         {
-            viewModel.SettingsViewModel.AddApplicationTraceMessage("Updater: Up to date");
+            _trace.Add("Updater: Up to date");
             Settings.Default.UpdateAvailable = false;
             Settings.Default.Save();
             viewModel.UpdateVersionLabel(false);
 
-            var messageWindow = new MessageWindow("Elite Insights is up to date.");
+            var messageWindow = new MessageWindow("Elite Insights is up to date.", _trace);
 
             await messageWindow.ShowDialog(this);
         }
@@ -308,7 +311,7 @@ public partial class MainWindow : Window
         }
 
         var message = await viewModel.SendAllToDiscordAsync();
-        var messageWindow = new MessageWindow(message);
+        var messageWindow = new MessageWindow(message, _trace);
         await messageWindow.ShowDialog(this);
     }
 }

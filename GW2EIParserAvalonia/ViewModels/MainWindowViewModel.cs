@@ -48,13 +48,16 @@ public partial class MainWindowViewModel : ObservableObject
     private readonly ParserService _parserService;
     private readonly SettingsService _settingsService;
     private readonly Queue<LogFileViewModel> _logQueue = new();
+    private readonly IApplicationTrace _trace;
     private int _runningCount;
     public ProgramSettings Settings { get; }
     public SettingsViewModel SettingsViewModel { get; }
     public bool AnyRunning => _runningCount > 0;
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(IApplicationTrace trace)
     {
+        _trace = trace;
+
         _settingsService = new SettingsService();
         Settings = _settingsService.Load();
         _parserService = new ParserService(Settings);
@@ -99,7 +102,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         LogFiles.Add(logFileViewModel);
         UpdateQueueStatus();
-        SettingsViewModel.AddApplicationTraceMessage("UI: Added " + logFileViewModel.InputFilePath);
+        _trace.Add("UI: Added " + logFileViewModel.InputFilePath);
 
         ParseEnabled = !AnyRunning;
         ClearAllEnabled = true;
@@ -219,7 +222,7 @@ public partial class MainWindowViewModel : ObservableObject
             WatchingDirectoryVisible = true;
 
             AddFilesFromDirectory(SettingsViewModel.AutoAddPath);
-            SettingsViewModel.AddApplicationTraceMessage("Settings: Updated watch directory to " + SettingsViewModel.AutoAddPath);
+            _trace.Add("Settings: Updated watch directory to " + SettingsViewModel.AutoAddPath);
         }
         else
         {
@@ -242,12 +245,12 @@ public partial class MainWindowViewModel : ObservableObject
     {
         if (ProgramHelper.IsTemporaryCompressedFormat(oldPath) && ProgramHelper.IsCompressedFormat(newPath))
         {
-            SettingsViewModel.AddApplicationTraceMessage("File Watcher: renamed " + oldPath + " to " + newPath);
+            _trace.Add("File Watcher: renamed " + oldPath + " to " + newPath);
             _ = AddDelayed(newPath);
         }
         else if (ProgramHelper.IsTemporaryFormat(oldPath) && ProgramHelper.IsSupportedFormat(newPath))
         {
-            SettingsViewModel.AddApplicationTraceMessage("File Watcher: adding " + newPath);
+            _trace.Add("File Watcher: adding " + newPath);
             _ = AddDelayed(newPath);
         }
     }
@@ -258,7 +261,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         if (File.Exists(path))
         {
-            SettingsViewModel.AddApplicationTraceMessage("File Watcher: adding " + path);
+            _trace.Add("File Watcher: adding " + path);
             AddFile(path);
         }
     }
@@ -286,11 +289,11 @@ public partial class MainWindowViewModel : ObservableObject
 
         logFile.Operation.ToQueuedState();
         UpdateLogState(logFile);
-        SettingsViewModel.AddApplicationTraceMessage("Operation: Queued " + logFile.InputFilePath);
+        _trace.Add("Operation: Queued " + logFile.InputFilePath);
 
         logFile.Operation.ToRunState();
         UpdateLogState(logFile);
-        SettingsViewModel.AddApplicationTraceMessage("Operation: Parsing " + logFile.InputFilePath);
+        _trace.Add("Operation: Parsing " + logFile.InputFilePath);
 
         try
         {
@@ -299,7 +302,7 @@ public partial class MainWindowViewModel : ObservableObject
             if (logFile.State != OperationState.ClearOnCancel)
             {
                 logFile.Operation.ToCompleteState();
-                SettingsViewModel.AddApplicationTraceMessage("Operation: Parsed " + logFile.InputFilePath);
+                _trace.Add("Operation: Parsed " + logFile.InputFilePath);
             }
         }
         catch (OperationCanceledException)
@@ -384,7 +387,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         LogFiles.Remove(logFile);
         UpdateQueueStatus();
-        SettingsViewModel.AddApplicationTraceMessage("UI: Removed " + logFile.InputFilePath);
+        _trace.Add("UI: Removed " + logFile.InputFilePath);
         ClearAllEnabled = LogFiles.Count > 0;
         ClearUncompletedEnabled = LogFiles.Any(x => x.State == OperationState.UnComplete);
         ParseEnabled = !AnyRunning && LogFiles.Count > 0;
@@ -392,7 +395,7 @@ public partial class MainWindowViewModel : ObservableObject
 
     public async Task<string> SendAllToDiscordAsync()
     {
-        SettingsViewModel.AddApplicationTraceMessage("UI: Manual Discord Batch");
+        _trace.Add("UI: Manual Discord Batch");
 
         DiscordBatchEnabled = false;
 
@@ -402,7 +405,7 @@ public partial class MainWindowViewModel : ObservableObject
             var operations = LogFiles.Select(x => (OperationController)x.Operation).ToList();
 
             return await Task.Run(() =>
-                _parserService.HandleBatchedDiscordEmbed(ids, operations, SettingsViewModel.AddApplicationTraceMessage));
+                _parserService.HandleBatchedDiscordEmbed(ids, operations, _trace.Add));
         }
         finally
         {
@@ -488,7 +491,7 @@ public partial class MainWindowViewModel : ObservableObject
         if (e.PropertyName == nameof(SettingsViewModel.PopulateHourLimit))
         {
             SettingsViewModel.OnPopulateHourChange();
-            SettingsViewModel.AddApplicationTraceMessage("Settings: Updated populate function hour limit to " + SettingsViewModel.PopulateHourLimit);
+            _trace.Add("Settings: Updated populate function hour limit to " + SettingsViewModel.PopulateHourLimit);
         }
     }
 }

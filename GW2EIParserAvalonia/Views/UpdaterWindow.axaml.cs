@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using GW2EIParserAvalonia.Services;
 using GW2EIParserCommons.Properties;
 using GW2EIUpdater;
 
@@ -11,6 +12,7 @@ namespace GW2EIParserAvalonia.Views;
 public partial class UpdaterWindow : Window
 {
     private readonly Updater.UpdateInfo _info;
+    private readonly IApplicationTrace _trace;
 
     public event EventHandler? UpdateStarted;
 
@@ -19,11 +21,12 @@ public partial class UpdaterWindow : Window
         InitializeComponent();
     }
 
-    public UpdaterWindow(Updater.UpdateInfo info)
+    public UpdaterWindow(Updater.UpdateInfo info, IApplicationTrace trace)
     {
         InitializeComponent();
 
         _info = info;
+        _trace = trace;
 
         CurrentVersionText.Text = info.CurrentVersion;
         LatestVersionText.Text = info.LatestVersion;
@@ -40,7 +43,7 @@ public partial class UpdaterWindow : Window
 
             foreach (var trace in traces)
             {
-                //_viewModel.AddTraceMessage("Updater: " + trace);
+                _trace.Add("Updater: " + trace);
             }
 
             UpdateStarted?.Invoke(this, EventArgs.Empty);
@@ -49,10 +52,10 @@ public partial class UpdaterWindow : Window
         {
             foreach (var trace in traces)
             {
-                //_viewModel.AddTraceMessage("Updater: " + trace);
+                _trace.Add("Updater: " + trace);
             }
 
-            var messageWindow = new MessageWindow("Update Failed.");
+            var messageWindow = new MessageWindow("Update Failed.", _trace);
 
             await messageWindow.ShowDialog(this);
         }

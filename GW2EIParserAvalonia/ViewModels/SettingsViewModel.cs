@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using GW2EIParserCommons;
 using GW2EIParserCommons.Properties;
@@ -9,12 +8,10 @@ namespace GW2EIParserAvalonia.ViewModels;
 public partial class SettingsViewModel : ObservableObject
 {
     private readonly ProgramSettings _settings;
-    private readonly string _applicationTraceFileName;
 
     public SettingsViewModel(ProgramSettings settings)
     {
         _settings = settings;
-        _applicationTraceFileName = $"{ProgramHelper.EILogPath}EILogs-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.txt";
     }
 
     // General
@@ -273,28 +270,6 @@ public partial class SettingsViewModel : ObservableObject
         if (value)
         {
             AutoAddFolderRequested?.Invoke(this, EventArgs.Empty);
-        }
-    }
-
-    public void AddApplicationTraceMessage(string message)
-    {
-        if (!Settings.Default.ApplicationTraces)
-        {
-            return;
-        }
-        if (!Directory.Exists(ProgramHelper.EILogPath))
-        {
-            Directory.CreateDirectory(ProgramHelper.EILogPath);
-        }
-        if (!File.Exists(_applicationTraceFileName))
-        {
-            using StreamWriter sw = File.CreateText(_applicationTraceFileName);
-            sw.WriteLine(message);
-        }
-        else
-        {
-            using StreamWriter sw = File.AppendText(_applicationTraceFileName);
-            sw.WriteLine(message);
         }
     }
 

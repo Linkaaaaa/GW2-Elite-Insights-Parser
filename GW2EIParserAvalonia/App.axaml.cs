@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using GW2EIParserAvalonia.Services;
 using GW2EIParserAvalonia.ViewModels;
 using GW2EIParserAvalonia.Views;
 
@@ -17,9 +18,11 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
+            ApplicationTrace trace = new();
+
+            desktop.MainWindow = new MainWindow(trace)
             {
-                DataContext = new MainWindowViewModel(),
+                DataContext = new MainWindowViewModel(trace),
             };
         }
 
