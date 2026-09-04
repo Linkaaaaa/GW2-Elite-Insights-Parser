@@ -1,5 +1,7 @@
-﻿using GW2EIEvtcParser.EIData;
+﻿using System.Numerics;
+using GW2EIEvtcParser.EIData;
 using GW2EIEvtcParser.Exceptions;
+using GW2EIEvtcParser.Extensions;
 using GW2EIEvtcParser.ParsedData;
 using GW2EIEvtcParser.ParserHelpers;
 using static GW2EIEvtcParser.LogLogic.LogLogicPhaseUtils;
@@ -83,6 +85,12 @@ internal class Arkk : ShatteredObservatory
         return crMap;
     }
 
+    internal override void EIEvtcParse(ulong gw2Build, EvtcVersionEvent evtcVersion, LogData logData, AgentData agentData, List<CombatItem> combatData, IReadOnlyDictionary<uint, ExtensionHandler> extensions)
+    {
+        IdentifyGadgets(agentData, combatData);
+        base.EIEvtcParse(gw2Build, evtcVersion, logData, agentData, combatData, extensions);
+    }
+
     internal override IReadOnlyList<TargetID> GetTrashMobsIDs()
     {
         var trashIDs = new List<TargetID>(10 + base.GetTrashMobsIDs().Count);
@@ -96,7 +104,7 @@ internal class Arkk : ShatteredObservatory
         trashIDs.Add(TargetID.DOC);
         trashIDs.Add(TargetID.CHOP);
         trashIDs.Add(TargetID.ProjectionArkk);
-        trashIDs.Add(TargetID.ReactorArkk);
+        trashIDs.Add(TargetID.ReactorActiveArkk);
         return trashIDs;
     }
 
@@ -256,6 +264,45 @@ internal class Arkk : ShatteredObservatory
 
     }
 
+    internal static void IdentifyGadgets(AgentData agentData, List<CombatItem> combatData)
+    {
+        var electrocutedPositions = new[] {
+            // sides
+            new Vector2(-17905.2f, -15904.8f),
+            new Vector2(-18931.2f, -16899.7f),
+            new Vector2(-17945.8f, -17921.5f),
+            new Vector2(-16921.2f, -16908.7f),
+            // corners
+            // new Vector2(-16914.3f, -15900.4f),
+            // new Vector2(-18927.5f, -15900.4f),
+            // new Vector2(-18927.5f, -17935.9f),
+            // new Vector2(-16914.3f, -17935.9f),
+        }; // sides is enough for replay
+        foreach (var agent in agentData.GetAgentByType(AgentItem.AgentType.VolatileSpecies).Where(x => x.IsUnamedSpecies()))
+        {
+            switch (agent.HitboxWidth)
+            {
+                case 16:
+                    var posEvent = combatData.FirstOrDefault(x => x.IsPosition && x.SrcMatchesAgent(agent));
+                    if (posEvent != null)
+                    {
+                        var pos = MovementEvent.GetPoint3D(posEvent).XY();
+                        if (electrocutedPositions.Any(x => (x - pos).LengthSquared() < InchDistanceThresholdSquared))
+                        {
+                            agent.OverrideID(TargetID.ElectrocutedAreaArkk, agentData); // animations "zeropose", "areas" (beware collisions)
+                        }
+                    }
+                    break;
+                case 284:
+                    agent.OverrideID(TargetID.ReactorArkk, agentData); // animations "rebuild", "demolish"
+                    break;
+                case 472:
+                    agent.OverrideID(TargetID.TileArkk, agentData); // animations "on", "warning", "off"
+                    break;
+            }
+        }
+    }
+
     internal override void ComputePlayerCombatReplayActors(PlayerActor p, ParsedEvtcLog log, CombatReplay replay)
     {
         if (!log.LogData.IgnoreBaseCallsForCRAndInstanceBuffs)
@@ -366,7 +413,7 @@ internal class Arkk : ShatteredObservatory
             //         }
             //     }
             //     break;
-            case (int)TargetID.ReactorArkk:
+            case (int)TargetID.ReactorActiveArkk:
                 {
                     // reactor beams
                     var beamEvents = GetBuffApplyRemoveSequence(log.CombatData, ReactorBeamArkk, target, true, true);
@@ -395,6 +442,60 @@ internal class Arkk : ShatteredObservatory
                 environmentDecorations.Add(new PieDecoration(1400, 30, (end, end + 300), Colors.Red, 0.2, new PositionConnector(effect.Position)).UsingRotationConnector(rotation));
             }
         }
+
+        // electrocuted areas
+        foreach (var reactor in log.AgentData.GetStableSpeciesByID(TargetID.ElectrocutedAreaArkk))
+        {
+            const uint length = 2050;
+            const uint width = 650;
+            const float offset = 325f;
+            var center = new Vector2(-17931, -16914);
+            var areas = new Token("areas");
+            if (reactor.TryGetCurrentPosition(log, reactor.LastAware, out var position))
+            {
+                var isWest = position.Value.X < center.X;
+                var isNorthSouth = Math.Abs(position.Value.Y - center.Y) > 100f;
+                var connector = new PositionConnector(position.Value).WithOffset((isWest ? -1f : 1f) * offset * Vector3.UnitY, true);
+                var rotation = new AngleConnector(isNorthSouth ? 90f : 0f);
+                foreach (var anim in log.CombatData.GetGadgetAnimationData(reactor))
+                {
+                    if (anim.AnimationToken == areas)
+                    {
+                        var lifespan = (anim.Time, anim.LoopEnd ?? log.LogData.LogEnd);
+                        environmentDecorations.Add(new RectangleDecoration(width, length, lifespan, Colors.Orange, 0.2, connector).UsingRotationConnector(rotation));
+                    }
+                }
+            }
+        }
+
+        // disappearing tiles
+        foreach (var tile in log.AgentData.GetStableSpeciesByID(TargetID.TileArkk))
+        {
+            const uint size = 330;
+            var warning = new Token("warning");
+            var off = new Token("off");
+            if (tile.TryGetCurrentPosition(log, tile.LastAware, out var position))
+            {
+                foreach (var anim in log.CombatData.GetGadgetAnimationData(tile))
+                {
+                    var lifespan = (anim.Time, anim.LoopEnd ?? log.LogData.LogEnd);
+                    Color color;
+                    if (anim.AnimationToken == warning)
+                    {
+                        color = Colors.Orange;
+                    }
+                    else if (anim.AnimationToken == off)
+                    {
+                        color = Colors.Red;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                    environmentDecorations.Add(new RectangleDecoration(size, size, lifespan, color, 0.15, new PositionConnector(position.Value)));
+                }
+            }
+        }
     }
 
     internal override List<CastEvent> SpecialCastEventProcess(CombatData combatData, AgentData agentData, SkillData skillData, Dictionary<long, List<AnimatedCastEvent>> animatedCastDataByID)
@@ -403,6 +504,7 @@ internal class Arkk : ShatteredObservatory
         res.AddRange(ProfHelper.ComputeUnderBuffCastEvents(combatData, skillData, HypernovaLaunchSAK, HypernovaLaunchBuff));
         return res;
     }
+
     internal override void ComputeAchievementEligibilityEvents(ParsedEvtcLog log, Player p, List<AchievementEligibilityEvent> achievementEligibilityEvents)
     {
         if (!log.LogData.IgnoreBaseCallsForCRAndInstanceBuffs)

@@ -8,7 +8,7 @@ namespace GW2EIEvtcParser.ParsedData;
 partial class CombatData
 {
 
-    internal void AddStateChangeEvent(long logStart, CombatItem stateChangeEvent, AgentData agentData, 
+    internal void AddStateChangeEvent(long logStart, CombatItem stateChangeEvent, AgentData agentData,
         SkillData skillData, List<WeaponSwapEvent> wepSwaps,
         List<BuffEvent> buffEvents, List<StunBreakEvent> stunBreakEvents,
         EvtcVersionEvent evtcVersion, EvtcParserSettings settings,
@@ -435,11 +435,11 @@ partial class CombatData
                             lastSquadMarker.SetEndTime(squadMarkerEvent.Time);
                         }
                         else
-                        // Ignore current if last marker does not have an end set
-                        if (lastSquadMarker.EndNotSet)
-                        {
-                            break;
-                        }
+                            // Ignore current if last marker does not have an end set
+                            if (lastSquadMarker.EndNotSet)
+                            {
+                                break;
+                            }
                     }
                 }
                 Add(statusEvents.SquadMarkerEventsByIndex, squadMarkerEvent.MarkerIndex, squadMarkerEvent);
@@ -532,7 +532,7 @@ partial class CombatData
                         var last = srcTransformations.LastOrDefault();
                         last?.SetEndTime(transformationEvent.Time);
                     }
-                } 
+                }
                 else
                 {
                     if (statusEvents.TransformationEventsBySrc.TryGetValue(transformationEvent.Src, out var srcTransformations))
@@ -562,7 +562,7 @@ partial class CombatData
                 if (statusEvents.WvWObjectiveStatusEventsByKey.TryGetValue(key, out var existingStatus))
                 {
                     existingStatus.AddOwners(wvwObjectiveStatus);
-                } 
+                }
                 else
                 {
                     statusEvents.WvWObjectiveStatusEventsByKey[key] = wvwObjectiveStatus;
@@ -592,6 +592,11 @@ partial class CombatData
                 break;
             case StateChange.GadgetAnimation:
                 var gadgetAnimation = new GadgetAnimationEvent(stateChangeEvent, agentData);
+                if (_gadgetAnimationEventsByGadget.TryGetValue(gadgetAnimation.Gadget, out var animations))
+                {
+                    var last = animations[^1];
+                    last.SetNext(gadgetAnimation);
+                }
                 Add(_gadgetAnimationEventsByToken, gadgetAnimation.AnimationToken, gadgetAnimation);
                 Add(_gadgetAnimationEventsByGadget, gadgetAnimation.Gadget, gadgetAnimation);
                 break;
@@ -651,12 +656,12 @@ partial class CombatData
             if (buffEvent.IsStateChange == StateChange.BuffChange)
             {
                 buffEvents.Add(new BuffExtensionEvent(buffEvent, agentData, skillData));
-            } 
+            }
             else
             {
                 buffEvents.Add(new BuffApplyEvent(buffEvent, agentData, skillData, evtcVersion));
             }
-        } 
+        }
         else
         {
             if (buffEvent.IsOffcycle > 0)
@@ -781,7 +786,7 @@ partial class CombatData
             }
             resBySrcAgent.SortByTime();
 
-            // sanitize 
+            // sanitize
             for (int i = 0; i < resBySrcAgent.Count - 1; i++)
             {
                 resBySrcAgent[i].CutAt(resBySrcAgent[i + 1].Time + ServerDelayConstant);
@@ -792,7 +797,7 @@ partial class CombatData
         return res;
     }
 
-    private static void AddNonDamageDamageEvent(CombatItem damageEvent, DamageResult result, 
+    private static void AddNonDamageDamageEvent(CombatItem damageEvent, DamageResult result,
         List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage,
         List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents,
         List<StunBreakEvent> stunBreakEvents,
@@ -823,7 +828,7 @@ partial class CombatData
         }
     }
 
-    internal static void AddDirectDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage, 
+    internal static void AddDirectDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage,
         List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents,
         List<StunBreakEvent> stunBreakEvents,
         AgentData agentData, SkillData skillData)
@@ -853,7 +858,7 @@ partial class CombatData
         }
     }
 
-    internal static void AddBuffDamageDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage, 
+    internal static void AddBuffDamageDamageEvent(CombatItem damageEvent, List<HealthDamageEvent> hpDamage, List<BreakbarDamageEvent> brkBarDamage,
         List<BreakbarRecoveryEvent> brkBarRecovered, List<CrowdControlEvent> crowdControlEvents,
         List<StunBreakEvent> stunBreakEvents,
         AgentData agentData, SkillData skillData, EvtcVersionEvent evtcVersion)

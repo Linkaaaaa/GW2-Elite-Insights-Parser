@@ -2364,6 +2364,7 @@ public static class SkillIDs
     public const long EnsolyssNightmareBullet13 = 37496;
     public const long CausticBarrage = 37497;
     public const long DeterminationEnsolyss = 37498;
+    public const long FixationTether = 37501;
     public const long EnsolyssNightmareBomb9 = 37510;
     public const long EnsolyssNightmareRespite7 = 37516;
     public const long DireTorment = 37522;

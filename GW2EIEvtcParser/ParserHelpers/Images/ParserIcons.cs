@@ -1305,7 +1305,7 @@ internal static class ParserIcons
         { TargetID.FluxAnomalyCM3, TrashFluxAnomaly },
         { TargetID.FluxAnomalyCM4, TrashFluxAnomaly },
         { TargetID.SolarBloom, TrashSolarBloom },
-        { TargetID.ReactorArkk, TrashReactorArkk },
+        { TargetID.ReactorActiveArkk, TrashReactorArkk },
         { TargetID.Torch, TrashTorch },
         { TargetID.AberrantWisp, TrashAberrantWisp },
         { TargetID.BoundIcebroodElemental, TrashBoundIcebroodElemental },

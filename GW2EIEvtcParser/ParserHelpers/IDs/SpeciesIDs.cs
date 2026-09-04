@@ -642,7 +642,10 @@ public static class SpeciesIDs
         CHOP = 16552,
         ProjectionArkk = 17613,
         TimePocketArkk = 17709, // spawns before anomaly, creates dome effect
-        ReactorArkk = 17823,
+        ReactorActiveArkk = 17823,
+        ReactorArkk = SpeciesIDs.ReactorArkk,
+        ElectrocutedAreaArkk = SpeciesIDs.ElectrocutedAreaArkk,
+        TileArkk = SpeciesIDs.TileArkk,
         // - Ai
         Parent_AiKeeperOfThePeak = ParentAiKeeperOfThePeak,
         AiKeeperOfThePeak = 23254,
@@ -1268,6 +1271,9 @@ public static class SpeciesIDs
     private const int InsectSwarms = -123;
     private const int EtherealSeal = -124;
     private const int SabethaPlatform = -125;
+    private const int ReactorArkk = -126;
+    private const int ElectrocutedAreaArkk = -127;
+    private const int TileArkk = -128;
 
     public const int IgnoredSpecies = int.MinValue;
     public const int NonIdentifiedSpecies = 0;
