@@ -62,7 +62,6 @@ public sealed class AvaloniaOperationController : OperationController
 
     public void ToRunState()
     {
-        _cancellationTokenSource.Dispose();
         _cancellationTokenSource = new CancellationTokenSource();
 
         SetState(OperationState.Parsing);
@@ -95,9 +94,6 @@ public sealed class AvaloniaOperationController : OperationController
 
     public override void ResetContent()
     {
-        _cancellationTokenSource.Dispose();
-        _cancellationTokenSource = new CancellationTokenSource();
-
         base.ResetContent();
         ToReadyState();
     }
@@ -115,5 +111,10 @@ public sealed class AvaloniaOperationController : OperationController
         base.UpdateProgress(status);
         Status = status;
         ProgressUpdated?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void DisposeCancellation()
+    {
+        _cancellationTokenSource.Dispose();
     }
 }

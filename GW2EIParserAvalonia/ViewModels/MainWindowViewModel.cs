@@ -54,7 +54,7 @@ public partial class MainWindowViewModel : ObservableObject
     public SettingsViewModel SettingsViewModel { get; }
     public bool AnyRunning => _runningCount > 0;
 
-    public MainWindowViewModel(IApplicationTrace trace)
+    public MainWindowViewModel(IApplicationTrace trace, CommandLineOptions? commandLineOptions)
     {
         _trace = trace;
 
@@ -71,6 +71,14 @@ public partial class MainWindowViewModel : ObservableObject
         LogTracesVisible = SettingsViewModel.SaveOutTrace;
 
         Version = $"v{typeof(MainWindowViewModel).Assembly.GetName().Version?.ToString() ?? string.Empty}";
+
+        if (commandLineOptions != null && commandLineOptions.LogFiles.Count > 0)
+        {
+            foreach (var file in commandLineOptions.LogFiles)
+            {
+                AddFile(file);
+            }
+        }
 
         UpdateWatchDirectory();
         UpdateButtonStates();
@@ -340,7 +348,7 @@ public partial class MainWindowViewModel : ObservableObject
 
             if (logFile.State != OperationState.Complete)
             {
-                logFile.Operation.Reset();
+                logFile.Operation.ResetContent();
                 UpdateLogState(logFile);
             }
 

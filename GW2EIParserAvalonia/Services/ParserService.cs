@@ -18,9 +18,18 @@ public sealed class ParserService
         _programHelper = new ProgramHelper(version, Settings);
     }
 
-    public Task ParseAsync(AvaloniaOperationController operation)
+    public async Task ParseAsync(AvaloniaOperationController operation)
     {
-        return Task.Run(() => _programHelper.DoWork(operation), operation.CancellationToken);
+        var cancellationToken = operation.CancellationToken;
+
+        try
+        {
+            await Task.Run(() => _programHelper.DoWork(operation), cancellationToken);
+        }
+        finally
+        {
+            operation.DisposeCancellation();
+        }
     }
 
     public bool ParseMultipleLogs()
