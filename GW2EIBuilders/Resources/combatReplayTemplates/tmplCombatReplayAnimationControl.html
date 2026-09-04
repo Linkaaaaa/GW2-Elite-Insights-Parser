@@ -1,7 +1,7 @@
 <template>
-    <div class="d-flex flex-column align-items-center">
+    <div>
         <ul v-if="showNormalPhases && isTouchDevice"
-            class="nav nav-pills d-flex flex-row justify-content-center mb-1" :style="{ 'max-width': (timelineWidth - 30) + 'px' }">
+            class="nav nav-pills d-flex flex-row justify-content-center mb-1 mx-auto">
             <li class="nav-item" v-for="(phase, id) in normalPhases"
                 :data-original-title="phase.durationS + ' seconds <br /> Start: ' + phase.start + '<br /> End: ' + phase.end">
                 <a class="nav-link" @click="updatePhaseTime(phase)">
@@ -9,8 +9,8 @@
                 </a>
             </li>
         </ul>
-        <div v-if="showNormalPhases && !isTouchDevice" class="position-relative">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Phase Selector">
+        <div v-if="showNormalPhases && !isTouchDevice" class="d-flex">
+            <a href="#" class="dropdown-toggle mx-auto" data-toggle="dropdown" title="Phase Selector">
                 {{ selectedPhase && !selectedPhase.breakbarPhase ? getPhaseName(selectedPhase) : 'Phase Selector' }}
                 <span class="caret"></span>
             </a>
@@ -23,20 +23,22 @@
             </ul>
         </div>
 
-        <div class="position-relative mt-1" :style="{'min-width': canvasSize.x + 'px', 'height': canvasSize.y + 'px'}">
-            <canvas class="replay" :width="canvasSize.x + 'px'" :height="canvasSize.y + 'px'" :id="htmlElementIDs.mainCanvasID"></canvas>
-            <canvas class="replay" :width="canvasSize.x + 'px'" :height="canvasSize.y + 'px'" :id="htmlElementIDs.bgCanvasID"></canvas>
-            <canvas class="replay" :width="canvasSize.x + 'px'" :height="canvasSize.y + 'px'" :id="htmlElementIDs.pickCanvasID"></canvas>
+        <div class="d-flex mt-1">
+            <div class="position-relative mx-auto">
+                <canvas class="replay position-relative" :width="canvasSize.x + 'px'" :height="canvasSize.y + 'px'" :id="htmlElementIDs.mainCanvasID"></canvas>
+                <canvas class="replay top-0 left-0" :width="canvasSize.x + 'px'" :height="canvasSize.y + 'px'" :id="htmlElementIDs.bgCanvasID"></canvas>
+                <canvas class="replay top-0 left-0" :width="canvasSize.x + 'px'" :height="canvasSize.y + 'px'" :id="htmlElementIDs.pickCanvasID"></canvas>
 
-            <div @click="resetViewpoint();" class="btn btn-small position-bottom-left opacity-90 top-of-canvas m-2"
-                 :class="{'btn-dark': !light, 'btn-light': light}"
-                 data-original-title="Reset canvas position">
-                &#9974; Reset Viewpoint
-            </div>
-            <div v-show="!isTouchDevice && isMechanicSelected" @click="resetMechanic();"
-                 class="btn btn-small position-bottom-right opacity-90 top-of-canvas m-2" :class="{'btn-dark': !light, 'btn-light': light}"
-                 data-original-title="Remove mechanic ticks from timeline">
-                &#128295; Reset Mechanic
+                <div @click="resetViewpoint();" class="btn btn-small position-bottom-left opacity-90 top-of-canvas m-2"
+                     :class="{'btn-dark': !light, 'btn-light': light}"
+                     data-original-title="Reset canvas position">
+                    &#9974; Reset Viewpoint
+                </div>
+                <div v-show="!isTouchDevice && isMechanicSelected" @click="resetMechanic();"
+                     class="btn btn-small position-bottom-right opacity-90 top-of-canvas m-2" :class="{'btn-dark': !light, 'btn-light': light}"
+                     data-original-title="Remove mechanic ticks from timeline">
+                    &#128295; Reset Mechanic
+                </div>
             </div>
         </div>
 

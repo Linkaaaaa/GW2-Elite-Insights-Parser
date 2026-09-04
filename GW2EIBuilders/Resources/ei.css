@@ -711,6 +711,14 @@ table tbody td.mech-actor-active {
     border-bottom-right-radius: 0.25rem;
 }
 
+.combat-replay {
+    display: grid;
+    grid-template-columns: 600px 1fr 600px;
+    gap: 10px;
+    margin-inline: 50px;
+    margin-block: 10px;
+}
+
 canvas {
     position: absolute;
 }
@@ -1162,4 +1170,12 @@ td.approximate::before {
 
 .border-dark {
     border-color: black !important;
+}
+
+.top-0 {
+    top: 0;
+}
+
+.left-0 {
+    left: 0;
 }
