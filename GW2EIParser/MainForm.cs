@@ -112,86 +112,95 @@ internal sealed partial class MainForm : Form
         _settingsForm.ConditionalSettingDisable(_anyRunning);
         operation.ToQueuedState();
         AddTraceMessage("Operation: Queued " + operation.InputFile);
+#pragma warning disable CA2000
         var cancelTokenSource = new CancellationTokenSource();// Prepare task
-        Task task = Task.Run(() =>
+#pragma warning restore CA2000
+        try
         {
-            operation.ToRunState();
-            AddTraceMessage("Operation: Parsing " + operation.InputFile);
-            _programHelper.DoWork(operation);
-        }, cancelTokenSource.Token).ContinueWith(t =>
-        {
-            cancelTokenSource.Dispose();
-            _runningCount--;
-            AddTraceMessage("Operation: Parsed " + operation.InputFile);
-            // Exception management
-            if (t.IsFaulted)
+            Task task = Task.Run(() =>
             {
-                if (t.Exception != null)
+                operation.ToRunState(cancelTokenSource);
+                AddTraceMessage("Operation: Parsing " + operation.InputFile);
+                _programHelper.DoWork(operation);
+            }, cancelTokenSource.Token)
+                .ContinueWith(t =>
                 {
-                    if (t.Exception.InnerExceptions.Count > 1)
+                    cancelTokenSource.Dispose();
+                    _runningCount--;
+                    AddTraceMessage("Operation: Parsed " + operation.InputFile);
+                    // Exception management
+                    if (t.IsFaulted)
                     {
-                        operation.UpdateProgress("Program: something terrible has happened");
-                    }
-                    else
-                    {
-                        Exception ex = t.Exception.InnerExceptions[0];
-                        if (ex is not ProgramException)
+                        if (t.Exception != null)
+                        {
+                            if (t.Exception.InnerExceptions.Count > 1)
+                            {
+                                operation.UpdateProgress("Program: something terrible has happened");
+                            }
+                            else
+                            {
+                                Exception ex = t.Exception.InnerExceptions[0];
+                                if (ex is not ProgramException)
+                                {
+                                    operation.UpdateProgress("Program: something terrible has happened");
+                                }
+                                if (ex.InnerException is OperationCanceledException)
+                                {
+                                    operation.UpdateProgress("Program: operation Aborted");
+                                }
+                                else if (ex.InnerException != null)
+                                {
+                                    var finalException = ParserHelper.GetFinalException(ex);
+                                    operation.UpdateProgress("Program: " + finalException.Source);
+                                    operation.UpdateProgress("Program: " + finalException.StackTrace);
+                                    operation.UpdateProgress("Program: " + finalException.TargetSite);
+                                    operation.UpdateProgress("Program: " + finalException.Message);
+                                }
+                            }
+                        }
+                        else
                         {
                             operation.UpdateProgress("Program: something terrible has happened");
                         }
-                        if (ex.InnerException is OperationCanceledException)
+                    }
+                    if (operation.State == OperationState.ClearOnCancel)
+                    {
+                        OperatorBindingSource.Remove(operation);
+                    }
+                    else
+                    {
+                        if (t.IsFaulted)
+                        {
+                            OperationController.FailureReason reason = OperationController.GetReasonFromException(t.Exception);
+                            operation.ToUnCompleteState(reason);
+                        }
+                        else if (t.IsCanceled)
                         {
                             operation.UpdateProgress("Program: operation Aborted");
+                            operation.ToUnCompleteState(OperationController.FailureReason.User);
                         }
-                        else if (ex.InnerException != null)
+                        else if (t.IsCompleted)
                         {
-                            var finalException = ParserHelper.GetFinalException(ex);
-                            operation.UpdateProgress("Program: " + finalException.Source);
-                            operation.UpdateProgress("Program: " + finalException.StackTrace);
-                            operation.UpdateProgress("Program: " + finalException.TargetSite);
-                            operation.UpdateProgress("Program: " + finalException.Message);
+                            operation.ToCompleteState();
+                        }
+                        else
+                        {
+                            operation.UpdateProgress("Program: something terrible has happened");
+                            operation.ToUnCompleteState(OperationController.FailureReason.Fatal);
                         }
                     }
-                }
-                else
-                {
-                    operation.UpdateProgress("Program: something terrible has happened");
-                }
-            }
-            if (operation.State == OperationState.ClearOnCancel)
-            {
-                OperatorBindingSource.Remove(operation);
-            }
-            else
-            {
-                if (t.IsFaulted)
-                {
-                    OperationController.FailureReason reason = OperationController.GetReasonFromException(t.Exception);
-                    operation.ToUnCompleteState(reason);
-                }
-                else if (t.IsCanceled)
-                {
-                    operation.UpdateProgress("Program: operation Aborted");
-                    operation.ToUnCompleteState(OperationController.FailureReason.User);
-                }
-                else if (t.IsCompleted)
-                {
-                    operation.ToCompleteState();
-                }
-                else
-                {
-                    operation.UpdateProgress("Program: something terrible has happened");
-                    operation.ToUnCompleteState(OperationController.FailureReason.Fatal);
-                }
-            }
-            _programHelper.GenerateTraceFile(operation);
-            if (operation.State != OperationState.Complete)
-            {
-                operation.ResetContent();
-            }
-            _RunNextOperation();
-        }, TaskScheduler.FromCurrentSynchronizationContext());
-        operation.SetContext(cancelTokenSource, task);
+                    _programHelper.GenerateTraceFile(operation);
+                    if (operation.State != OperationState.Complete)
+                    {
+                        operation.ResetContent();
+                    }
+                    _RunNextOperation();
+                }, TaskScheduler.FromCurrentSynchronizationContext());
+        } 
+        catch
+        {
+            cancelTokenSource.Dispose();
+        }
     }
 
     /// <summary>
@@ -270,7 +279,7 @@ internal sealed partial class MainForm : Form
 
             foreach (FormOperationController operation in OperatorBindingSource)
             {
-                if (!operation.IsBusy())
+                if (operation.IsIdle)
                 {
                     QueueOrRunOperation(operation);
                 }
@@ -293,11 +302,11 @@ internal sealed partial class MainForm : Form
         //Cancel all workers
         foreach (FormOperationController operation in OperatorBindingSource)
         {
-            if (operation.IsBusy())
+            if (operation.IsRunning)
             {
                 operation.ToCancelState();
-            }
-            else if (operations.Contains(operation))
+            } 
+            else if (operation.IsIdleOrPending && operations.Contains(operation))
             {
                 operation.ToReadyState();
             }
@@ -328,11 +337,11 @@ internal sealed partial class MainForm : Form
         for (int i = OperatorBindingSource.Count - 1; i >= 0; i--)
         {
             var operation = OperatorBindingSource[i] as FormOperationController;
-            if (operation.IsBusy())
+            if (operation.IsRunning)
             {
                 operation.ToCancelAndClearState();
             }
-            else
+            else if (operation.IsIdleOrPending)
             {
                 OperatorBindingSource.RemoveAt(i);
             }
@@ -345,7 +354,7 @@ internal sealed partial class MainForm : Form
         for (int i = OperatorBindingSource.Count - 1; i >= 0; i--)
         {
             var operation = OperatorBindingSource[i] as FormOperationController;
-            if (!operation.IsBusy() && operation.State == OperationState.UnComplete)
+            if (operation.State == OperationState.UnComplete)
             {
                 OperatorBindingSource.RemoveAt(i);
             }
@@ -445,6 +454,7 @@ internal sealed partial class MainForm : Form
                             break;
 
                         case OperationState.Parsing:
+                        case OperationState.Queued:
                             AddTraceMessage("UI: Cancel single log parsing");
                             operation.ToCancelState();
                             break;
@@ -458,9 +468,6 @@ internal sealed partial class MainForm : Form
                                 _logQueue.Enqueue(op);
                             }
                             operation.ToReadyState();
-                            break;
-                        case OperationState.Queued:
-                            operation.ToRemovalFromQueueState();
                             break;
 
                         case OperationState.Complete:
