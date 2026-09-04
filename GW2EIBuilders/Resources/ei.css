@@ -713,10 +713,10 @@ table tbody td.mech-actor-active {
 
 .combat-replay {
     display: grid;
-    grid-template-columns: 600px 1fr 600px;
+    grid-template-columns: 600px 750px 500px;
     gap: 10px;
-    margin-inline: 50px;
-    margin-block: 10px;
+    max-width: 1870px;
+    margin: 10px auto;
 }
 
 canvas {
