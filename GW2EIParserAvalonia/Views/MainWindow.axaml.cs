@@ -19,7 +19,12 @@ namespace GW2EIParserAvalonia.Views;
 public partial class MainWindow : Window
 {
     private FileSystemWatcher? _logFileWatcher;
-    private readonly IApplicationTrace _trace;
+    private readonly IApplicationTrace _trace = null!;
+
+    public MainWindow()
+    {
+        InitializeComponent();
+    }
 
     public MainWindow(IApplicationTrace trace)
     {

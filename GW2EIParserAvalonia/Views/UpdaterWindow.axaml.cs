@@ -12,7 +12,7 @@ namespace GW2EIParserAvalonia.Views;
 public partial class UpdaterWindow : Window
 {
     private readonly Updater.UpdateInfo _info;
-    private readonly IApplicationTrace _trace;
+    private readonly IApplicationTrace _trace = null!;
 
     public event EventHandler? UpdateStarted;
 

@@ -6,8 +6,13 @@ namespace GW2EIParserAvalonia.Views;
 
 public partial class MessageWindow : Window
 {
-    public string Message { get; }
-    private readonly IApplicationTrace _trace;
+    public string Message { get; } = string.Empty;
+    private readonly IApplicationTrace _trace = null!;
+
+    public MessageWindow()
+    {
+        InitializeComponent();
+    }
 
     public MessageWindow(string message, IApplicationTrace trace, string title = "GW2 Elite Insights Parser")
     {

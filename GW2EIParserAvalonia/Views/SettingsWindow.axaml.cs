@@ -12,7 +12,12 @@ namespace GW2EIParserAvalonia.Views;
 
 public partial class SettingsWindow : Window
 {
-    private readonly IApplicationTrace _trace;
+    private readonly IApplicationTrace _trace = null!;
+
+    public SettingsWindow()
+    {
+        InitializeComponent();
+    }
 
     public SettingsWindow(SettingsViewModel viewModel, IApplicationTrace trace)
     {
