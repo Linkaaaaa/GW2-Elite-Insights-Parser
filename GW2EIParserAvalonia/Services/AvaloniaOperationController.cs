@@ -147,6 +147,18 @@ public sealed class AvaloniaOperationController : OperationController
         }
     }
 
+    public override void ResetContent()
+    {
+        base.ResetContent();
+        _logFileViewModel.UpdateFromOperation();
+    }
+
+    public override void ResetState()
+    {
+        base.ResetState();
+        _logFileViewModel.UpdateFromOperation();
+    }
+
     public override void UpdateProgress(string status)
     {
         base.UpdateProgress(status);
