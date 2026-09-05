@@ -196,7 +196,7 @@ public abstract class OperationController : ParserController
         _GeneratedFiles.Add(path);
     }
 
-    public void FinalizeStatus(bool parsed, FailureReason reason)
+    public virtual void FinalizeStatus(bool parsed, FailureReason reason)
     {
         StatusList.Insert(0, ("Elapsed " + Elapsed + " ms"));
         Status = StatusList.LastOrDefault() ?? "";

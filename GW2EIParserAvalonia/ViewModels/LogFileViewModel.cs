@@ -35,10 +35,15 @@ public partial class LogFileViewModel : ObservableObject
     public event EventHandler? PendingCancellationRequested;
     public event EventHandler? RemoveRequested;
 
+
+    public bool IsRunning => Operation.IsRunning;
+    public bool IsIdle => Operation.IsIdle;
+    public bool IsIdleOrPending => Operation.IsIdleOrPending;
+
     public LogFileViewModel(string fullPath)
     {
         inputFilePath = fullPath;
-        Operation = new AvaloniaOperationController(inputFilePath);
+        Operation = new AvaloniaOperationController(inputFilePath, this);
         logStatus = Operation.Status;
         buttonText = Operation.ButtonText;
         reParseText = Operation.ReParseText;
@@ -48,16 +53,6 @@ public partial class LogFileViewModel : ObservableObject
         reParseEnabled = Operation.ReParseEnabled;
         logTracesEnabled = Operation.LogTracesEnabled;
         Operation.ProgressUpdated += Operation_ProgressUpdated;
-    }
-
-    public bool IsBusy()
-    {
-        return State is
-            OperationState.Queued
-            or OperationState.Pending
-            or OperationState.Parsing
-            or OperationState.Cancelling
-            or OperationState.ClearOnCancel;
     }
 
     [RelayCommand]
@@ -70,15 +65,11 @@ public partial class LogFileViewModel : ObservableObject
                 ParseRequested?.Invoke(this, EventArgs.Empty);
                 break;
             case OperationState.Parsing:
+            case OperationState.Queued:
                 Operation.ToCancelState();
-                UpdateFromOperation();
                 break;
             case OperationState.Pending:
                 PendingCancellationRequested?.Invoke(this, EventArgs.Empty);
-                break;
-            case OperationState.Queued:
-                Operation.ToCancelState();
-                UpdateFromOperation();
                 break;
             case OperationState.Complete:
                 OpenGeneratedFiles(Operation.OpenableFiles);
@@ -149,7 +140,7 @@ public partial class LogFileViewModel : ObservableObject
         ReParseEnabled = Operation.ReParseEnabled;
         LogTracesEnabled = Operation.LogTracesEnabled;
         Elapsed = Operation.Elapsed;
-        RemoveEnabled = !IsBusy();
+        RemoveEnabled = Operation.IsIdle;
     }
 
     private void Operation_ProgressUpdated(object? sender, EventArgs e)

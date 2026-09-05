@@ -9,5 +9,7 @@ public enum OperationState
     Pending = 4,
     ClearOnCancel = 5,
     Queued = 6,
-    UnComplete = 7
+    UnComplete = 7,
+    RemoveFromQueue = 8,
+    RemoveFromQueueAndClear = 9,
 }

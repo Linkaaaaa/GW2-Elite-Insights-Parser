@@ -141,7 +141,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         foreach (var logFile in LogFiles)
         {
-            if (!logFile.IsBusy())
+            if (logFile.Operation.IsIdle)
             {
                 QueueOrRunOperation(logFile);
             }
@@ -156,15 +156,15 @@ public partial class MainWindowViewModel : ObservableObject
 
         foreach (var logFile in LogFiles)
         {
-            if (logFile.IsBusy())
+            if (logFile.IsRunning)
             {
                 logFile.Operation.ToCancelState();
-                UpdateLogState(logFile);
+                UpdateQueueStatus();
             }
-            else if (queued.Contains(logFile))
+            else if (logFile.IsIdleOrPending && queued.Contains(logFile))
             {
                 logFile.Operation.ToReadyState();
-                UpdateLogState(logFile);
+                UpdateQueueStatus();
             }
         }
 
@@ -179,12 +179,12 @@ public partial class MainWindowViewModel : ObservableObject
         {
             var logFile = LogFiles[i];
 
-            if (logFile.IsBusy())
+            if (logFile.IsRunning)
             {
                 logFile.Operation.ToCancelAndClearState();
-                UpdateLogState(logFile);
+                UpdateQueueStatus();
             }
-            else
+            else if (logFile.IsIdleOrPending)
             {
                 LogFiles.RemoveAt(i);
                 UpdateQueueStatus();
@@ -200,7 +200,7 @@ public partial class MainWindowViewModel : ObservableObject
         {
             var logFile = LogFiles[i];
 
-            if (!logFile.IsBusy() && logFile.State == OperationState.UnComplete)
+            if (logFile.State == OperationState.UnComplete)
             {
                 LogFiles.RemoveAt(i);
             }
@@ -283,7 +283,7 @@ public partial class MainWindowViewModel : ObservableObject
         {
             _logQueue.Enqueue(logFile);
             logFile.Operation.ToPendingState();
-            UpdateLogState(logFile);
+            UpdateQueueStatus();
         }
     }
 
@@ -293,14 +293,14 @@ public partial class MainWindowViewModel : ObservableObject
         _runningCount++;
 
         logFile.Operation.ToQueuedState();
-        UpdateLogState(logFile);
+        UpdateQueueStatus();
         _trace.Add("Operation: Queued " + logFile.InputFilePath);
 
         try
         {
             await _parserService.ParseAsync(logFile.Operation, () =>
             {
-                UpdateLogState(logFile);
+                UpdateQueueStatus();
                 _trace.Add("Operation: Parsing " + logFile.InputFilePath);
             });
 
@@ -338,7 +338,7 @@ public partial class MainWindowViewModel : ObservableObject
             }
             else
             {
-                UpdateLogState(logFile);
+                UpdateQueueStatus();
             }
 
             _parserService.GenerateTraceFile(logFile.Operation);
@@ -346,7 +346,7 @@ public partial class MainWindowViewModel : ObservableObject
             if (logFile.State != OperationState.Complete)
             {
                 logFile.Operation.ResetContent();
-                UpdateLogState(logFile);
+                UpdateQueueStatus();
             }
 
             RunNextOperation();
@@ -380,12 +380,12 @@ public partial class MainWindowViewModel : ObservableObject
         }
 
         logFile.Operation.ToReadyState();
-        UpdateLogState(logFile);
+        UpdateQueueStatus();
     }
 
     private void LogFile_RemoveRequested(object? sender, EventArgs e)
     {
-        if (sender is not LogFileViewModel logFile || logFile.IsBusy())
+        if (sender is not LogFileViewModel logFile || !logFile.RemoveEnabled)
         {
             return;
         }
@@ -421,12 +421,6 @@ public partial class MainWindowViewModel : ObservableObject
     public void UpdateVersionLabel(bool isAvailable)
     {
         Version = isAvailable ? Version + " (Update Available)" : Version;
-    }
-
-    private void UpdateLogState(LogFileViewModel logFile)
-    {
-        logFile.UpdateFromOperation();
-        UpdateQueueStatus();
     }
 
     private void UpdateQueueStatus()
