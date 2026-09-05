@@ -272,7 +272,6 @@ public partial class MainWindowViewModel : ObservableObject
 
     private void QueueOrRunOperation(LogFileViewModel logFile)
     {
-        UpdateButtonStates();
 
         if (!AnyRunning || (_parserService.ParseMultipleLogs() && _runningCount < _parserService.GetMaxParallelRunning()))
         {
@@ -284,6 +283,7 @@ public partial class MainWindowViewModel : ObservableObject
             logFile.Operation.ToPendingState();
             UpdateQueueStatus();
         }
+        UpdateButtonStates();
     }
 
     private async Task RunOperationAsync(LogFileViewModel logFile)
