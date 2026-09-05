@@ -208,7 +208,7 @@
 
                     <DataGridTextColumn
                         Header="Elapsed"
-                        Binding="{Binding Elapsed}"
+                        Binding="{Binding Elapsed, StringFormat='\{0:#;-#;\}'}}"
                         Width="100" />
 
                 </DataGrid.Columns>
