@@ -94,6 +94,7 @@
             Grid.Row="2"
             BorderThickness="1"
             CornerRadius="6"
+            Background="Transparent"
             Padding="1">
 
             <DataGrid
@@ -104,7 +105,9 @@
                 GridLinesVisibility="Horizontal"
                 RowHeight="40"
                 HeadersVisibility="Column"
-                DoubleTapped="LogFilesGrid_DoubleTapped">
+                DoubleTapped="LogFilesGrid_DoubleTapped"
+                Background="Transparent">
+                
 
                 <DataGrid.Columns>
 

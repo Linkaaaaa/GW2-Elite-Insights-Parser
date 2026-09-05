@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.VisualTree;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
@@ -207,6 +209,13 @@ public partial class MainWindow : Window
 
     private async void LogFilesGrid_DoubleTapped(object? sender, TappedEventArgs e)
     {
+        var row = (e.Source as Visual)?.FindAncestorOfType<DataGridRow>();
+        var header = (e.Source as Visual)?.FindAncestorOfType<DataGridColumnHeader>();
+        if (header != null || row != null)
+        {
+            return;
+        }
+
         FilePicker();
     }
 
