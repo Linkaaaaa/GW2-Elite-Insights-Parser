@@ -1,83 +1,78 @@
 <template>
     <div>
-        <div class="d-flex flex-row justify-content-center">
-            <div v-if="rowPageCount > 0" style="width:25px;">
-                <table-scroll-component :min="0" :max="rowPageCount" :width="'230px'" :height="'10px'" :transform="colPageCount > 0 ? 'translate(-100px, 210px) rotate(90deg)' : 'translate(-100px, 185px) rotate(90deg)' " :pagestructure="rowStructure"></table-scroll-component>
-            </div>
-            <div>
-                <div v-if="colPageCount > 0">
-                    <table-scroll-component :min="0" :max="colPageCount" :width="'200px'" :height="'10px'" :transform="'translate(350px, 5px)'" :pagestructure="colStructure"></table-scroll-component>
-                </div>
-                <table class="table table-sm table-striped table-hover" cellspacing="0" width="100%" :id="tableid">
-                    <thead>
-                        <tr>
-                            <th class="prof-cell" :class="getHeaderClass('Prof')" @click="sortBy('Prof')"></th>
-                            <th class="name-cr-cell text-left" :class="getHeaderClass('Name')" @click="sortBy('Name')">
-                                Name
-                            </th>
-                            <th class="damage-cr-cell-small" :class="getHeaderClass('All')" @click="sortBy('All')">
-                                All
-                            </th>
-                            <th class="damage-cr-cell-small" :class="getHeaderClass('Taken')" @click="sortBy('Taken')">
-                                Taken
-                            </th>
-                            <th v-if="!targetless" v-for="(col, colIndex) in tableData.cols" v-show="isInColPage(colIndex)"
-                                class="damage-cr-cell" :class="getHeaderClass('Target', colIndex)" @click="sortBy('Target', colIndex)">
-                                <span class="cr-ellipsis" :data-original-title="col.name">
-                                    {{col.name}}
-                                </span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(row, rowIndex) in sortData(tableData.rows)" 
-                            :class="{active: row.player.uniqueID === playerid}" 
-                            v-show="isInRowPage(rowIndex)" @click="select(row.player)"
-                            @mousedown="startSelect"
-                            style="cursor: pointer;">
-                            <td :class="getBodyClass('Prof')" :title="row.player.profession">
-                                <img :src="row.player.icon" :alt="row.player.profession" class="icon">
-                                <span style="display:none">
-                                    {{row.player.profession}}
-                                </span>
-                            </td>
-                            <td class="text-left" :class="getBodyClass('Name')">
-                                <span class="cr-ellipsis" :title="row.player.name + ' - ' + row.player.acc">
-                                    {{row.player.name}}
-                                </span>
-                            </td>
-                            <td :class="getBodyClass('All')">
-                                {{tableRound(row.dps[row.dps.length - 1])}}
-                            </td>
-                            <td :class="getBodyClass('Taken')">
-                                {{tableRound(row.dps[row.dps.length - 2])}}
-                            </td>
-                            <td v-if="!targetless" v-for="(col, colIndex) in tableData.cols" v-show="isInColPage(colIndex)"
-                                :class="getBodyClass('Target', colIndex)">
-                                {{tableRound(row.dps[colIndex])}}
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr v-for="sum in tableData.sums">
-                            <td></td>
-                            <td>
-                                {{sum.name}}
-                            </td>
-                            <td>
-                                {{tableRound(sum.dps[sum.dps.length - 1])}}
-                            </td>
-                            <td>
-                                {{tableRound(sum.dps[sum.dps.length - 2])}}
-                            </td>
-                            <td v-if="!targetless" v-for="(col, colIndex) in tableData.cols" v-show="isInColPage(colIndex)">
-                                {{tableRound(sum.dps[colIndex])}}
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+        <div v-if="rowPageCount > 0" style="width:25px;">
+            <table-scroll-component :min="0" :max="rowPageCount" :width="'230px'" :height="'10px'" :transform="colPageCount > 0 ? 'translate(-100px, 210px) rotate(90deg)' : 'translate(-100px, 185px) rotate(90deg)' " :pagestructure="rowStructure"></table-scroll-component>
         </div>
+
+        <table-scroll-component v-if="colPageCount > 0" :min="0" :max="colPageCount" :width="'200px'" :height="'10px'" :transform="'translateX(390px)'" :pagestructure="colStructure" />
+        <table class="table table-sm table-striped table-hover border rounded border-dark" cellspacing="0" width="100%" :id="tableid">
+            <thead>
+                <tr>
+                    <th class="prof-cell" :class="getHeaderClass('Prof')" @click="sortBy('Prof')"></th>
+                    <th class="name-cr-cell text-left" :class="getHeaderClass('Name')" @click="sortBy('Name')">
+                        Name
+                    </th>
+                    <th class="damage-cr-cell-small" :class="getHeaderClass('All')" @click="sortBy('All')">
+                        All
+                    </th>
+                    <th class="damage-cr-cell-small" :class="getHeaderClass('Taken')" @click="sortBy('Taken')">
+                        Taken
+                    </th>
+                    <th v-if="!targetless" v-for="(col, colIndex) in tableData.cols" v-show="isInColPage(colIndex)"
+                        class="damage-cr-cell" :class="getHeaderClass('Target', colIndex)" @click="sortBy('Target', colIndex)">
+                        <span class="cr-ellipsis" :data-original-title="col.name">
+                            {{col.name}}
+                        </span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(row, rowIndex) in sortData(tableData.rows)"
+                    :class="{active: row.player.uniqueID === playerid}"
+                    v-show="isInRowPage(rowIndex)" @click="select(row.player)"
+                    @mousedown="startSelect"
+                    style="cursor: pointer;">
+                    <td :class="getBodyClass('Prof')" :title="row.player.profession">
+                        <img :src="row.player.icon" :alt="row.player.profession" class="icon">
+                        <span style="display:none">
+                            {{row.player.profession}}
+                        </span>
+                    </td>
+                    <td class="text-left" :class="getBodyClass('Name')">
+                        <span class="cr-ellipsis" :title="row.player.name + ' - ' + row.player.acc">
+                            {{row.player.name}}
+                        </span>
+                    </td>
+                    <td :class="getBodyClass('All')">
+                        {{tableRound(row.dps[row.dps.length - 1])}}
+                    </td>
+                    <td :class="getBodyClass('Taken')">
+                        {{tableRound(row.dps[row.dps.length - 2])}}
+                    </td>
+                    <td v-if="!targetless" v-for="(col, colIndex) in tableData.cols" v-show="isInColPage(colIndex)"
+                        :class="getBodyClass('Target', colIndex)">
+                        {{tableRound(row.dps[colIndex])}}
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr v-for="sum in tableData.sums">
+                    <td></td>
+                    <td>
+                        {{sum.name}}
+                    </td>
+                    <td>
+                        {{tableRound(sum.dps[sum.dps.length - 1])}}
+                    </td>
+                    <td>
+                        {{tableRound(sum.dps[sum.dps.length - 2])}}
+                    </td>
+                    <td v-if="!targetless" v-for="(col, colIndex) in tableData.cols" v-show="isInColPage(colIndex)">
+                        {{tableRound(sum.dps[colIndex])}}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 </template>
 
