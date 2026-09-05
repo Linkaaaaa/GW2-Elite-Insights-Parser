@@ -71,7 +71,7 @@ internal class CommandWindow
         {
             parserArgOffset += 1;
         }
-        else
+        else if (OperatingSystem.IsWindows())
         {
             /*
              * Magic for windows:
