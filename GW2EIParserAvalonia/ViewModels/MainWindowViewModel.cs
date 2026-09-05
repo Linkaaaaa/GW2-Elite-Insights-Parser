@@ -70,7 +70,7 @@ public partial class MainWindowViewModel : ObservableObject
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
         LogTracesVisible = SettingsViewModel.SaveOutTrace;
 
-        Version = $"v{typeof(MainWindowViewModel).Assembly.GetName().Version?.ToString() ?? string.Empty}";
+        Version = $"v{Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty}";
 
         if (commandLineOptions != null && commandLineOptions.LogFiles.Count > 0)
         {
