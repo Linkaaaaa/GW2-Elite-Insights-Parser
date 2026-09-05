@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using GW2EIParserCommons;
 using static GW2EIParserCommons.ProgramHelper;
@@ -18,17 +19,23 @@ public sealed class ParserService
         _programHelper = new ProgramHelper(version, Settings);
     }
 
-    public async Task ParseAsync(AvaloniaOperationController operation)
+    public delegate void OnTaskRun();
+
+    public async Task ParseAsync(AvaloniaOperationController operation, OnTaskRun onTaskRun )
     {
-        var cancellationToken = operation.CancellationToken;
+        var cancellationTokenSource = new CancellationTokenSource();
 
         try
         {
-            await Task.Run(() => _programHelper.DoWork(operation), cancellationToken);
+            await Task.Run(() => {
+                operation.ToRunState(cancellationTokenSource);
+                onTaskRun();
+                _programHelper.DoWork(operation);
+            }, cancellationTokenSource.Token);
         }
         finally
         {
-            operation.DisposeCancellation();
+            cancellationTokenSource.Dispose();
         }
     }
 

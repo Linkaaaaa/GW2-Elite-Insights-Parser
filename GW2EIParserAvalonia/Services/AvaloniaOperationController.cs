@@ -14,7 +14,6 @@ public sealed class AvaloniaOperationController : OperationController
     public bool LogTracesEnabled { get; private set; } = false;
     public OperationState State { get; private set; } = OperationState.Ready;
     private CancellationTokenSource _cancellationTokenSource = new();
-    public CancellationToken CancellationToken => _cancellationTokenSource.Token;
     public event EventHandler? ProgressUpdated;
 
     private static readonly Dictionary<OperationState, (string ActionButton, string ReParseButton, bool ReParseEnabled, bool LogTraces)> _states = new()
@@ -60,9 +59,9 @@ public sealed class AvaloniaOperationController : OperationController
         SetState(OperationState.Pending);
     }
 
-    public void ToRunState()
+    public void ToRunState(CancellationTokenSource cancellationTokenSource)
     {
-        _cancellationTokenSource = new CancellationTokenSource();
+        _cancellationTokenSource = cancellationTokenSource;
 
         SetState(OperationState.Parsing);
         UpdateProgress("Parsing");
@@ -111,10 +110,5 @@ public sealed class AvaloniaOperationController : OperationController
         base.UpdateProgress(status);
         Status = status;
         ProgressUpdated?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void DisposeCancellation()
-    {
-        _cancellationTokenSource.Dispose();
     }
 }

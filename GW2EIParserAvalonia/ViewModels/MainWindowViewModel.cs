@@ -299,13 +299,13 @@ public partial class MainWindowViewModel : ObservableObject
         UpdateLogState(logFile);
         _trace.Add("Operation: Queued " + logFile.InputFilePath);
 
-        logFile.Operation.ToRunState();
-        UpdateLogState(logFile);
-        _trace.Add("Operation: Parsing " + logFile.InputFilePath);
-
         try
         {
-            await _parserService.ParseAsync(logFile.Operation);
+            await _parserService.ParseAsync(logFile.Operation, () =>
+            {
+        UpdateLogState(logFile);
+        _trace.Add("Operation: Parsing " + logFile.InputFilePath);
+            });
 
             if (logFile.State != OperationState.ClearOnCancel)
             {
