@@ -28,20 +28,9 @@ public partial class SettingsWindow : Window
         viewModel.AutoAddFolderRequested += ViewModel_AutoAddFolderRequested;
     }
 
-    private void ApplyButton_Click(object? sender, RoutedEventArgs e)
+    private void CloseButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is SettingsViewModel viewModel)
-        {
-            viewModel.ApplyToSettings();
-        }
-        
-        _trace.Add("UI: Settings applied");
-        Close();
-    }
-
-    private void CancelButton_Click(object? sender, RoutedEventArgs e)
-    {
-        _trace.Add("UI: Settings cancelled");
+        _trace.Add("UI: Settings closed");
         Close();
     }
 

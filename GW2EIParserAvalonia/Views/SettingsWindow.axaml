@@ -25,23 +25,16 @@
             Spacing="10">
 
             <Button
-                Content="Load"
+                Content="Load Settings"
                 MinWidth="100"
                 Click="LoadButton_Click"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center" />
 
             <Button
-                Content="Cancel"
+                Content="Close"
                 MinWidth="100"
-                Click="CancelButton_Click"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center" />
-
-            <Button
-                Content="Apply"
-                MinWidth="100"
-                Click="ApplyButton_Click"
+                Click="CloseButton_Click"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center" />
 

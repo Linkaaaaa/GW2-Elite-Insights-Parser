@@ -123,12 +123,14 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private bool updateAvailable;
 
+    private bool _loading = false;
+
     //
-    public event EventHandler? SettingsApplied;
     public event EventHandler? AutoAddFolderRequested;
 
     public void LoadFromSettings()
     {
+        _loading = true;
         // General
         // - Log
         ComputePhases = _settings.ComputePhases;
@@ -193,10 +195,85 @@ public partial class SettingsViewModel : ObservableObject
 
         // Updater
         UpdateAvailable = Settings.Default.UpdateAvailable;
+
+        _loading = false;
+    }
+
+    private void ApplyToDefault()
+    {
+        // General
+        // - Log
+        Settings.Default.ParsePhases = ComputePhases;
+        Settings.Default.ComputeDamage = ComputeDamage;
+        Settings.Default.ComputeBuff = ComputeBuff;
+        Settings.Default.ComputeCast = ComputeCast;
+        Settings.Default.ComputeDamageModifiers = ComputeDamageModifiers;
+        Settings.Default.ParseCombatReplay = ComputeCombatReplay;
+        Settings.Default.ComputeMechanics = ComputeMechanics;
+        Settings.Default.ParseExtensions = ParseExtensions;
+        Settings.Default.DetailledWvW = DetailledWvW;
+
+        // - Parsing
+        Settings.Default.SingleThreaded = SingleThreaded;
+        Settings.Default.ParseMultipleLogs = ParseMultipleLogs;
+        Settings.Default.SkipFailedTries = SkipFailedTries;
+        Settings.Default.AutoAdd = AutoAdd;
+        Settings.Default.AutoAddPath = AutoAddPath;
+        Settings.Default.AutoParse = AutoParse;
+        Settings.Default.CustomTooShort = CustomTooShort;
+        Settings.Default.CustomTooBig = CustomTooBig;
+        Settings.Default.MemoryLimit = MemoryLimit;
+
+        // - Output
+        Settings.Default.Anonymous = Anonymous;
+        Settings.Default.SaveAtOut = SaveAtOut;
+        Settings.Default.OutLocation = OutLocation;
+        Settings.Default.AddDuration = AddDuration;
+        Settings.Default.AddPoVProf = AddPoVProf;
+        Settings.Default.SaveOutTrace = SaveOutTrace;
+        Settings.Default.ApplicationTraces = ApplicationTraces;
+
+        // HTML
+        Settings.Default.SaveOutHTML = SaveOutHTML;
+        Settings.Default.LightTheme = LightTheme;
+        Settings.Default.HtmlExternalScripts = HtmlExternalScripts;
+        Settings.Default.HtmlExternalScriptsPath = HtmlExternalScriptsPath;
+        Settings.Default.HtmlExternalScriptsCdn = HtmlExternalScriptsCdn;
+        Settings.Default.HtmlCompressJson = HtmlCompressJson;
+
+        // CSV
+        Settings.Default.SaveOutCSV = SaveOutCSV;
+
+        // JSON
+        Settings.Default.SaveOutJSON = SaveOutJSON;
+        Settings.Default.IndentJSON = IndentJSON;
+        Settings.Default.RawTimelineArrays = RawTimelineArrays;
+        Settings.Default.CompressRaw = CompressRaw;
+
+        // Upload
+        Settings.Default.UploadToDPSReports = UploadToDPSReports;
+        Settings.Default.DPSReportUserToken = DPSReportUserToken;
+        Settings.Default.UploadToWingman = UploadToWingman;
+        Settings.Default.SendEmbedToWebhook = SendEmbedToWebhook;
+        Settings.Default.WebhookURL = WebhookURL;
+        Settings.Default.SendSimpleMessageToWebhook = SendSimpleMessageToWebhook;
+        Settings.Default.AutoDiscordBatch = AutoDiscordBatch;
+
+        // GUI
+        Settings.Default.PopulateHourLimit = PopulateHourLimit;
+
+        // Updater
+        Settings.Default.UpdateAvailable = UpdateAvailable;
+
+        Settings.Default.Save();
     }
 
     public void ApplyToSettings()
     {
+        if (_loading)
+        {
+            return;
+        }
         // General
         // - Log
         _settings.ComputePhases = ComputePhases;
@@ -213,9 +290,6 @@ public partial class SettingsViewModel : ObservableObject
         _settings.SingleThreaded = SingleThreaded;
         _settings.ParseMultipleLogs = ParseMultipleLogs;
         _settings.SkipFailedTries = SkipFailedTries;
-        Settings.Default.AutoAdd = AutoAdd;
-        Settings.Default.AutoAddPath = AutoAddPath;
-        Settings.Default.AutoParse = AutoParse;
         _settings.CustomTooShort = CustomTooShort;
         _settings.CustomTooBig = CustomTooBig;
         _settings.MemoryLimit = MemoryLimit;
@@ -227,7 +301,6 @@ public partial class SettingsViewModel : ObservableObject
         _settings.AddDuration = AddDuration;
         _settings.AddPoVProf = AddPoVProf;
         _settings.SaveOutTrace = SaveOutTrace;
-        Settings.Default.ApplicationTraces = ApplicationTraces;
 
         // HTML
         _settings.SaveOutHTML = SaveOutHTML;
@@ -253,16 +326,9 @@ public partial class SettingsViewModel : ObservableObject
         _settings.SendEmbedToWebhook = SendEmbedToWebhook;
         _settings.WebhookURL = WebhookURL;
         _settings.SendSimpleMessageToWebhook = SendSimpleMessageToWebhook;
-        Settings.Default.AutoDiscordBatch = AutoDiscordBatch;
 
-        // GUI
-        Settings.Default.PopulateHourLimit = PopulateHourLimit;
+        ApplyToDefault();
 
-        // Updater
-        Settings.Default.UpdateAvailable = UpdateAvailable;
-
-        Settings.Default.Save();
-        SettingsApplied?.Invoke(this, EventArgs.Empty);
     }
 
     partial void OnAutoAddChanged(bool value)
@@ -276,14 +342,7 @@ public partial class SettingsViewModel : ObservableObject
     public void ApplyLoadedSettings(string path)
     {
         CustomSettingsManager.ReadConfig(path);
-        var loadedSettings = CustomSettingsManager.GetProgramSettings(_settings);
+        CustomSettingsManager.GetProgramSettings(_settings);
         LoadFromSettings();
-        SettingsApplied?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void OnPopulateHourChange()
-    {
-        Settings.Default.PopulateHourLimit = PopulateHourLimit;
-        Settings.Default.Save();
     }
 }

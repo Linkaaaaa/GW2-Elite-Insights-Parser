@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using GW2EIEvtcParser;
@@ -46,7 +47,6 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private string version = string.Empty;
     private readonly ParserService _parserService;
-    private readonly SettingsService _settingsService;
     private readonly Queue<LogFileViewModel> _logQueue = new();
     private readonly IApplicationTrace _trace;
     private int _runningCount;
@@ -58,14 +58,12 @@ public partial class MainWindowViewModel : ObservableObject
     {
         _trace = trace;
 
-        _settingsService = new SettingsService();
-        Settings = _settingsService.Load();
+        Settings = CustomSettingsManager.GetProgramSettings();
         _parserService = new ParserService(Settings);
 
         SettingsViewModel = new SettingsViewModel(Settings);
         SettingsViewModel.LoadFromSettings();
-        SettingsViewModel.SettingsApplied += SettingsViewModel_SettingsApplied;
-        SettingsViewModel.PropertyChanged += SettingsViewModel_PropertyChanged;
+        SettingsViewModel.PropertyChanged += SettingsViewModel_SettingsApplied;
 
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
         LogTracesVisible = SettingsViewModel.SaveOutTrace;
@@ -86,8 +84,7 @@ public partial class MainWindowViewModel : ObservableObject
 
     private void SettingsViewModel_SettingsApplied(object? sender, EventArgs e)
     {
-        _settingsService.Save(Settings);
-
+        SettingsViewModel.ApplyToSettings();
         AutoDiscordBatch = SettingsViewModel.AutoDiscordBatch;
         LogTracesVisible = SettingsViewModel.SaveOutTrace;
 
@@ -303,8 +300,8 @@ public partial class MainWindowViewModel : ObservableObject
         {
             await _parserService.ParseAsync(logFile.Operation, () =>
             {
-        UpdateLogState(logFile);
-        _trace.Add("Operation: Parsing " + logFile.InputFilePath);
+                UpdateLogState(logFile);
+                _trace.Add("Operation: Parsing " + logFile.InputFilePath);
             });
 
             if (logFile.State != OperationState.ClearOnCancel)
@@ -492,14 +489,5 @@ public partial class MainWindowViewModel : ObservableObject
         operation.UpdateProgress("Program: " + finalException.StackTrace);
         operation.UpdateProgress("Program: " + finalException.TargetSite);
         operation.UpdateProgress("Program: " + finalException.Message);
-    }
-
-    private void SettingsViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(SettingsViewModel.PopulateHourLimit))
-        {
-            SettingsViewModel.OnPopulateHourChange();
-            _trace.Add("Settings: Updated populate function hour limit to " + SettingsViewModel.PopulateHourLimit);
-        }
     }
 }
