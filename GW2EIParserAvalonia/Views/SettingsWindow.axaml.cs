@@ -75,12 +75,12 @@ public partial class SettingsWindow : Window
 
         if (string.IsNullOrWhiteSpace(path))
         {
-            viewModel.AutoAdd = false;
             viewModel.AutoAddPath = string.Empty;
+            viewModel.AutoAdd = false;
             return;
         }
-        viewModel.AutoAdd = true;
         viewModel.AutoAddPath = path;
+        viewModel.AutoAdd = true;
     }
 
     private async void SelectFolder_Click(object? sender, RoutedEventArgs e)
