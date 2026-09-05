@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
@@ -83,17 +85,20 @@ public partial class SettingsWindow : Window
         viewModel.AutoAdd = true;
     }
 
-    private async void SelectFolder_Click(object? sender, RoutedEventArgs e)
+    private async void SelectOutLocationFolder_Click(object? sender, RoutedEventArgs e)
     {
         if (DataContext is not SettingsViewModel viewModel)
         {
             return;
         }
 
+        var startLocation = await StorageProvider.TryGetFolderFromPathAsync(viewModel.OutLocation);
+
         var folders = await StorageProvider.OpenFolderPickerAsync(
             new FolderPickerOpenOptions
             {
                 Title = "Select output directory",
+                SuggestedStartLocation = startLocation,
                 AllowMultiple = false
             });
 
@@ -102,6 +107,30 @@ public partial class SettingsWindow : Window
         if (folder != null)
         {
             viewModel.OutLocation = folder.Path.LocalPath;
+        }
+    }
+    private async void SelectExternalScriptFolder_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not SettingsViewModel viewModel)
+        {
+            return;
+        }
+
+        var startLocation = await StorageProvider.TryGetFolderFromPathAsync(viewModel.HtmlExternalScriptsPath);
+
+        var folders = await StorageProvider.OpenFolderPickerAsync(
+            new FolderPickerOpenOptions
+            {
+                Title = "Select external asset directory",
+                SuggestedStartLocation = startLocation,
+                AllowMultiple = false
+            });
+
+        var folder = folders.FirstOrDefault();
+
+        if (folder != null)
+        {
+            viewModel.HtmlExternalScriptsPath = folder.Path.LocalPath;
         }
     }
 
