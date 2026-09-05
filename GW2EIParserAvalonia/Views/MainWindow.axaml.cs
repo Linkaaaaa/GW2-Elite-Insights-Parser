@@ -9,6 +9,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using GW2EIEvtcParser.ParserHelpers;
 using GW2EIParserAvalonia.Services;
 using GW2EIParserAvalonia.ViewModels;
 using GW2EIParserCommons.Properties;
@@ -216,13 +217,27 @@ public partial class MainWindow : Window
             return;
         }
 
-        var picker = new FilePickerService(StorageProvider);
+        var files = await StorageProvider.OpenFilePickerAsync(
+            new FilePickerOpenOptions
+            {
+                Title = "Select GW2 EVTC Combat Logs",
+                AllowMultiple = true,
+                FileTypeFilter =
+                [
+                    new FilePickerFileType("GW2 EVTC Combat Logs")
+                    {
+                        Patterns = SupportedFileFormats.SupportedFormats.Select(format => $"*{format}").ToList()
+                    }
+                ]
+            });
 
-        var files = await picker.PickLogFilesAsync();
-
-        foreach (var path in files)
+        foreach (var file in files)
         {
-            viewModel.AddFile(path);
+            var path = file.TryGetLocalPath();
+            if (path != null)
+            {
+                viewModel.AddFile(path);
+            }
         }
     }
 
