@@ -226,7 +226,6 @@ public partial class MainWindowViewModel : ObservableObject
             WatchingDirectory = $"Watching for log files in '{SettingsViewModel.AutoAddPath}'";
             WatchingDirectoryVisible = true;
 
-            AddFilesFromDirectory(SettingsViewModel.AutoAddPath);
             _trace.Add("Settings: Updated watch directory to " + SettingsViewModel.AutoAddPath);
         }
         else
