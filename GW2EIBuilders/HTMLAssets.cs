@@ -159,6 +159,7 @@ public class HTMLAssets
         [
             Properties.Resources.tmplCombatReplayStatusData,
             Properties.Resources.tmplCombatReplayDamageTable,
+            Properties.Resources.tmplCombatReplayDamageSelector,
             Properties.Resources.tmplCombatReplayActorBuffStats,
             Properties.Resources.tmplCombatReplayActorStatus,
             Properties.Resources.tmplCombatReplayActorRotation,
@@ -168,6 +169,7 @@ public class HTMLAssets
             Properties.Resources.tmplCombatReplayUI,
             Properties.Resources.tmplCombatReplayExtraDecorations,
             Properties.Resources.tmplCombatReplayAnimationControl,
+            Properties.Resources.tmplCombatReplaySpeedPicker,
             Properties.Resources.tmplCombatReplayMechanicsList
         ];
         var res = new List<string>();

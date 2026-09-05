@@ -1,12 +1,12 @@
 <template>
-    <div class="d-flex mt-2">
-        <div class="ml-auto" style=" width: 620px;">
-            <dps-graph-mode-selector-component :data="graphdata" :phaseduration="phaseduration" :phasehassubphases="false" :ignorebreakbar="false" :column="false" />
+    <div class="combat-replay">
+        <div>
+            <combat-replay-damage-selector-component :data="graphdata" :phaseduration="phaseduration" :phasehassubphases="false" :ignorebreakbar="false" :column="false" />
             <combat-replay-damage-stats-component :time="animationStatus.time" :playerid="animationStatus.selectedActorID" :graphdata="graphdata" />
             <combat-replay-extra-decorations-component :light="light" class="mx-auto" />
         </div>
-        <combat-replay-animation-control-component class="mx-2" :time="animationStatus.time / 1000.0" :light="light" :range="animationStatus.range":animated="animationStatus.animated" />
-        <combat-replay-status-data-component class="mr-auto" :time="animationStatus.time" :light="light" :selectedactorid="animationStatus.selectedActorID" />
+        <combat-replay-animation-control-component :time="animationStatus.time / 1000.0" :light="light" :range="animationStatus.range" :animated="animationStatus.animated" />
+        <combat-replay-status-data-component :time="animationStatus.time" :light="light" :selectedactorid="animationStatus.selectedActorID" />
     </div>
 </template>
 

@@ -176,9 +176,9 @@ namespace GW2EIBuilders.Properties {
         ///}
         ///
         ///.scrollable-y {
+        ///    overflow-x: hidden;
         ///    overflow-y: auto;
-        ///    scrollbar-width: thin;
-        ///}        /// [rest of string was truncated]&quot;;.
+        ///    s [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string css {
             get {
@@ -354,12 +354,14 @@ namespace GW2EIBuilders.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &quot;use strict&quot;;
         ///
+        ///
         ///var numberComponent = {
         ///    methods: {
         ///        // https://stackoverflow.com/questions/16637051/adding-space-between-numbers
         ///        integerWithSpaces: function(x) {
         ///            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, &quot; &quot;);
         ///        },
+        ///
         ///        round: function (value) {
         ///            if (isNaN(value) || !isFinite(value)) {
         ///                return 0;
@@ -367,7 +369,7 @@ namespace GW2EIBuilders.Properties {
         ///            return Math.round(value);
         ///        },
         ///        round1: function (value) {
-        ///            if (isNaN(val [rest of string was truncated]&quot;;.
+        ///            if (isNaN [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string mixins {
             get {
@@ -415,15 +417,13 @@ namespace GW2EIBuilders.Properties {
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div&gt;
         ///        &lt;div v-if=&quot;actor !== null&quot; class=&quot;mb-1 mt-1&quot;&gt;
-        ///            &lt;div v-if=&quot;isminion&quot;&gt;
-        ///                &lt;p style=&quot;display: table-row;&quot;&gt;
-        ///                    {{actor.name}} did {{round3(100*barrierdist.contributedBarrier/barrierdist.totalBarrier)}}% of its master&apos;s total
-        ///                    {{istarget ? &apos;Target&apos; :&apos;&apos;}} barrier ({{barrierdist.contributedBarrier}})
-        ///                &lt;/p&gt;
-        ///            &lt;/div&gt;
-        ///            &lt;div v-else&gt;
-        ///                &lt;p style=&quot;display: table-row;&quot;&gt;
-        ///     [rest of string was truncated]&quot;;.
+        ///            &lt;p style=&quot;display: table-row;&quot;&gt;
+        ///                {{ actor.name }} did {{ percentFormater3(barrierdist.contributedBarrier / barrierdist.totalBarrier) }} 
+        ///                {{ isminion ? &quot;of its master&apos;s total&quot; : &apos;of their total&apos; }}
+        ///                {{ istarget ? &apos;Target&apos; : &apos;&apos; }} barrier ({{ numberFormater(barrierdist.contributedBarrier) }})
+        ///            &lt;/p&gt;
+        ///        &lt;/div&gt;
+        ///        &lt;table class=&quot;table table-sm table-str [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplBarrierDistTable {
             get {
@@ -695,12 +695,11 @@ namespace GW2EIBuilders.Properties {
         ///        &lt;div v-if=&quot;castingSkill&quot;&gt;
         ///            &lt;img class=&quot;icon-cur-cr-rota&quot; :class=&quot;getIconClass(castingSkill)&quot; :src=&quot;castingSkill.skill.icon&quot; :title=&quot;getTooltip(castingSkill)&quot; /&gt;
         ///        &lt;/div&gt;
-        ///        &lt;div v-else class=&quot;empty-icon-cur-cr-rota&quot;&gt;
+        ///        &lt;div v-else class=&quot;empty-icon-cur-cr-rota&quot;&gt;&lt;/div&gt;
         ///
-        ///        &lt;/div&gt;
         ///        &lt;div v-for=&quot;next in nextSkills&quot;&gt;
         ///            &lt;img class=&quot;icon-next-cr-rota&quot; :class=&quot;getIconClass(next)&quot; :src=&quot;next.skill.icon&quot; :title=&quot;getTooltip(next)&quot; /&gt;
-        ///      [rest of string was truncated]&quot;;.
+        ///        &lt;/div&gt;        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplCombatReplayActorRotation {
             get {
@@ -710,8 +709,8 @@ namespace GW2EIBuilders.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;template&gt;
-        ///    &lt;div class=&quot;d-flex flex-row flex-wrap justify-content-center align-items-start mb-2&quot;&gt;
-        ///        &lt;div class=&quot;d-flex flex-row justify-content-center mb-1&quot;&gt;
+        ///    &lt;div class=&quot;d-flex flex-row flex-wrap justify-content-center align-items-start&quot;&gt;
+        ///        &lt;div class=&quot;d-flex flex-row justify-content-center&quot;&gt;
         ///            &lt;ul class=&quot;nav nav-pills d-flex flex-row scale85&quot;&gt;
         ///                &lt;li class=&quot;nav-item&quot;&gt;
         ///                    &lt;a class=&quot;nav-link&quot; :class=&quot;{active: buffs}&quot; @click=&quot;buffs = !buffs&quot;&gt;
@@ -719,7 +718,7 @@ namespace GW2EIBuilders.Properties {
         ///                    &lt;/a&gt;
         ///                &lt;/li&gt;
         ///                &lt;li class=&quot;nav-item&quot;&gt;
-        ///                    &lt;a class= [rest of string was truncated]&quot;;.
+        ///                    &lt;a class=&quot;nav-link&quot; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplCombatReplayActorsStats {
             get {
@@ -729,13 +728,13 @@ namespace GW2EIBuilders.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;template&gt;
-        ///    &lt;div&gt;
-        ///        &lt;div v-if=&quot;buffs&quot;&gt;
+        ///    &lt;div class=&quot;actor-data p-1&quot;&gt;
+        ///        &lt;div v-if=&quot;buffs&quot; class=&quot;mb-1&quot;&gt;
         ///            &lt;combat-replay-actor-buff v-if=&quot;isPresent(&apos;Encounter Specifics&apos;)&quot; :buffarray=&quot;data.encounterSpecifics&quot; /&gt;
         ///            &lt;combat-replay-actor-buff v-if=&quot;isPresent(&apos;Others&apos;)&quot; :buffarray=&quot;data.others&quot; /&gt;
         ///            &lt;combat-replay-actor-buff v-if=&quot;isPresent(&apos;Conditions&apos;)&quot; :buffarray=&quot;data.conditions&quot; /&gt;
         ///            &lt;combat-replay-actor-buff v-if=&quot;isPresent(&apos;Shared&apos;)&quot; :buffarray=&quot;data.shared&quot; /&gt;
-        ///            &lt;combat-replay-actor-buff v-if=&quot;isPresen [rest of string was truncated]&quot;;.
+        ///            &lt;com [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplCombatReplayActorStats {
             get {
@@ -746,14 +745,14 @@ namespace GW2EIBuilders.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div class=&quot;text-white&quot; @click=&quot;select&quot;&gt;
-        ///        &lt;div class=&quot;actor-status&quot; :style=&quot;{&apos;background&apos;: getActorGradient(time, status), &apos;height&apos;: getActorHeight()}&quot;&gt;
-        ///            &lt;p class=&quot;mb-0 scale65&quot;&gt;
-        ///                {{percentageFormater(healths, time)}}
+        ///        &lt;div class=&quot;actor-status&quot; :style=&quot;{&apos;background&apos;: getActorGradient(time, status), &apos;height&apos;: getActorHeight()}&quot;
+        ///             :data-original-title=&quot;isTarget ? actor.name : actor.name + &apos; - &apos; + actor.acc&quot;&gt;
+        ///            &lt;p class=&quot;mb-0 scale65 cr-status-percent text-left&quot;&gt;
+        ///                {{ percentFormater2(getPercent(healths, time) / 100) }}
         ///            &lt;/p&gt;
         ///
         ///            &lt;h6 class=&quot;text-center mb-0 ellipis align-self-center&quot;&gt;
-        ///                &lt;img v-for=&quot;(marker, _) in activeMarkers()&quot; :src=&quot;marker.imageUrl&quot; height=&quot;16&quot; width=&quot;16&quot;&gt;
-        ///                &lt;img :src=&quot;actor.icon&quot; :alt= [rest of string was truncated]&quot;;.
+        ///               [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplCombatReplayActorStatus {
             get {
@@ -763,13 +762,12 @@ namespace GW2EIBuilders.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;template&gt;
-        ///    &lt;div class=&quot;d-flex flex-column align-items-center&quot; style=&quot;width: 750px;&quot;&gt;
-        ///        &lt;div v-if=&quot;showNormalPhases &amp;&amp; isTouchDevice&quot; class=&quot;mb-1&quot;&gt;
-        ///            &lt;ul class=&quot;nav nav-pills d-flex flex-row justify-content-center max-wd-700px&quot;&gt;
-        ///                &lt;li class=&quot;nav-item&quot; v-for=&quot;(phase, id) in phases&quot;
-        ///                    v-show=&quot;!phase.breakbarPhase&quot;
-        ///                    :data-original-title=&quot;phase.durationS + &apos; seconds &lt;br /&gt; Start: &apos; + phase.start + &apos;&lt;br /&gt; End: &apos; + phase.end&quot;&gt;
-        ///          [rest of string was truncated]&quot;;.
+        ///    &lt;div class=&quot;d-flex flex-column align-items-center&quot;&gt;
+        ///        &lt;ul v-if=&quot;showNormalPhases &amp;&amp; isTouchDevice&quot;
+        ///            class=&quot;nav nav-pills d-flex flex-row justify-content-center mb-1&quot; :style=&quot;{ &apos;max-width&apos;: (timelineWidth - 30) + &apos;px&apos; }&quot;&gt;
+        ///            &lt;li class=&quot;nav-item&quot; v-for=&quot;(phase, id) in normalPhases&quot;
+        ///                :data-original-title=&quot;phase.durationS + &apos; seconds &lt;br /&gt; Start: &apos; + phase.start + &apos;&lt;br /&gt; End: &apos; + phase.end&quot;&gt;
+        ///                &lt;a class=&quot;nav-link&quot; @click=&quot;updatePhaseTi [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplCombatReplayAnimationControl {
             get {
@@ -780,13 +778,27 @@ namespace GW2EIBuilders.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div&gt;
-        ///        &lt;div class=&quot;d-flex flex-row justify-content-center&quot;&gt;
-        ///            &lt;div v-if=&quot;rowPageCount &gt; 0&quot; style=&quot;width:25px;&quot;&gt;
-        ///                &lt;table-scroll-component :min=&quot;0&quot; :max=&quot;rowPageCount&quot; :width=&quot;&apos;230px&apos;&quot; :height=&quot;&apos;10px&apos;&quot; :transform=&quot;colPageCount &gt; 0 ? &apos;translate(-100px, 210px) rotate(90deg)&apos; : &apos;translate(-100px, 185px) rotate(90deg)&apos; &quot; :pagestructure=&quot;rowStructure&quot;&gt;&lt;/table-scroll-component&gt;
-        ///            &lt;/div&gt;
-        ///            &lt;div&gt;
-        ///                &lt;div v-if=&quot;colPageCount &gt; 0&quot;&gt;
-        ///  [rest of string was truncated]&quot;;.
+        ///        &lt;div class=&quot;d-flex flex-row justify-content-center align-items-center&quot;&gt;
+        ///            &lt;ul class=&quot;nav nav-pills&quot; :class=&quot;{&apos;flex-row&apos;: !column, &apos;flex-column&apos;: column}&quot;&gt;
+        ///                &lt;li class=&quot;nav-item&quot; data-original-title=&quot;Power + Condition&quot;&gt;
+        ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;data.damagemode = damageModeEnum.All&quot; :class=&quot;{active: data.damagemode === damageModeEnum.All}&quot;&gt;
+        ///                        &lt;img :src=&quot;UIIcons.Damage&quot; alt=&quot;All&quot; class=&quot;icon&quot;&gt;
+        ///              [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string tmplCombatReplayDamageSelector {
+            get {
+                return ResourceManager.GetString("tmplCombatReplayDamageSelector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;template&gt;
+        ///    &lt;div&gt;
+        ///        &lt;div v-if=&quot;rowPageCount &gt; 0&quot; style=&quot;width:25px;&quot;&gt;
+        ///            &lt;table-scroll-component :min=&quot;0&quot; :max=&quot;rowPageCount&quot; :width=&quot;&apos;230px&apos;&quot; :height=&quot;&apos;10px&apos;&quot; :transform=&quot;colPageCount &gt; 0 ? &apos;translate(-100px, 210px) rotate(90deg)&apos; : &apos;translate(-100px, 185px) rotate(90deg)&apos; &quot; :pagestructure=&quot;rowStructure&quot;&gt;&lt;/table-scroll-component&gt;
+        ///        &lt;/div&gt;
+        ///
+        ///        &lt;table-scroll-component v-if=&quot;colPageCount &gt; 0&quot; :min=&quot;0&quot; :max=&quot;colPageCount&quot; :width=&quot;&apos;200px&apos;&quot; :height=&quot;&apos;10px&apos;&quot; :transform=&quot;&apos;transla [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplCombatReplayDamageTable {
             get {
@@ -827,7 +839,30 @@ namespace GW2EIBuilders.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;template&gt;
-        ///    &lt;div class=&quot;d-flex flex-column justify-content-center&quot;&gt;
+        ///    &lt;label class=&quot;ml-auto&quot;&gt;
+        ///        &lt;select class=&quot;form-control d-inline w-auto h-auto&quot; :value=&quot;defaultSpeed&quot; 
+        ///                data-original-title=&quot;Speed&quot;
+        ///                @change=&quot;updateSelectedSpeed($event.target.value)&quot;&gt;
+        ///            &lt;option v-for=&quot;speed in speeds&quot; :key=&quot;speed&quot; :value=&quot;speed&quot;&gt;
+        ///                {{ speed }}x
+        ///            &lt;/option&gt;
+        ///        &lt;/select&gt;
+        ///    &lt;/label&gt;
+        ///&lt;/template&gt;
+        ///
+        ///&lt;script&gt;
+        ///    Vue.component(&quot;combat-replay-time-speed-picker-component&quot;, {
+        ///        template: `${t [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string tmplCombatReplaySpeedPicker {
+            get {
+                return ResourceManager.GetString("tmplCombatReplaySpeedPicker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;template&gt; 
+        ///    &lt;div&gt;
         ///        &lt;ul v-if=&quot;showTabs&quot; class=&quot;nav nav-pills d-flex flex-row justify-content-center mb-1&quot;&gt;
         ///            &lt;li class=&quot;nav-item&quot;&gt;
         ///                &lt;a class=&quot;nav-link&quot; :class=&quot;{active: mode === 0}&quot; @click=&quot;mode = 0&quot;&gt;Actors&lt;/a&gt;
@@ -836,7 +871,8 @@ namespace GW2EIBuilders.Properties {
         ///                &lt;a class=&quot;nav-link&quot; :class=&quot;{active: mode === 1}&quot; @click=&quot;mode = 1&quot;&gt;Mechanics&lt;/a&gt;
         ///            &lt;/li&gt;
         ///        &lt;/ul&gt;
-        ///      [rest of string was truncated]&quot;;.
+        ///        &lt;div class=&quot;squad-details&quot;&gt;
+        ///            &lt;keep [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplCombatReplayStatusData {
             get {
@@ -846,11 +882,12 @@ namespace GW2EIBuilders.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;template&gt;
-        ///    &lt;div class=&quot;d-flex mt-2 justify-content-center&quot;&gt;
-        ///        &lt;div class=&quot;d-flex flex-column align-items-center mr-2&quot; style=&quot;margin-left: auto; width:620px;&quot;&gt;
+        ///    &lt;div class=&quot;d-flex my-2&quot;&gt;
+        ///        &lt;div class=&quot;ml-auto&quot; style=&quot; width: 650px;&quot;&gt;
         ///            &lt;dps-graph-mode-selector-component :data=&quot;graphdata&quot; :phaseduration=&quot;phaseduration&quot; :phasehassubphases=&quot;false&quot; :ignorebreakbar=&quot;false&quot; :column=&quot;false&quot; /&gt;
         ///            &lt;combat-replay-damage-stats-component :time=&quot;animationStatus.time&quot; :playerid=&quot;animationStatus.selectedActorID&quot; :graphdata=&quot;graphdata&quot; /&gt;
-        ///            &lt;combat-rep [rest of string was truncated]&quot;;.
+        ///            &lt;combat-replay-extra-decorations-component :light=&quot;light&quot; class=&quot;mx-auto&quot; /&gt;
+        ///         [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplCombatReplayUI {
             get {
@@ -921,12 +958,12 @@ namespace GW2EIBuilders.Properties {
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div&gt;
         ///        &lt;div v-if=&quot;actor !== null&quot; class=&quot;mb-1 mt-1&quot;&gt;
-        ///            &lt;div v-if=&quot;isminion&quot;&gt;
-        ///                &lt;p style=&quot;display: table-row;&quot;&gt;
-        ///                    {{actor.name}} did {{percentFormater(round3(dmgdist.contributedDamage/dmgdist.totalDamage))}} of its master&apos;s total
-        ///                    {{istarget ? &apos;Target&apos; :&apos;&apos;}} damage ({{numberFormater(dmgdist.contributedDamage)}})
-        ///                &lt;/p&gt;
-        ///                &lt;p v-if=&quot;hasBreakbarDamage &amp;&amp; dmgdist.contributedBreakbarDamage &gt; 0&quot; st [rest of string was truncated]&quot;;.
+        ///            &lt;p style=&quot;display: table-row;&quot;&gt;
+        ///                {{ actor.name }} did {{ percentFormater3(dmgdist.contributedDamage / dmgdist.totalDamage) }}
+        ///                {{ isminion ? &quot;of its master&apos;s total&quot; : &quot;of their total&quot; }}
+        ///                {{ istarget ? &apos;Target&apos; :&apos;&apos; }} damage ({{ numberFormater(dmgdist.contributedDamage) }})
+        ///            &lt;/p&gt;
+        ///            &lt;p v-if=&quot;hasBreakbarDamage &amp;&amp; dmgdist.contributedBreakbarDamage &gt; 0&quot; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplDamageDistTable {
             get {
@@ -1189,12 +1226,12 @@ namespace GW2EIBuilders.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;template&gt;
-        ///    &lt;div class=&quot;d-flex flex-row justify-content-center mt-1 mb-1&quot;&gt;     
+        ///    &lt;div class=&quot;d-flex flex-row justify-content-center mt-1 mb-1&quot;&gt;
         ///        &lt;ul class=&quot;nav nav-pills d-flex flex-wrap justify-content-center mr-3 scale75&quot; :class=&quot;{&apos;flex-row&apos;: !column, &apos;flex-column&apos;: column}&quot;&gt;
         ///            &lt;li class=&quot;nav-item d-flex flex-row justify-content-center align-items-center&quot;&gt;
         ///                &lt;a class=&quot;nav-link&quot; @click=&quot;data.dpsmode = 0&quot; :class=&quot;{active: data.dpsmode === 0}&quot;&gt;Full&lt;/a&gt;
         ///            &lt;/li&gt;
-        ///            &lt;li v-if=&quot;phaseduration &gt; 4&quot; class=&quot;nav-item d-fle [rest of string was truncated]&quot;;.
+        ///            &lt;li v-if=&quot;phaseduration &gt; 4&quot; class=&quot;nav-item d-flex fle [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplDPSGraphModeSelector {
             get {
@@ -1379,15 +1416,13 @@ namespace GW2EIBuilders.Properties {
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div&gt;
         ///        &lt;div v-if=&quot;actor !== null&quot; class=&quot;mb-1 mt-1&quot;&gt;
-        ///            &lt;div v-if=&quot;isminion&quot;&gt;
-        ///                &lt;p style=&quot;display: table-row;&quot;&gt;
-        ///                    {{actor.name}} did {{round3(100*healingdist.contributedHealing/healingdist.totalHealing)}}% of its master&apos;s total
-        ///                    {{istarget ? &apos;Target&apos; :&apos;&apos;}} healing ({{healingdist.contributedHealing}})
-        ///                &lt;/p&gt;
-        ///            &lt;/div&gt;
-        ///            &lt;div v-else&gt;
-        ///                &lt;p style=&quot;display: table-row;&quot;&gt;
-        ///     [rest of string was truncated]&quot;;.
+        ///            &lt;p style=&quot;display: table-row;&quot;&gt;
+        ///                {{ actor.name }} did {{ percentFormater3(healingdist.contributedHealing  / healingdist.totalHealing) }}
+        ///                {{ isminion ? &quot;of its master&apos;s total&quot; : &apos;of their total&apos; }}
+        ///                {{ istarget ? &apos;Target&apos; : &apos;&apos; }} healing ({{ numberFormater(healingdist.contributedHealing) }})
+        ///            &lt;/p&gt;
+        ///        &lt;/div&gt;
+        ///        &lt;table class=&quot;table table-sm table-str [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplHealingDistTable {
             get {
