@@ -36,7 +36,7 @@ public partial class SettingsWindow : Window
         Close();
     }
 
-    private async void LoadButton_Click(object? sender, RoutedEventArgs e)
+    private async void LoadSettingsButton_Click(object? sender, RoutedEventArgs e)
     {
         if (DataContext is not SettingsViewModel viewModel)
         {
@@ -61,6 +61,38 @@ public partial class SettingsWindow : Window
         {
             viewModel.ApplyLoadedSettings(files[0].Path.LocalPath);
             _trace.Add($"UI: Settings loaded from {files[0].Path.LocalPath}");
+        }
+    }
+    private async void SaveSettingsButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not SettingsViewModel)
+        {
+            return;
+        }
+        var file = await StorageProvider.SaveFilePickerAsync(
+            new FilePickerSaveOptions
+            {
+                Title = "Save a Configuration file",
+                SuggestedFileName = "config.conf",
+                DefaultExtension = "conf",
+                ShowOverwritePrompt = true,
+                FileTypeChoices = new[]
+                {
+                    new FilePickerFileType("Conf file")
+                    {
+                        Patterns = [ "*.conf" ]
+                    }
+                }
+            });
+
+        if (file != null)
+        {
+            string dump = CustomSettingsManager.DumpSettings();
+            await using Stream stream = await file.OpenWriteAsync();
+            await using var writer = new StreamWriter(stream);
+            byte[] settings = new UTF8Encoding(true).GetBytes(dump);
+            stream.Write(settings, 0, settings.Length);
+            _trace.Add($"UI: Settings saved to {file.Path.LocalPath}");
         }
     }
 
