@@ -333,6 +333,10 @@ public partial class SettingsViewModel : ObservableObject
 
     partial void OnAutoAddChanged(bool value)
     {
+        if (_loading)
+        {
+            return;
+        }
         if (value)
         {
             AutoAddFolderRequested?.Invoke(this, EventArgs.Empty);
