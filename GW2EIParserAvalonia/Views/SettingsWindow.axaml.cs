@@ -76,9 +76,10 @@ public partial class SettingsWindow : Window
         if (string.IsNullOrWhiteSpace(path))
         {
             viewModel.AutoAdd = false;
+            viewModel.AutoAddPath = string.Empty;
             return;
         }
-
+        viewModel.AutoAdd = true;
         viewModel.AutoAddPath = path;
     }
 
