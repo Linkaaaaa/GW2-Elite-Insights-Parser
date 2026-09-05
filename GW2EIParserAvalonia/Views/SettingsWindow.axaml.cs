@@ -103,17 +103,24 @@ public partial class SettingsWindow : Window
             return;
         }
 
-        var picker = new FilePickerService(StorageProvider);
+        var startLocation = await StorageProvider.TryGetFolderFromPathAsync(viewModel.AutoAddPath);
 
-        var path = await picker.PickFolderAsync();
+        var folders = await StorageProvider.OpenFolderPickerAsync(
+            new FolderPickerOpenOptions
+            {
+                Title = "Select watch directory",
+                SuggestedStartLocation = startLocation,
+                AllowMultiple = false
+            });
+        var folder = folders.FirstOrDefault();
 
-        if (string.IsNullOrWhiteSpace(path))
+        if (folder == null || string.IsNullOrWhiteSpace(folder.Path.LocalPath))
         {
             viewModel.AutoAddPath = string.Empty;
             viewModel.AutoAdd = false;
             return;
         }
-        viewModel.AutoAddPath = path;
+        viewModel.AutoAddPath = folder.Path.LocalPath;
         viewModel.AutoAdd = true;
     }
 
