@@ -49,9 +49,8 @@ public partial class MainWindow : Window
         }
 
         var window = new SettingsWindow(viewModel.SettingsViewModel, _trace);
-        await window.ShowDialog(this);
-
-        UpdateFileWatcher();
+        window.Show();
+        window.Closed += (object? sender, EventArgs e) => UpdateFileWatcher();
     }
 
     private async void PopulateButton_Click(object? sender, RoutedEventArgs e)
