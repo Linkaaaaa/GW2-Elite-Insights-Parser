@@ -176,7 +176,7 @@
 }
 
 .actor-data:not(:last-child) {
-    border-bottom: 1px solid #888;
+    border-bottom: 1px solid #dee2e6;
 }
 
 .theme-slate .actor-data.active {
@@ -1180,8 +1180,12 @@ td.approximate::before {
     opacity: 0.9;
 }
 
-.border-dark {
-    border-color: black !important;
+.theme-slate .border-dark {
+    border-color: rgb(22, 22, 22) !important;
+}
+
+.theme-yeti .border-dark {
+    border-color:  rgb(222, 226, 230) !important;
 }
 
 .top-0 {

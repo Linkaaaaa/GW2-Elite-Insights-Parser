@@ -197,20 +197,23 @@
                     <input type="range" :min="minTime" :max="maxTime" value="0" :id="htmlElementIDs.timeRangeID" style="display: none;">
                 </label>
 
-                <div @click="toggleAnimate();" class="btn btn-small"
+                <div @click="toggleAnimate();" style="width: 80px;"
+                    class="btn btn-small"
                      :class="{'btn-dark': !light, 'btn-light': light}"
                      data-original-title="Play / pause animation">
-                    {{ animated ? "&#9208" : "&#9654" }} Play / Pause
+                    {{ animated ? "&#9208 Pause" : "&#9654 Play" }} 
                 </div>
                 <div @click="restartAnimate();" class="btn btn-small"
                      :class="{'btn-dark': !light, 'btn-light': light}"
                      data-original-title="Reset back to start">
                     &#8617;&#65039; Restart
                 </div>
-                <div @click="toggleBackwards();" class="btn btn-small"
-                     :class="{'active': backwards, 'btn-dark': !light, 'btn-light': light}"
-                     data-original-title="Play animation backwards">
-                    &#9664; Backwards
+                <div @click="toggleBackwards();" style="width: 104px;"
+                    class="btn btn-small"
+                     :class="{'btn-dark': !light, 'btn-light': light}"
+                     data-original-title="Play animation backwards/forwards">
+                    {{ backwards ? "&#9654; Forwards" : "&#9664; Backwards" }} 
+                    
                 </div>
 
                 <combat-replay-time-speed-picker-component />

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="d-flex flex-row justify-content-center align-items-center">
+        <div class="d-flex flex-row justify-content-center align-items-center mb-2">
             <ul class="nav nav-pills" :class="{'flex-row': !column, 'flex-column': column}">
                 <li class="nav-item" data-original-title="Power + Condition">
                     <a class="nav-link" @click="data.damagemode = damageModeEnum.All" :class="{active: data.damagemode === damageModeEnum.All}">
@@ -27,7 +27,7 @@
 
         <div class="d-flex flex-row justify-content-between mb-2 align-items-center">
             <fieldset class="border-0 d-flex">
-                <legend class="scale85 mb-0 ml-1">Window</legend>
+                <!--<legend class="scale85 mb-0 ml-1">Window</legend>-->
                 <ul class="nav nav-pills scale75" :class="{'flex-row': !column, 'flex-column': column}">
                     <li class="nav-item">
                         <a class="nav-link" @click="data.dpsmode = 0" :class="{active: data.dpsmode === 0}">Full</a>
@@ -52,7 +52,7 @@
             </fieldset>
             
             <fieldset class="border-0 d-flex">
-                <legend class="scale85 mb-0 ml-1">View</legend>
+                <!--<legend class="scale85 mb-0 ml-1">View</legend>-->
                 <ul class="nav nav-pills d-flex flex-wrap justify-content-center scale75" :class="{'flex-row': !column, 'flex-column': column}">
                     <li class="nav-item">
                         <a class="nav-link" @click="data.graphmode = graphModeEnum.DPS" :class="{active: data.graphmode === graphModeEnum.DPS}">PS</a>
