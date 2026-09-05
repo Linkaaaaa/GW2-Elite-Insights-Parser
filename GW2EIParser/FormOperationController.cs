@@ -1,4 +1,5 @@
 ﻿using GW2EIParserCommons;
+using static GW2EIEvtcParser.ArcDPSEnums;
 using static GW2EIParser.MainForm;
 
 namespace GW2EIParser;
@@ -13,13 +14,12 @@ internal enum OperationState
     ClearOnCancel = 5,
     Queued = 6,
     UnComplete = 7,
+    RemoveFromQueue = 8,
+    RemoveFromQueueAndClear = 9,
 }
 internal sealed class FormOperationController : OperationController
 {
-
     private CancellationTokenSource _cancelTokenSource;
-
-    private Task _task;
 
     private readonly DataGridView _dgv;
     private readonly BindingSource _bdSrc;
@@ -36,6 +36,10 @@ internal sealed class FormOperationController : OperationController
     /// </summary>
     public OperationState State { get; private set; }
 
+    public bool IsRunning => State == OperationState.Parsing || State == OperationState.Queued || State == OperationState.Cancelling;
+    public bool IsIdle => State == OperationState.UnComplete || State == OperationState.Complete || State == OperationState.Ready;
+    public bool IsIdleOrPending => IsIdle || State == OperationState.Pending;
+
     public FormOperationController(string location, string status, DataGridView dgv, BindingSource bindingSource) : base(location, status)
     {
         ButtonText = "Parse";
@@ -46,24 +50,9 @@ internal sealed class FormOperationController : OperationController
         SetReparseButtonState(false);
     }
 
-    public void SetContext(CancellationTokenSource cancelTokenSource, Task task)
-    {
-        _cancelTokenSource = cancelTokenSource;
-        _task = task;
-    }
-
-    public bool IsBusy()
-    {
-        if (_task != null)
-        {
-            return !_task.IsCompleted;
-        }
-        return false;
-    }
-
     protected override void ThrowIfCanceled()
     {
-        if (_task != null && _cancelTokenSource.IsCancellationRequested)
+        if ( _cancelTokenSource.IsCancellationRequested)
         {
             _cancelTokenSource.Token.ThrowIfCancellationRequested();
         }
@@ -92,37 +81,61 @@ internal sealed class FormOperationController : OperationController
         }
     }
 
-    public void ToRunState()
+    public void ToRunState(CancellationTokenSource cancelTokenSource)
     {
+        _cancelTokenSource = cancelTokenSource;
+        // If removal requested, immediately cancel execution
+        if (State == OperationState.RemoveFromQueue)
+        {
+            State = OperationState.Parsing;
+            ToCancelState();
+            return;
+        } 
+        else if (State == OperationState.RemoveFromQueueAndClear)
+        {
+            State = OperationState.Parsing;
+            ToCancelAndClearState();
+            return;
+        }
+        State = OperationState.Parsing;
         ButtonText = "Cancel";
         SetReparseButtonState(false);
-        State = OperationState.Parsing;
         Status = "Parsing";
         InvalidateDataView();
     }
 
     public void ToCancelState()
     {
-        if (_task == null)
+        if (State == OperationState.Parsing)
         {
-            return;
+            State = OperationState.Cancelling;
+            ButtonText = "Cancelling";
+            _cancelTokenSource.Cancel();
+        } 
+        else if (State == OperationState.Queued)
+        {
+            State = OperationState.RemoveFromQueue;
+            Status = "Awaiting Removal from Queue";
         }
-        State = OperationState.Cancelling;
-        ButtonText = "Cancelling";
         SetReparseButtonState(false);
-        _cancelTokenSource.Cancel();
-        InvalidateDataView();
-    }
-    public void ToRemovalFromQueueState()
-    {
-        ToCancelState();
-        Status = "Awaiting Removal from Queue";
         InvalidateDataView();
     }
     public void ToCancelAndClearState()
     {
-        ToCancelState();
-        State = OperationState.ClearOnCancel;
+        if (State == OperationState.Parsing)
+        {
+            ToCancelState();
+            State = OperationState.ClearOnCancel;
+        } 
+        else if (State == OperationState.Queued)
+        {
+            ToCancelState();
+            State = OperationState.RemoveFromQueueAndClear;
+        }
+        else if (State == OperationState.Cancelling)
+        {
+            State = OperationState.ClearOnCancel;
+        }
     }
     public void ToReadyState()
     {

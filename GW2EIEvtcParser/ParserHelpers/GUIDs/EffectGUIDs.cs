@@ -576,6 +576,7 @@ public static class EffectGUIDs
     public static readonly GUID CorporealReassignmentExplosion1 = new("C93D2CA54BC7F84BBFA31B40DE056D21"); // owned by exploding player
     public static readonly GUID CorporealReassignmentExplosion2 = new("DAD653E8823274409610A732BE8FA188"); // owned by exploding player
     public static readonly GUID HorizonStrikeArkk = new("C5E4632E8131D342AA4F18222C68D8EB"); // owned by arkk
+    public static readonly GUID ArkkEye = new("291F8934D54C7840A4CE943B11499A2F"); // owned by arkk, 2.1s duration
     // Sunqua Peak Fractal
     public static readonly GUID AiArrowAttackIndicator = new("88E9C3112BF6DA4486845A0433782E9C"); // GENERIC, no owner, rotated towards direction, used for lines & dash
     public static readonly GUID AiCircleAoEIndicator = new("171A7BD24B5D0B4BA3770FF8A6A37EC0"); // GENERIC, no owner, no rotation, used for air & fire lines, pulsing circles

@@ -74,6 +74,8 @@ For every input, CLI will consistently output a JSON like object, preceded by "P
 
 -__parsed__: boolean, set to true if parsing was successful.
 
+-__reason__: string, only relevant when "parsed" is false. Indicates the reason why the parsing has failed. In "Setting", "User", "FileContent" and "Fatal".
+
 -__status__: string, as displayed on the application on UI mode once processing is done.
 
 -__generatedFiles__: array of string, full name of all created files.

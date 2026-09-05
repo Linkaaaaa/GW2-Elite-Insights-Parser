@@ -128,7 +128,8 @@ internal class ShatteredObservatoryInstance : ShatteredObservatory
                 {
                     success = true;
                     end = death.Time;
-                } else if (log.CombatData.TryGetEffectEventsByGUID(EffectGUIDs.ArtsariivDeadExplosion, out var effects))
+                }
+                else if (log.CombatData.TryGetEffectEventsByGUID(EffectGUIDs.ArtsariivDeadExplosion, out var effects))
                 {
                     var effect = effects.FirstOrDefault(x => artsariiv.InAwareTimes(x.Time - 500));
                     if (effect != null)
@@ -137,7 +138,7 @@ internal class ShatteredObservatoryInstance : ShatteredObservatory
                         end = effect.Time;
                     }
                 }
-                AddInstanceEncounterPhase(log, phases, encounterPhases, [artsariiv], [], [], mainPhase, "Artsariiv", start, end, success, _artsariiv, LogData.Mode.CMNoName );
+                AddInstanceEncounterPhase(log, phases, encounterPhases, [artsariiv], [], [], mainPhase, "Artsariiv", start, end, success, _artsariiv, LogData.Mode.CMNoName);
             }
         }
         NumericallyRenameEncounterPhases(encounterPhases);
@@ -264,6 +265,7 @@ internal class ShatteredObservatoryInstance : ShatteredObservatory
     {
         Skorvald.DetectUnknownAnomalies(agentData, combatData);
         Artsariiv.DetectCloneArtsariivs(evtcVersion, agentData, combatData);
+        Arkk.IdentifyGadgets(agentData, combatData);
         base.EIEvtcParse(gw2Build, evtcVersion, logData, agentData, combatData, extensions);
         Skorvald.RenameAnomalies(Targets, combatData);
         Artsariiv.RenameSmallArtsariivs(TrashMobs);

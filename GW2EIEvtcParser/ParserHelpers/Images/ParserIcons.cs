@@ -274,6 +274,7 @@ internal static class ParserIcons
     private const string TrashTear = "https://i.imgur.com/N9seps0.png";
     private const string TrashFluxAnomaly = "https://i.imgur.com/JZUYCHt.png";
     private const string TrashSolarBloom = "https://i.imgur.com/2b09Qgn.png";
+    private const string TrashReactorArkk = "https://i.imgur.com/j5Urqb8.png";
     private const string TrashGamblerDrunkarThief = "https://i.imgur.com/vINeVU6.png";
     private const string TrashTormentedDeadMessenger = "https://i.imgur.com/1J2BTFg.png";
     private const string TrashEnforcer = "https://i.imgur.com/elHjamF.png";
@@ -1304,6 +1305,7 @@ internal static class ParserIcons
         { TargetID.FluxAnomalyCM3, TrashFluxAnomaly },
         { TargetID.FluxAnomalyCM4, TrashFluxAnomaly },
         { TargetID.SolarBloom, TrashSolarBloom },
+        { TargetID.ReactorActiveArkk, TrashReactorArkk },
         { TargetID.Torch, TrashTorch },
         { TargetID.AberrantWisp, TrashAberrantWisp },
         { TargetID.BoundIcebroodElemental, TrashBoundIcebroodElemental },

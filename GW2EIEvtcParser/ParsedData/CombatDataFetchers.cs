@@ -86,7 +86,7 @@ partial class CombatData
 
     public AttackTargetEvent? GetAttackTargetEventByAttackTarget(AgentItem attackTarget)
     {
-        if (_metaDataEvents.AttackTargetEventByAttackTarget.TryGetValue(attackTarget.EnglobingAgentItem, out var attackTargetEvent)) 
+        if (_metaDataEvents.AttackTargetEventByAttackTarget.TryGetValue(attackTarget.EnglobingAgentItem, out var attackTargetEvent))
         {
             return attackTargetEvent;
         }
@@ -331,7 +331,7 @@ partial class CombatData
             if (agent.IsEnglobedAgent)
             {
                 transformationEvents = transformations.Where(transformation => transformation.Src.Is(agent) && agent.InAwareTimes(transformation.Time)).ToList();
-            } 
+            }
             else
             {
                 transformationEvents = transformations.Where(transformation => transformation.Src.Is(agent)).ToList();
@@ -445,7 +445,7 @@ partial class CombatData
         return [];
     }
     /// <summary>
-    /// Returns list of buff apply events applied on agent 
+    /// Returns list of buff apply events applied on agent
     /// </summary>
     public IReadOnlyList<AbstractBuffApplyEvent> GetBuffApplyDataByDst(AgentItem dst)
     {
@@ -476,7 +476,7 @@ partial class CombatData
         return [];
     }
 
-    public IReadOnlyList<BuffRemoveAllEvent> GetBuffRemoveAllDataBySrc( AgentItem src)
+    public IReadOnlyList<BuffRemoveAllEvent> GetBuffRemoveAllDataBySrc(AgentItem src)
     {
         return GetTimeValueOrEmpty(_buffRemoveAllDataBySrc, src);
     }
@@ -490,7 +490,7 @@ partial class CombatData
         return [];
     }
 
-    public IReadOnlyList<BuffRemoveAllEvent> GetBuffRemoveAllDataByDst( AgentItem dst)
+    public IReadOnlyList<BuffRemoveAllEvent> GetBuffRemoveAllDataByDst(AgentItem dst)
     {
         return GetTimeValueOrEmpty(_buffRemoveAllDataByDst, dst);
     }
@@ -805,9 +805,9 @@ partial class CombatData
         return GetTimeValueOrEmpty(_gadgetAnimationEventsByGadget, caster);
     }
     /// <summary>
-    /// Returns list of gadget animation events from token 
+    /// Returns list of gadget animation events from token
     /// </summary>
-    public IReadOnlyList<GadgetAnimationEvent> GetGadgetAnimationData(ulong token)
+    public IReadOnlyList<GadgetAnimationEvent> GetGadgetAnimationData(Token token)
     {
         return _gadgetAnimationEventsByToken.GetValueOrEmpty(token);
     }
