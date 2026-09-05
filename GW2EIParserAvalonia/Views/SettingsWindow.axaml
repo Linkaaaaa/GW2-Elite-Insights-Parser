@@ -30,7 +30,7 @@
                 Click="LoadSettingsButton_Click"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center" />
-            
+
             <Button
                 Content="Save Settings"
                 MinWidth="100"
@@ -212,14 +212,21 @@
 
             </TabItem>
 
-            <!-- HTML -->
+            <!-- FORMATS -->
 
-            <TabItem Header="HTML">
+            <TabItem Header="Formats">
 
                 <ScrollViewer>
                     <StackPanel
                         Margin="20"
                         Spacing="10">
+
+                        <!-- HTML -->
+
+                        <TextBlock
+                            Text="HTML"
+                            FontSize="20"
+                            FontWeight="Bold" />
 
                         <CheckBox
                             Content="Output as HTML"
@@ -249,7 +256,10 @@
                             Text="Absolute external scripts path"
                             Margin="0,10,0,0" />
 
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Grid
+                            ColumnDefinitions="*,Auto"
+                            ColumnSpacing="8">
+
                             <TextBox
                                 Grid.Column="0"
                                 Text="{Binding HtmlExternalScriptsPath}"
@@ -262,6 +272,7 @@
                                 Click="SelectExternalScriptFolder_Click"
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Center" />
+
                         </Grid>
 
                         <TextBlock
@@ -277,37 +288,27 @@
                             Content="Compress JSON embedded in HTML"
                             IsChecked="{Binding HtmlCompressJson}" />
 
-                    </StackPanel>
-                </ScrollViewer>
+                        <Separator />
 
-            </TabItem>
+                        <!-- CSV -->
 
-            <!-- CSV -->
-
-            <TabItem Header="CSV">
-
-                <ScrollViewer>
-                    <StackPanel
-                        Margin="20"
-                        Spacing="10">
+                        <TextBlock
+                            Text="CSV"
+                            FontSize="20"
+                            FontWeight="Bold" />
 
                         <CheckBox
                             Content="Output as CSV"
                             IsChecked="{Binding SaveOutCSV}" />
 
-                    </StackPanel>
-                </ScrollViewer>
+                        <Separator />
 
-            </TabItem>
+                        <!-- JSON -->
 
-            <!-- JSON -->
-
-            <TabItem Header="JSON">
-
-                <ScrollViewer>
-                    <StackPanel
-                        Margin="20"
-                        Spacing="10">
+                        <TextBlock
+                            Text="JSON"
+                            FontSize="20"
+                            FontWeight="Bold" />
 
                         <CheckBox
                             Content="Output as JSON"
