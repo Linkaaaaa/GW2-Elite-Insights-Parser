@@ -804,7 +804,7 @@ internal sealed partial class MainForm : Form
             var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             Settings.Default.UpdateLastChecked = time;
             List<string> traces = [];
-            Updater.UpdateInfo? info = await Updater.CheckForUpdate("GW2EI.zip", traces);
+            Updater.UpdateInfo? info = await Updater.CheckForUpdate("GW2EIWinForms.zip", traces);
             traces.ForEach(x => AddTraceMessage("Updater: " + x));
 #if DEBUG
             var force = true;
