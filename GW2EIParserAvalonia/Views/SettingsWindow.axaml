@@ -338,8 +338,7 @@
                         <TextBox
                             Text="{Binding DPSReportUserToken}"
                             PlaceholderText="User token"
-                            PasswordChar="•"
-                            IsEnabled="{Binding UploadToDPSReports}" />
+                            PasswordChar="•" />
 
                         <Separator />
 
@@ -369,8 +368,7 @@
 
                         <TextBox
                             Text="{Binding WebhookURL}"
-                            PlaceholderText="Webhook URL"
-                            IsEnabled="{Binding SendEmbedToWebhook}" />
+                            PlaceholderText="Webhook URL" />
 
                         <CheckBox
                             Content="Send link only"
