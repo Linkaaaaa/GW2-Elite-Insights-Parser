@@ -18,7 +18,7 @@
 
     <Grid
         Margin="24"
-        RowDefinitions="Auto,Auto,*,Auto,Auto"
+        RowDefinitions="Auto,Auto,*,Auto,Auto,Auto"
         RowSpacing="16">
 
         <!-- Header -->
@@ -213,10 +213,23 @@
             </DataGrid>
 
         </Border>
+        <Grid
+           Grid.Row="3"
+           ColumnDefinitions="*,Auto">
+
+            <StackPanel Spacing="3">
+                <TextBlock
+                    Text="{Binding WatchingDirectory}"
+                    IsEnabled="{Binding WatchingDirectoryVisible}"
+                    FontSize="13"
+                    Opacity="0.65" />
+            </StackPanel>
+
+        </Grid>
 
         <!-- Bottom actions -->
         <Grid
-            Grid.Row="3"
+            Grid.Row="4"
             ColumnDefinitions="*,Auto">
 
             <!-- Application actions -->
@@ -302,7 +315,7 @@
 
         <!-- Footer -->
         <TextBlock
-            Grid.Row="4"
+            Grid.Row="5"
             Text="{Binding Version}"
             FontSize="13"
             HorizontalAlignment="Left"
