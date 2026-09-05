@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
     <ApplicationIcon>Content\ArenaNet\LI.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Deterministic>false</Deterministic>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
