@@ -310,6 +310,12 @@ class Animator {
         // manipulation
         this.mouseDown = null;
         this.dragged = false;
+        // tooltip
+        this.canvasHovering = false;
+        this.canvasHoverPoint = null;
+        this.canvasTooltipRAF = null;
+        this.lastCanvasTooltipCheck = 0;
+        // global
         this.globalScale = 1.0;
         this.globalRotation = 0;
         this.globalTranslation = null;
@@ -930,6 +936,99 @@ class Animator {
             animateCanvas(noUpdateTime);
         }
     }
+    _scheduleCanvasTooltipUpdate() {
+        if (this.canvasTooltipRAF !== null) {
+            return;
+        }
+
+        this.canvasTooltipRAF = window.requestAnimationFrame(() => {
+            this.canvasTooltipRAF = null;
+
+            if (!this.canvasHovering || this.mouseDown || !this.canvasHoverPoint) {
+                return;
+            }
+
+            const point = this.canvasHoverPoint;
+
+            this._updateCanvasTooltipAt(point.x, point.y);
+        });
+    }
+
+    _updateCanvasTooltipAt(clientX, clientY) {
+        if (typeof eiUnifiedTooltipManager === 'undefined' ||
+            !eiUnifiedTooltipManager ||
+            !this.mainCanvas ||
+            !this.pickCanvas ||
+            !this.pickContext
+        ) {
+            return;
+        }
+
+        const manager = eiUnifiedTooltipManager;
+        this.lastCanvasTooltipCheck = Date.now();
+        const rect = this.mainCanvas.getBoundingClientRect();
+
+        // Convert the viewport coordinates into the canvas's CSS coordinates.
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+
+        if (rect.width <= 0 ||
+            rect.height <= 0 ||
+            x < 0 ||
+            y < 0 ||
+            x >= rect.width ||
+            y >= rect.height
+        ) {
+            manager.hide();
+            return;
+        }
+
+        this._drawPickCanvas();
+
+        // The canvas backing resolution can differ from its CSS dimensions.
+        const pickX = Math.floor(x * this.pickCanvas.width / rect.width);
+
+        const pickY = Math.floor(y * this.pickCanvas.height / rect.height);
+
+        if (
+            pickX < 0 ||
+            pickY < 0 ||
+            pickX >= this.pickCanvas.width ||
+            pickY >= this.pickCanvas.height
+        ) {
+            manager.hide();
+            return;
+        }
+
+        const pixel = this.pickContext.getImageData(pickX, pickY, 1, 1).data;
+
+        // Transparent pixels mean that no selectable actor is underneath.
+        if (pixel[3] === 0) {
+            manager.hide();
+            return;
+        }
+
+        // Decode the RGB picking color back into the actor ID.
+        uint32ToUint8[0] = pixel[0];
+        uint32ToUint8[1] = pixel[1];
+        uint32ToUint8[2] = pixel[2];
+        uint32ToUint8[3] = 0;
+
+        const actorID = uint32[0];
+
+        // Match the same actor ID convention used by selectActor().
+        const player = logData.players.find(item => item.uniqueID === actorID);
+        const target = player ? null : logData.targets.find(item => item.uniqueID === actorID);
+        const actorRecord = player || target;
+
+        if (!actorRecord || !actorRecord.name) {
+            manager.hide();
+            return;
+        }
+
+        // Display the actor name at the cursor's viewport position.
+        manager.showAt(actorRecord.name, clientX, clientY);
+    }
     _initMouseEvents() {
         const _this = this;
         const canvas = this.mainCanvas;
@@ -939,6 +1038,11 @@ class Animator {
 
         canvas.addEventListener('mousedown', function (evt) {
             evt.preventDefault();
+
+            if (typeof eiUnifiedTooltipManager !== 'undefined' && eiUnifiedTooltipManager) {
+                eiUnifiedTooltipManager.hide();
+            }
+
             _this.lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
             _this.lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
             _this.mouseDown = {
@@ -952,8 +1056,16 @@ class Animator {
             evt.preventDefault();
             _this.lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
             _this.lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+            _this.canvasHovering = true;
+            _this.canvasHoverPoint = {
+                x: evt.clientX,
+                y: evt.clientY
+            };
             _this.dragged = true;
             if (_this.mouseDown) {
+                if (typeof eiUnifiedTooltipManager !== 'undefined' && eiUnifiedTooltipManager) {
+                    eiUnifiedTooltipManager.hide();
+                }
                 const pt = ctx.transformedPoint(_this.lastX, _this.lastY);
                 const downPt = _this.mouseDown.pt;
                 ctx.translate(pt.x - downPt.x, pt.y - downPt.y);
@@ -962,6 +1074,8 @@ class Animator {
                 if (_this.animation === null) {
                     animateCanvas(noUpdateTime);
                 }
+            } else {
+                _this._scheduleCanvasTooltipUpdate();
             }
         }, false);
 
@@ -983,8 +1097,20 @@ class Animator {
             _this.mouseDown = null;
         }, false);
 
+        canvas.addEventListener('mouseleave', function () {
+            _this.canvasHovering = false;
+            _this.canvasHoverPoint = null;
+
+            if (typeof eiUnifiedTooltipManager !== 'undefined' && eiUnifiedTooltipManager) {
+                eiUnifiedTooltipManager.hide();
+            }
+        }, false);
+
         const zoom = function (evt) {
             evt.preventDefault();
+            if (typeof eiUnifiedTooltipManager !== 'undefined' && eiUnifiedTooltipManager) {
+                eiUnifiedTooltipManager.hide();
+            }
             const delta = evt.wheelDelta ? evt.wheelDelta / 40 : evt.detail ? -evt.detail : 0;
             if (delta) {
                 const factor = Math.pow(1.1, delta);
@@ -1358,6 +1484,9 @@ class Animator {
         //this._drawPickCanvas();
         this._drawBGCanvas();
         this._drawMainCanvas();
+        if (this.canvasHovering && !this.mouseDown && this.canvasHoverPoint && Date.now() - this.lastCanvasTooltipCheck >= 150) {
+            this._scheduleCanvasTooltipUpdate();
+        }
         if (overheadAnimationFrame === maxOverheadAnimationFrame || overheadAnimationFrame === 0) {
             overheadAnimationIncrement *= -1;
         }

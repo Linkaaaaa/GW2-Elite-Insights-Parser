@@ -16,72 +16,72 @@
                         Account
                     </th>
                     <th class="damage-cell" :class="getHeaderClass('Data', 0)" @click="sortBy('Data', 0)"
-                        data-original-title="Damage taken">
+                        ei-tooltip="Damage taken">
                         <img :src="UIIcons.Damage"
                             alt="Damage Taken" class="icon icon-hover">
                     </th>
                     <th class="damage-cell" :class="getHeaderClass('Data', 1)" @click="sortBy('Data', 1)"
-                        data-original-title="Damage absorbed by barrier">
+                        ei-tooltip="Damage absorbed by barrier">
                         <img :src="UIIcons.Barrier"
                             alt="Damage Barrier" class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 2)" @click="sortBy('Data', 2)"
-                        data-original-title="Number of hits missed against">
+                        ei-tooltip="Number of hits missed against">
                         <img :src="UIIcons.Miss" alt="Missed"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 3)" @click="sortBy('Data', 3)"
-                        data-original-title="Number of times interrupted">
+                        ei-tooltip="Number of times interrupted">
                         <img :src="UIIcons.Interrupt" alt="Interrupted"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 17)" @click="sortBy('Data', 17)"
-                        data-original-title="CC">                  
+                        ei-tooltip="CC">                  
                         <img :src="UIIcons.CC" alt="CC"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 19)" @click="sortBy('Data', 19)"
-                        data-original-title="Stun Break">
+                        ei-tooltip="Stun Break">
                         <img :src="UIIcons.StunBreak" alt="Stun Break"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 4)" @click="sortBy('Data', 4)"
-                        data-original-title="Number of times was invulnerable to damage">
+                        ei-tooltip="Number of times was invulnerable to damage">
                         <img :src="UIIcons.Invul" alt="Invuln"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 5)" @click="sortBy('Data', 5)"
-                        data-original-title="Number of evades">
+                        ei-tooltip="Number of evades">
                         <img :src="UIIcons.Evade" alt="Evaded"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 6)" @click="sortBy('Data', 6)"
-                        data-original-title="Number of times blocked an attack">
+                        ei-tooltip="Number of times blocked an attack">
                         <img :src="UIIcons.Block" alt="Blocked"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 7)" @click="sortBy('Data', 7)"
-                        data-original-title="Number of dodge + mirage cloak">
+                        ei-tooltip="Number of dodge + mirage cloak">
                         <img :src="UIIcons.Dodge" alt="Dodge"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 8)" @click="sortBy('Data', 8)"
-                        data-original-title="Condition Cleanse">
+                        ei-tooltip="Condition Cleanse">
                         <img :src="UIIcons.Cleanse" alt="Condition Cleanse"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 10)" @click="sortBy('Data', 10)"
-                        data-original-title="Boon Strips">
+                        ei-tooltip="Boon Strips">
                         <img :src="UIIcons.Strip" alt="Boon Strips"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 12)" @click="sortBy('Data', 12)"
-                        data-original-title="Times downed">
+                        ei-tooltip="Times downed">
                         <img :src="UIIcons.DownedAlly" alt="Downs"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 16)" @click="sortBy('Data', 16)"
-                        data-original-title="Damage taken while downed">
+                        ei-tooltip="Damage taken while downed">
                         <img :src="UIIcons.Damage" alt="Damage"
                             class="icon">
                             &#8658
@@ -90,7 +90,7 @@
                             class="icon">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 14)" @click="sortBy('Data', 14)"
-                        data-original-title="Times died">
+                        ei-tooltip="Times died">
                         <img :src="UIIcons.Dead" alt="Dead"
                             class="icon icon-hover">
                     </th>
@@ -101,7 +101,7 @@
                     <td :class="getBodyClass('Sub')">
                         {{row.player.group}}
                     </td>
-                    <td :class="getBodyClass('Prof')" :data-original-title="row.player.profession">
+                    <td :class="getBodyClass('Prof')" :ei-tooltip="row.player.profession">
                         <img :src="row.player.icon" :alt="row.player.profession" class="icon"><span
                             style="display:none">{{row.player.profession}}</span>
                     </td>
@@ -123,10 +123,10 @@
                     <td :class="getBodyClass('Data', 3)">
                         {{ numberFormater(row.def[3]) }}
                     </td>
-                    <td :class="getBodyClass('Data', 17)" :data-original-title="numberFormater3(row.def[18] / 1000) + ' seconds'">
+                    <td :class="getBodyClass('Data', 17)" :ei-tooltip="numberFormater3(row.def[18] / 1000) + ' seconds'">
                         {{ numberFormater(row.def[17]) }}
                     </td>
-                    <td :class="getBodyClass('Data', 19)" :data-original-title="numberFormater3(row.def[20]) + ' seconds'">
+                    <td :class="getBodyClass('Data', 19)" :ei-tooltip="numberFormater3(row.def[20]) + ' seconds'">
                         {{ numberFormater(row.def[19]) }}
                     </td>
                     <td :class="getBodyClass('Data', 4)">
@@ -141,19 +141,19 @@
                     <td :class="getBodyClass('Data', 7)">
                         {{ numberFormater(row.def[7]) }}
                     </td>
-                    <td :class="getBodyClass('Data', 8)" :data-original-title="numberFormater(row.def[9]) + ' seconds'">
+                    <td :class="getBodyClass('Data', 8)" :ei-tooltip="numberFormater(row.def[9]) + ' seconds'">
                         {{ numberFormater(row.def[8]) }}
                     </td>
-                    <td :class="getBodyClass('Data', 10)" :data-original-title="numberFormater(row.def[11]) + ' seconds'">
+                    <td :class="getBodyClass('Data', 10)" :ei-tooltip="numberFormater(row.def[11]) + ' seconds'">
                         {{ numberFormater(row.def[10]) }}
                     </td>
-                    <td :class="getBodyClass('Data', 12)" :data-original-title="row.def[13]">
+                    <td :class="getBodyClass('Data', 12)" :ei-tooltip="row.def[13]">
                         {{ numberFormater(row.def[12]) }}
                     </td>
                     <td :class="getBodyClass('Data', 16)">
                         {{ numberFormater(row.def[16]) }}
                     </td>
-                    <td :class="getBodyClass('Data', 14)" :data-original-title="row.def[15]">
+                    <td :class="getBodyClass('Data', 14)" :ei-tooltip="row.def[15]">
                         {{ numberFormater(row.def[14]) }}
                     </td>
                 </tr>
@@ -168,14 +168,14 @@
                     <td>{{ numberFormater(sum.def[1]) }}</td>
                     <td>{{ numberFormater(sum.def[2]) }}</td>
                     <td>{{ numberFormater(sum.def[3]) }}</td>
-                    <td :data-original-title="numberFormater3(sum.def[18]/1000) + ' seconds'">{{ numberFormater(sum.def[17]) }}</td>
-                    <td :data-original-title="numberFormater3(sum.def[20]) + ' seconds'">{{ numberFormater(sum.def[19]) }}</td>
+                    <td :ei-tooltip="numberFormater3(sum.def[18]/1000) + ' seconds'">{{ numberFormater(sum.def[17]) }}</td>
+                    <td :ei-tooltip="numberFormater3(sum.def[20]) + ' seconds'">{{ numberFormater(sum.def[19]) }}</td>
                     <td>{{ numberFormater(sum.def[4]) }}</td>
                     <td>{{ numberFormater(sum.def[5]) }}</td>
                     <td>{{ numberFormater(sum.def[6]) }}</td>
                     <td>{{ numberFormater(sum.def[7]) }}</td>
-                    <td :data-original-title="numberFormater3(sum.def[9]) + ' seconds'">{{ numberFormater(sum.def[8]) }}</td>
-                    <td :data-original-title="numberFormater3(sum.def[11]) + ' seconds'">{{ numberFormater(sum.def[10]) }}</td>
+                    <td :ei-tooltip="numberFormater3(sum.def[9]) + ' seconds'">{{ numberFormater(sum.def[8]) }}</td>
+                    <td :ei-tooltip="numberFormater3(sum.def[11]) + ' seconds'">{{ numberFormater(sum.def[10]) }}</td>
                     <td>{{ numberFormater(sum.def[12]) }}</td>
                     <td>{{ numberFormater(sum.def[16]) }}</td>
                     <td>{{ numberFormater(sum.def[14]) }}</td>

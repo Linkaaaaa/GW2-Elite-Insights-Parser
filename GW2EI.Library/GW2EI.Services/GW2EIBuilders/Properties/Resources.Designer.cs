@@ -387,7 +387,7 @@ namespace GW2EIBuilders.Properties {
         ///                Skills &lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;
         ///            &lt;/a&gt;
         ///            &lt;img class=&quot;icon ml-2&quot; :src=&quot;UIIcons.QuestionMark&quot;
-        ///                data-original-title=&quot;Use Skills dropdown to hide unwanted skills&quot; /&gt;
+        ///                ei-tooltip=&quot;Use Skills dropdown to hide unwanted skills&quot; /&gt;
         ///            &lt;ul class=&quot;dropdown-menu p-2 font-weight-normal scrollabledropdown min-wd-16 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplAdvancedRotation {
@@ -459,7 +459,7 @@ namespace GW2EIBuilders.Properties {
         ///            &lt;ul class=&quot;nav nav-pills d-flex flex-row justify-content-center scale85&quot;&gt;
         ///                &lt;li class=&quot;nav-item&quot;&gt;
         ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;buffMode = 0&quot; :class=&quot;{active: buffMode === 0}&quot;
-        ///                       data-original-title=&quot;Buffs upkeep.&quot;&gt;Uptime&lt;/a&gt;
+        ///                       ei-tooltip=&quot;Buffs upkeep.&quot;&gt;Uptime&lt;/a&gt;
         ///                &lt;/li&gt;
         ///                &lt;li class=&quot;nav-item&quot;&gt;
         ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;buffMode = 1&quot; [rest of string was truncated]&quot;;.
@@ -476,7 +476,7 @@ namespace GW2EIBuilders.Properties {
         ///        &lt;div :key=&quot;&apos;activedurationplayer&apos;&quot; class=&quot;d-flex flex-row justify-content-center mt-1 mb-1&quot;&gt;
         ///            &lt;ul class=&quot;nav nav-pills d-flex flex-row justify-content-center scale85&quot;&gt;
         ///                &lt;li class=&quot;nav-item&quot;&gt;
-        ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;activeduration = 0&quot; data-original-title=&quot;Buffs upkeep applied by each player to the selected player based on currently selected phase.&quot;
+        ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;activeduration = 0&quot; ei-tooltip=&quot;Buffs upkeep applied by each player to the selected player based on currently selected phase.&quot;
         ///                       :class=&quot;{active: activeduration === 0}&quot;&gt;Phase dur [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplBuffStatsPlayer {
@@ -528,7 +528,7 @@ namespace GW2EIBuilders.Properties {
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div v-if=&quot;buffs.length &gt; 0&quot;&gt;
         ///        &lt;img v-if=&quot;generation&quot; class=&quot;mb-1 icon&quot; :src=&quot;UIIcons.QuestionMark&quot; style=&quot;position: absolute; transform: translate(0px, -20px);&quot;
-        ///            :data-original-title=&quot;tooltipExpl&quot; /&gt;
+        ///            :ei-tooltip=&quot;tooltipExpl&quot; /&gt;
         ///        &lt;div v-if=&quot;colPageCount &gt; 0&quot;&gt;
         ///            &lt;table-scroll-component :min=&quot;0&quot; :max=&quot;colPageCount&quot; :width=&quot;&apos;600px&apos;&quot; :height=&quot;&apos;10px&apos;&quot; :transform=&quot;transFormString&quot; :pagestructure=&quot;colStructure&quot;&gt;&lt;/table-scroll-component&gt;
         ///        &lt;/div&gt;
@@ -568,7 +568,7 @@ namespace GW2EIBuilders.Properties {
         ///            &lt;ul class=&quot;nav nav-pills d-flex flex-row justify-content-center scale85&quot;&gt;
         ///                &lt;li class=&quot;nav-item&quot;&gt;
         ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;buffMode = 0&quot; :class=&quot;{active: buffMode === 0}&quot;
-        ///                       data-original-title=&quot;Incoming buffs applications.&quot;&gt;Incoming&lt;/a&gt;
+        ///                       ei-tooltip=&quot;Incoming buffs applications.&quot;&gt;Incoming&lt;/a&gt;
         ///                &lt;/li&gt;
         ///                &lt;li class=&quot;nav-item&quot;&gt;
         ///                    &lt;a class=&quot;nav-link&quot; @cli [rest of string was truncated]&quot;;.
@@ -585,7 +585,7 @@ namespace GW2EIBuilders.Properties {
         ///        &lt;div :key=&quot;&apos;activedurationplayer&apos;&quot; class=&quot;d-flex flex-row justify-content-center mt-1 mb-1&quot;&gt;
         ///            &lt;ul class=&quot;nav nav-pills d-flex flex-row justify-content-center scale85&quot;&gt;
         ///                &lt;li class=&quot;nav-item&quot;&gt;
-        ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;activeduration = 0&quot; data-original-title=&quot;Buffs volumes applied by each player to the selected player based on currently selected phase.&quot;
+        ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;activeduration = 0&quot; ei-tooltip=&quot;Buffs volumes applied by each player to the selected player based on currently selected phase.&quot;
         ///                       :class=&quot;{active: activeduration === 0}&quot;&gt;Phase du [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplBuffVolumeStatsPlayer {
@@ -616,9 +616,9 @@ namespace GW2EIBuilders.Properties {
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div v-if=&quot;buffs.length &gt; 0&quot;&gt;
         ///        &lt;img v-if=&quot;outgoing&quot; class=&quot;mb-1 icon&quot; :src=&quot;UIIcons.QuestionMark&quot; style=&quot;position: absolute; transform: translate(0px, -20px);&quot;
-        ///            :data-original-title=&quot;tooltipExplOut&quot; /&gt;
+        ///            :ei-tooltip=&quot;tooltipExplOut&quot; /&gt;
         ///        &lt;img v-if=&quot;!outgoing&quot; class=&quot;mb-1 icon&quot; :src=&quot;UIIcons.QuestionMark&quot; style=&quot;position: absolute; transform: translate(0px, -20px);&quot;
-        ///            :data-original-title=&quot;tooltipExplInc&quot; /&gt;
+        ///            :ei-tooltip=&quot;tooltipExplInc&quot; /&gt;
         ///        &lt;div v-if=&quot;colPageCount &gt; 0&quot;&gt;
         ///            &lt;table-scroll-component :min= [rest of string was truncated]&quot;;.
         /// </summary>
@@ -655,7 +655,7 @@ namespace GW2EIBuilders.Properties {
         ///        &lt;ul class=&quot;nav nav-pills d-flex flex-row flex-wrap justify-content-center&quot;&gt;
         ///            &lt;li class=&quot;nav-item&quot; v-for=&quot;(phase, id) in breakbarPhases&quot;
         ///                @click=&quot;updatePhaseTime(phase)&quot;
-        ///                :data-original-title=&quot;getTooltip(phase)&quot;&gt;
+        ///                :ei-tooltip=&quot;getTooltip(phase)&quot;&gt;
         ///                &lt;a class=&quot;nav-link&quot;&gt;{{id + 1}} &lt;/a&gt;
         ///            &lt;/li&gt;
         ///        &lt;/ul&gt;
@@ -675,15 +675,14 @@ namespace GW2EIBuilders.Properties {
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div class=&quot;actor-buff-container&quot;&gt;
         ///        &lt;span v-for=&quot;buffData in buffarray&quot; class=&quot;d-inline-block position-relative&quot;&gt;
-        ///            &lt;img :src=&quot;buffData.buff.icon&quot; :title=&quot;buffData.buff.name + &apos; - &apos; + buffData.buff.id&quot; :alt=&quot;buffData.buff.name + &apos; - &apos; + buffData.buff.id&quot; class=&quot;icon-s&quot; /&gt;
+        ///            &lt;img :src=&quot;buffData.buff.icon&quot; :ei-tooltip=&quot;buffData.buff.name + &apos; - &apos; + buffData.buff.id&quot; :alt=&quot;buffData.buff.name + &apos; - &apos; + buffData.buff.id&quot; class=&quot;icon-s&quot; /&gt;
         ///            &lt;span v-if=&quot;buffData.state &gt; 1&quot; class=&quot;buff-number&quot;&gt;{{buffData.state}}&lt;/span&gt;
         ///        &lt;/span&gt;
         ///    &lt;/div&gt;
         ///&lt;/template&gt;
         ///
         ///&lt;script&gt;
-        ///    Vue.component(&quot;combat-replay-actor-buff&quot;, {
-        ///        p [rest of string was truncated]&quot;;.
+        ///    Vue.component(&quot;combat-replay-actor-buff&quot; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplCombatReplayActorBuffStats {
             get {
@@ -693,15 +692,13 @@ namespace GW2EIBuilders.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;template&gt;
-        ///    &lt;div class=&quot;d-flex align-items-center actor-rotation&quot;&gt;
-        ///        &lt;div v-if=&quot;castingSkill&quot;&gt;
-        ///            &lt;img class=&quot;icon-cur-cr-rota&quot; :class=&quot;getIconClass(castingSkill)&quot; :src=&quot;castingSkill.skill.icon&quot; :title=&quot;getTooltip(castingSkill)&quot; /&gt;
+        ///    &lt;div class=&quot;actor-rotation&quot;&gt;
+        ///        &lt;div v-if=&quot;isAnimated(castingSkill)&quot; class=&quot;actor-rotation-castbar&quot; :style=&quot;{&apos;background&apos;: getCastbarGradient(castingSkill)}&quot;&gt;
+        ///            {{ getCastbarTimes(castingSkill) }}
         ///        &lt;/div&gt;
-        ///        &lt;div v-else class=&quot;empty-icon-cur-cr-rota&quot;&gt;&lt;/div&gt;
-        ///
-        ///        &lt;div v-for=&quot;next in nextSkills&quot;&gt;
-        ///            &lt;img class=&quot;icon-next-cr-rota&quot; :class=&quot;getIconClass(next)&quot; :src=&quot;next.skill.icon&quot; :title=&quot;getTooltip(next)&quot; /&gt;
-        ///        &lt;/div&gt;        /// [rest of string was truncated]&quot;;.
+        ///        &lt;div class=&quot;d-flex align-items-end actor-rotation-casts&quot;&gt;
+        ///            &lt;div v-if=&quot;castingSkill&quot;&gt;
+        ///                &lt;img class=&quot;icon-cur-cr-rota&quot; :class=&quot;getIconClass(castingSkill)&quot; :src=&quot;castingSkill.skill.icon&quot; :ei-tooltip=&quot;getTooltip(castingSkill) [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplCombatReplayActorRotation {
             get {
@@ -748,7 +745,7 @@ namespace GW2EIBuilders.Properties {
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div class=&quot;text-white&quot; @click=&quot;select&quot;&gt;
         ///        &lt;div class=&quot;actor-status&quot; :style=&quot;{&apos;background&apos;: getActorGradient(time, status), &apos;height&apos;: getActorHeight()}&quot;
-        ///             :data-original-title=&quot;isTarget ? actor.name : actor.name + &apos; - &apos; + actor.acc&quot;&gt;
+        ///             :ei-tooltip=&quot;isTarget ? actor.name : actor.name + &apos; - &apos; + actor.acc&quot;&gt;
         ///            &lt;p class=&quot;mb-0 scale65 cr-status-percent text-left&quot;&gt;
         ///                {{ percentFormater2(getPercent(healths, time) / 100) }}
         ///            &lt;/p&gt;
@@ -769,7 +766,7 @@ namespace GW2EIBuilders.Properties {
         ///            &lt;ul v-if=&quot;showNormalPhases &amp;&amp; isTouchDevice&quot;
         ///                class=&quot;nav nav-pills d-flex flex-row justify-content-center mb-1 mx-auto&quot;&gt;
         ///                &lt;li class=&quot;nav-item&quot; v-for=&quot;(phase, id) in normalPhases&quot;
-        ///                    :data-original-title=&quot;phase.durationS + &apos; seconds &lt;br /&gt; Start: &apos; + phase.start + &apos;&lt;br /&gt; End: &apos; + phase.end&quot;&gt;
+        ///                    :ei-tooltip=&quot;phase.durationS + &apos; seconds &lt;br /&gt; Start: &apos; + phase.start + &apos;&lt;br /&gt; End: &apos; + phase.end&quot;&gt;
         ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;updatePh [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplCombatReplayAnimationControl {
@@ -783,7 +780,7 @@ namespace GW2EIBuilders.Properties {
         ///    &lt;div&gt;
         ///        &lt;div class=&quot;d-flex flex-row justify-content-center align-items-center mb-2&quot;&gt;
         ///            &lt;ul class=&quot;nav nav-pills&quot; :class=&quot;{&apos;flex-row&apos;: !column, &apos;flex-column&apos;: column}&quot;&gt;
-        ///                &lt;li class=&quot;nav-item&quot; data-original-title=&quot;Power + Condition&quot;&gt;
+        ///                &lt;li class=&quot;nav-item&quot; ei-tooltip=&quot;Power + Condition&quot;&gt;
         ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;data.damagemode = damageModeEnum.All&quot; :class=&quot;{active: data.damagemode === damageModeEnum.All}&quot;&gt;
         ///                        &lt;img :src=&quot;UIIcons.Damage&quot; alt=&quot;All&quot; class=&quot;icon&quot;&gt;
         ///         [rest of string was truncated]&quot;;.
@@ -814,7 +811,7 @@ namespace GW2EIBuilders.Properties {
         ///    &lt;div class=&quot;d-flex flex-column justify-content-center align-items-center max-wd-500px scale85&quot;&gt;           
         ///        &lt;h4&gt;General Settings&lt;/h4&gt;
         ///        &lt;div class=&quot;d-flex flex-row justify-content-center flex-wrap&quot;&gt;
-        ///            &lt;div class=&quot;form-check mb-2 mr-2&quot; :data-original-title=&quot;&apos;Viewpoint will follow selected actor, as long as selected actor is drawn&apos;&quot;&gt;
+        ///            &lt;div class=&quot;form-check mb-2 mr-2&quot; :ei-tooltip=&quot;&apos;Viewpoint will follow selected actor, as long as selected actor is drawn&apos;&quot;&gt;
         ///                &lt;input type=&quot;checkbox&quot; class=&quot;form-check-input&quot; id=&quot;followCheck&quot; 
         ///                    :checked=&quot;getAnimator().displayS [rest of string was truncated]&quot;;.
         /// </summary>
@@ -844,7 +841,7 @@ namespace GW2EIBuilders.Properties {
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;label class=&quot;ml-auto&quot;&gt;
         ///        &lt;select class=&quot;form-control d-inline w-auto h-auto&quot; :value=&quot;defaultSpeed&quot; 
-        ///                data-original-title=&quot;Speed&quot;
+        ///                ei-tooltip=&quot;Speed&quot;
         ///                @change=&quot;updateSelectedSpeed($event.target.value)&quot;&gt;
         ///            &lt;option v-for=&quot;speed in speeds&quot; :key=&quot;speed&quot; :value=&quot;speed&quot;&gt;
         ///                {{ speed }}x
@@ -1059,7 +1056,7 @@ namespace GW2EIBuilders.Properties {
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div&gt;
         ///        &lt;img class=&quot;mb-1 icon&quot; :src=&quot;UIIcons.QuestionMark&quot; style=&quot;position: absolute; transform: translate(0px, -20px);&quot;
-        ///            :data-original-title=&quot;tooltipExpl&quot; /&gt;
+        ///            :ei-tooltip=&quot;tooltipExpl&quot; /&gt;
         ///        &lt;div v-if=&quot;colPageCount &gt; 0&quot;&gt;
         ///            &lt;table-scroll-component :min=&quot;0&quot; :max=&quot;colPageCount&quot; :width=&quot;&apos;600px&apos;&quot; :height=&quot;&apos;10px&apos;&quot; :transform=&quot;transFormString&quot; :pagestructure=&quot;colStructure&quot;&gt;&lt;/table-scroll-component&gt;
         ///        &lt;/div&gt;
@@ -1286,7 +1283,7 @@ namespace GW2EIBuilders.Properties {
         ///            Started with:
         ///            &lt;ul&gt;
         ///                &lt;li v-for=&quot;initial in data.start&quot;&gt;
-        ///                    {{initial.name}} &lt;img class=&quot;icon&quot; :alt=&quot;initial.name&quot; :data-original-title=&quot;initial.description&quot;
+        ///                    {{initial.name}} &lt;img class=&quot;icon&quot; :alt=&quot;initial.name&quot; :ei-tooltip=&quot;initial.description&quot;
         ///                        :src=&quot;initial.icon&quot;&gt;
         ///                    {{initial.stack &gt; 1 ? &quot;(&quot;+initial.stack+&quot;)&quot; : &quot;&quot;}} ({{round3(initial.duration)}}
         ///                    seconds remaining)
@@ -1666,11 +1663,11 @@ namespace GW2EIBuilders.Properties {
         ///        &lt;div v-if=&quot;!targetless&quot; class=&quot;d-flex flex-row justify-content-center mt-1 mb-1&quot;&gt;
         ///            &lt;ul class=&quot;nav nav-pills scale85&quot;&gt;
         ///                &lt;li class=&quot;nav-item&quot;&gt;
-        ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;mode = 1&quot; data-original-title=&quot;Against selected target(s).&quot;
+        ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;mode = 1&quot; ei-tooltip=&quot;Against selected target(s).&quot;
         ///                       :class=&quot;{active: mode}&quot;&gt;Target&lt;/a&gt;
         ///                &lt;/li&gt;
         ///                &lt;li class=&quot;nav-item&quot;&gt;
-        ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;mode = 0&quot; data-original-title=&quot;Ag [rest of string was truncated]&quot;;.
+        ///                    &lt;a class=&quot;nav-link&quot; @click=&quot;mode = 0&quot; ei-tooltip=&quot;Ag [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplOffensiveTable {
             get {
@@ -1759,7 +1756,7 @@ namespace GW2EIBuilders.Properties {
         ///    &lt;div&gt;
         ///        &lt;ul v-if=&quot;showNormalPhases&quot; class=&quot;nav nav-pills d-flex flex-row justify-content-center&quot;&gt;
         ///            &lt;li class=&quot;nav-item&quot; v-for=&quot;phase in phasesToUse&quot; v-show=&quot;!getPhaseData(phase.index).breakbarPhase&quot;
-        ///                :data-original-title=&quot;getPhaseTooltip(phase.index)&quot;&gt;
+        ///                :ei-tooltip=&quot;getPhaseTooltip(phase.index)&quot;&gt;
         ///                &lt;a class=&quot;nav-link&quot; @click=&quot;select(phase)&quot; :class=&quot;{active: phase.active}&quot;&gt;{{getPhaseName(phase.index)}}&lt;/a&gt;
         ///            &lt;/li&gt;
         ///        &lt;/ul&gt;
@@ -1801,7 +1798,7 @@ namespace GW2EIBuilders.Properties {
         ///            {{player.name}}       
         ///            &lt;img v-if=&quot;playerIsRunningHealingExtension(player)&quot;
         ///                            :src=&quot;UIIcons.GreenFlag&quot; alt=&quot;Complete&quot;
-        ///                            class=&quot;icon&quot; data-original-title=&quot;Complete Healing Data&quot;&gt;
+        ///                            class=&quot;icon&quot; ei-tooltip=&quot;Complete Healing Data&quot;&gt;
         ///        &lt;/h3&gt; 
         ///        &lt; [rest of string was truncated]&quot;;.
         /// </summary>
@@ -1850,8 +1847,8 @@ namespace GW2EIBuilders.Properties {
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div class=&quot;d-flex flex-row&quot;&gt;
         ///        &lt;div class=&quot;d-flex flex-column mr-1&quot;&gt;
-        ///            &lt;img class=&quot;icon&quot; :src=&quot;UIIcons.QuestionMark&quot; :data-original-title=&quot;scoreExpl&quot; /&gt;
-        ///            &lt;img class=&quot;icon&quot; :src=&quot;UIIcons.QuestionMark&quot; :data-original-title=&quot;weaponExpl&quot; /&gt;
+        ///            &lt;img class=&quot;icon&quot; :src=&quot;UIIcons.QuestionMark&quot; :ei-tooltip=&quot;scoreExpl&quot; /&gt;
+        ///            &lt;img class=&quot;icon&quot; :src=&quot;UIIcons.QuestionMark&quot; :ei-tooltip=&quot;weaponExpl&quot; /&gt;
         ///        &lt;/div&gt;
         ///        &lt;div class=&quot;d-flex flex-column max-wd-900px&quot;&gt;
         ///            &lt;div v-for=&quot;group in groups&quot; class=&quot;d-flex flex-wrap mb-1&quot;&gt;
@@ -1872,7 +1869,7 @@ namespace GW2EIBuilders.Properties {
         ///                Players &lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;
         ///            &lt;/a&gt;
         ///            &lt;img class=&quot;icon ml-2&quot; :src=&quot;UIIcons.QuestionMark&quot;
-        ///                data-original-title=&quot;Use Players dropdown to hide unwanted players&quot; /&gt;
+        ///                ei-tooltip=&quot;Use Players dropdown to hide unwanted players&quot; /&gt;
         ///            &lt;ul class=&quot;dropdown-menu p-2 font-weight-normal scrollabledropdown min-wd-165px [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string tmplPlayersRotation {
@@ -2083,9 +2080,9 @@ namespace GW2EIBuilders.Properties {
         ///   Looks up a localized string similar to &lt;template&gt;
         ///    &lt;div class=&quot;d-flex flex-row justify-content-center align-items-center mb-2&quot;&gt;
         ///        &lt;img v-if=&quot;target.health &gt; 0&quot; :src=&quot;UIIcons.VitalityChar&quot; alt=&quot;Health&quot;
-        ///            class=&quot;icon&quot; :data-original-title=&quot;&apos;Health: &apos; + target.health&quot;&gt;
+        ///            class=&quot;icon&quot; :ei-tooltip=&quot;&apos;Health: &apos; + target.health&quot;&gt;
         ///        &lt;img v-if=&quot;target.tough &gt; 0&quot; :src=&quot;UIIcons.ToughnessChar&quot; alt=&quot;Toughness&quot;
-        ///            class=&quot;icon&quot; hbHeight :data-original-title=&quot;&apos;Toughness: &apos; + target.tough&quot;&gt;
+        ///            class=&quot;icon&quot; hbHeight :ei-tooltip=&quot;&apos;Toughness: &apos; + target.tough&quot;&gt;
         ///        &lt;img v-if=&quot;target.hbWidth &gt; 0&quot; :src=&quot;UIIcons.HitboxWidth&quot; alt=&quot;Hitbox Width&quot;
         ///     [rest of string was truncated]&quot;;.
         /// </summary>
@@ -2198,6 +2195,15 @@ namespace GW2EIBuilders.Properties {
         internal static string tmplTargetTabPerPlayerGraph {
             get {
                 return ResourceManager.GetString("tmplTargetTabPerPlayerGraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string tooltip {
+            get {
+                return ResourceManager.GetString("tooltip", resourceCulture);
             }
         }
     }

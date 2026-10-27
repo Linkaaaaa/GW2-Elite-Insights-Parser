@@ -4,7 +4,7 @@
             <ul v-if="showNormalPhases && isTouchDevice"
                 class="nav nav-pills d-flex flex-row justify-content-center mb-1 mx-auto">
                 <li class="nav-item" v-for="(phase, id) in normalPhases"
-                    :data-original-title="phase.durationS + ' seconds <br /> Start: ' + phase.start + '<br /> End: ' + phase.end">
+                    :ei-tooltip="phase.durationS + ' seconds <br /> Start: ' + phase.start + '<br /> End: ' + phase.end">
                     <a class="nav-link" @click="updatePhaseTime(phase)">
                         {{ getPhaseName(phase) }}
                     </a>
@@ -18,7 +18,7 @@
                 <ul class="dropdown-menu p-2 font-weight-normal scrollabledropdown wd-200px">
                     <li v-for="(phase, index) in normalPhases" class="phase-selector-item" :key="index" :class="{ 'active': selectedPhase === phase }"
                         @click="updatePhaseTime(phase)"
-                        :data-original-title="phase.durationS + ' seconds <br /> Start: ' + phase.start + '<br /> End: ' + phase.end">
+                        :ei-tooltip="phase.durationS + ' seconds <br /> Start: ' + phase.start + '<br /> End: ' + phase.end">
                         {{ getPhaseName(phase) }}
                     </li>
                 </ul>
@@ -36,12 +36,12 @@
 
                 <div @click="resetViewpoint();" class="btn btn-small position-bottom-left opacity-90 top-of-canvas m-2"
                      :class="{'btn-dark': !light, 'btn-light': light}"
-                     data-original-title="Reset canvas position">
+                     ei-tooltip="Reset canvas position">
                     &#9974; Reset Viewpoint
                 </div>
                 <div v-show="!isTouchDevice && isMechanicSelected" @click="resetMechanic();"
                      class="btn btn-small position-bottom-right opacity-90 top-of-canvas m-2" :class="{'btn-dark': !light, 'btn-light': light}"
-                     data-original-title="Remove mechanic ticks from timeline">
+                     ei-tooltip="Remove mechanic ticks from timeline">
                     &#128295; Reset Mechanic
                 </div>
             </div>
@@ -209,25 +209,25 @@
             <div class="d-flex align-items-center justify-content-center">
                 <label class="mr-auto">
                     <input style="width: 100px;" class="form-control d-inline h-auto text-right" type="number" step="0.001"
-                           data-original-title="Time" :value="(time - range.min / 1000.0).toFixed(3)"
+                           ei-tooltip="Time" :value="(time - range.min / 1000.0).toFixed(3)"
                            @input="updateInputTime($event.target.value);">
                 </label>
 
                 <div @click="toggleAnimate();" style="width: 80px;"
                      class="btn btn-small"
                      :class="{'btn-dark': !light, 'btn-light': light}"
-                     data-original-title="Play / pause animation">
+                     ei-tooltip="Play / pause animation">
                     {{ animated ? "&#9208 Pause" : "&#9654 Play" }}
                 </div>
                 <div @click="restartAnimate();" class="btn btn-small"
                      :class="{'btn-dark': !light, 'btn-light': light}"
-                     data-original-title="Reset back to start">
+                     ei-tooltip="Reset back to start">
                     &#8617;&#65039; Restart
                 </div>
                 <div @click="toggleBackwards();" style="width: 104px;"
                      class="btn btn-small"
                      :class="{'btn-dark': !light, 'btn-light': light}"
-                     data-original-title="Play animation backwards/forwards">
+                     ei-tooltip="Play animation backwards/forwards">
                     {{ backwards ? "&#9654; Forwards" : "&#9664; Backwards" }}
 
                 </div>

@@ -2,22 +2,22 @@
     <div>
         <div class="d-flex flex-row justify-content-center align-items-center mb-2">
             <ul class="nav nav-pills" :class="{'flex-row': !column, 'flex-column': column}">
-                <li class="nav-item" data-original-title="Power + Condition">
+                <li class="nav-item" ei-tooltip="Power + Condition">
                     <a class="nav-link" @click="data.damagemode = damageModeEnum.All" :class="{active: data.damagemode === damageModeEnum.All}">
                         <img :src="UIIcons.Damage" alt="All" class="icon">
                     </a>
                 </li>
-                <li class="nav-item" data-original-title="Power">
+                <li class="nav-item" ei-tooltip="Power">
                     <a class="nav-link" @click="data.damagemode = damageModeEnum.Power" :class="{active: data.damagemode === damageModeEnum.Power}">
                         <img :src="UIIcons.Power" alt="Power" class="icon">
                     </a>
                 </li>
-                <li class="nav-item" data-original-title="Condition">
+                <li class="nav-item" ei-tooltip="Condition">
                     <a class="nav-link" @click="data.damagemode = damageModeEnum.Condition" :class="{active: data.damagemode === damageModeEnum.Condition}">
                         <img :src="UIIcons.ConditionDamage" alt="Condition" class="icon">
                     </a>
                 </li>
-                <li class="nav-item" v-if="hasBreakbarDamage" data-original-title="Breakbar">
+                <li class="nav-item" v-if="hasBreakbarDamage" ei-tooltip="Breakbar">
                     <a class="nav-link" @click="data.damagemode = damageModeEnum.Breakbar" :class="{active: data.damagemode === damageModeEnum.Breakbar}">
                         <img :src="UIIcons.Breakbar" alt="Breakbar" class="icon">
                     </a>
@@ -57,7 +57,7 @@
                     <li class="nav-item">
                         <a class="nav-link" @click="data.graphmode = graphModeEnum.DPS" :class="{active: data.graphmode === graphModeEnum.DPS}">PS</a>
                     </li>
-                    <li class="nav-item" data-original-title="Centered">
+                    <li class="nav-item" ei-tooltip="Centered">
                         <a class="nav-link" @click="data.graphmode = graphModeEnum.CenteredDPS" :class="{active: data.graphmode === graphModeEnum.CenteredDPS}">Ctrd.PS</a>
                     </li>
                     <li class="nav-item">

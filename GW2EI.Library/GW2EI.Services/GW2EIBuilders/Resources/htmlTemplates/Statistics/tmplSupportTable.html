@@ -16,22 +16,22 @@
                         Account
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 0)" @click="sortBy('Data', 0)"
-                        data-original-title="Condition Cleanse on Squad Mates">
+                        ei-tooltip="Condition Cleanse on Squad Mates">
                         <img :src="UIIcons.Cleanse"
                             alt="Condition Cleanse on Others" class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 2)" @click="sortBy('Data', 2)"
-                        data-original-title="Condition Cleanse on Self">
+                        ei-tooltip="Condition Cleanse on Self">
                         <img :src="UIIcons.CleanseSelf" alt="Condition Cleanse on Self"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 4)" @click="sortBy('Data', 4)"
-                        data-original-title="Boon Strips">
+                        ei-tooltip="Boon Strips">
                         <img :src="UIIcons.Strip" alt="Boon Strips"
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 6)" @click="sortBy('Data', 6)"
-                        data-original-title="Resurrects">
+                        ei-tooltip="Resurrects">
                         <img :src="UIIcons.DownedAlly" alt="Resurrects"
                             class="icon icon-hover">
                     </th>
@@ -42,7 +42,7 @@
                     <td :class="getBodyClass('Sub')">
                         {{row.player.group}}
                     </td>
-                    <td :class="getBodyClass('Prof')" :data-original-title="row.player.profession">
+                    <td :class="getBodyClass('Prof')" :ei-tooltip="row.player.profession">
                         <img :src="row.player.icon" :alt="row.player.profession" class="icon"><span
                             style="display:none">{{row.player.profession}}</span>
                     </td>
@@ -52,16 +52,16 @@
                     <td :class="getBodyClass('Account')" class="text-left">
                         {{row.player.acc}}
                     </td>
-                    <td :class="getBodyClass('Data', 0)" :data-original-title="numberFormater3(row.sup[1]) + ' seconds'">
+                    <td :class="getBodyClass('Data', 0)" :ei-tooltip="numberFormater3(row.sup[1]) + ' seconds'">
                         {{ numberFormater(row.sup[0]) }}
                     </td>
-                    <td :class="getBodyClass('Data', 2)" :data-original-title="numberFormater3(row.sup[3]) + ' seconds'">
+                    <td :class="getBodyClass('Data', 2)" :ei-tooltip="numberFormater3(row.sup[3]) + ' seconds'">
                         {{ numberFormater(row.sup[2]) }}
                     </td>
-                    <td :class="getBodyClass('Data', 4)" :data-original-title="numberFormater3(row.sup[5]) + ' seconds'">
+                    <td :class="getBodyClass('Data', 4)" :ei-tooltip="numberFormater3(row.sup[5]) + ' seconds'">
                         {{ numberFormater(row.sup[4]) }}
                     </td>
-                    <td :class="getBodyClass('Data', 6)" :data-original-title="numberFormater3(row.sup[7]) + ' seconds'">
+                    <td :class="getBodyClass('Data', 6)" :ei-tooltip="numberFormater3(row.sup[7]) + ' seconds'">
                         {{ numberFormater(row.sup[6]) }}
                     </td>
                 </tr>
@@ -72,10 +72,10 @@
                     <td></td>
                     <td class="text-left">{{ sum.name }}</td>
                     <td></td>
-                    <td :data-original-title="numberFormater3(sum.sup[1]) + ' seconds'">{{ numberFormater(sum.sup[0]) }}</td>
-                    <td :data-original-title="numberFormater3(sum.sup[3]) + ' seconds'">{{ numberFormater(sum.sup[2]) }}</td>
-                    <td :data-original-title="numberFormater3(sum.sup[5]) + ' seconds'">{{ numberFormater(sum.sup[4]) }}</td>
-                    <td :data-original-title="numberFormater3(sum.sup[7]) + ' seconds'">{{ numberFormater(sum.sup[6]) }}</td>
+                    <td :ei-tooltip="numberFormater3(sum.sup[1]) + ' seconds'">{{ numberFormater(sum.sup[0]) }}</td>
+                    <td :ei-tooltip="numberFormater3(sum.sup[3]) + ' seconds'">{{ numberFormater(sum.sup[2]) }}</td>
+                    <td :ei-tooltip="numberFormater3(sum.sup[5]) + ' seconds'">{{ numberFormater(sum.sup[4]) }}</td>
+                    <td :ei-tooltip="numberFormater3(sum.sup[7]) + ' seconds'">{{ numberFormater(sum.sup[6]) }}</td>
                 </tr>
             </tfoot>
         </table>

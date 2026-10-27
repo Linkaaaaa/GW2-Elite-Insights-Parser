@@ -52,19 +52,19 @@
             <ul class="nav nav-pills mr-1 ml-1 scale85">
                 <li class="nav-item rot-animfull">
                     <a class="nav-link" @click="aftercastBorder = !aftercastBorder"
-                       :class="{active: aftercastBorder}" data-original-title="Toggle full after cast border">Full After Cast</a>
+                       :class="{active: aftercastBorder}" ei-tooltip="Toggle full after cast border">Full After Cast</a>
                 </li>
                 <li class="nav-item rot-cancelled">
                     <a class="nav-link" @click="interruptedBorder = !interruptedBorder"
-                       :class="{active: interruptedBorder}" data-original-title="Toggle interrupted cast border">Interrupted</a>
+                       :class="{active: interruptedBorder}" ei-tooltip="Toggle interrupted cast border">Interrupted</a>
                 </li>
                 <li class="nav-item rot-instant">
                     <a class="nav-link" @click="instantBorder = !instantBorder"
-                       :class="{active: instantBorder}" data-original-title="Toggle instant cast border">Instant</a>
+                       :class="{active: instantBorder}" ei-tooltip="Toggle instant cast border">Instant</a>
                 </li>
                 <li class="nav-item rot-unknown">
                     <a class="nav-link" @click="unknownBorder = !unknownBorder"
-                       :class="{active: unknownBorder}" data-original-title="Toggle unknown cast border">Unknown</a>
+                       :class="{active: unknownBorder}" ei-tooltip="Toggle unknown cast border">Unknown</a>
                 </li>
             </ul>
         </div>
@@ -73,7 +73,7 @@
                 Skills <span class="caret"></span>
             </a>
             <img class="icon ml-2" :src="UIIcons.QuestionMark"
-                data-original-title="Use Skills dropdown to hide unwanted skills or click on a specific skill below to make all other skills transparent" />
+                ei-tooltip="Use Skills dropdown to hide unwanted skills or click on a specific skill below to make all other skills transparent" />
             <ul class="dropdown-menu p-2 font-weight-normal scrollabledropdown min-wd-165px">
                 <li class="d-flex flex-column justify-content-center align-items-center mb-1">
                     <button type="button" class="btn btn-primary btn-sm rot-button"
@@ -101,7 +101,7 @@
             </ul>
         </div>
         <span class="rot-skill" v-for="cast in rotation" :class="getCastClass(cast)" v-show="showSkill(cast)" @click="toggleHighlight(cast.skill)">
-            <img class="rot-icon" :class="getIconClass(cast)" :src="cast.skill.icon" :data-original-title="getTooltip(cast)" />
+            <img class="rot-icon" :class="getIconClass(cast)" :src="cast.skill.icon" :ei-tooltip="getTooltip(cast)" />
         </span>
     </div>
 </template>

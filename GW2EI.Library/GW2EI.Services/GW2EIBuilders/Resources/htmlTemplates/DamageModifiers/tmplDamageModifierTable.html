@@ -1,7 +1,7 @@
 <template>
     <div>
         <img class="mb-1 icon" :src="UIIcons.QuestionMark" style="position: absolute; transform: translate(0px, -20px);"
-            :data-original-title="tooltipExpl" />
+            :ei-tooltip="tooltipExpl" />
         <div v-if="colPageCount > 0">
             <table-scroll-component :min="0" :max="colPageCount" :width="'600px'" :height="'10px'" :transform="transFormString" :pagestructure="colStructure"></table-scroll-component>
         </div>
@@ -13,7 +13,7 @@
                     <th class="text-left" :class="getHeaderClass('Name')" @click="sortBy('Name')">Name</th>
                     <th class="stat-cell" v-for="(modifier, index) in modifiers" :class="getHeaderClass('Data', index)" 
                         v-show="isInColPage(index)"
-                        @click="sortBy('Data', index)":data-original-title="modifier.name + '<br>' + modifier.tooltip">
+                        @click="sortBy('Data', index)":ei-tooltip="modifier.name + '<br>' + modifier.tooltip">
                         <img :src="modifier.icon" :alt="modifier.name" class="icon icon-hover">
                     </th>
                 </tr>
@@ -22,14 +22,14 @@
                 <tr v-for="row in sortData((mode ? tableDataTarget.rows : tableData.rows))"
                     :class="{active: row.player.id === playerindex}">
                     <td :class="getBodyClass('Sub')">{{row.player.group}}</td>
-                    <td :class="getBodyClass('Prof')":data-original-title="row.player.profession">
+                    <td :class="getBodyClass('Prof')":ei-tooltip="row.player.profession">
                         <img :src="row.player.icon" :alt="row.player.profession" class="icon"><span
                             style="display:none">{{row.player.profession}}</span>
                     </td>
                     <td :class="getBodyClass('Name')"class="text-left">{{row.player.name}}</td>
                     <td v-for="(modifier, index) in modifiers" :class="getBodyClass('Data', index, modifier.approximate, getCellValue(row.data[index], modifier))"
                         v-show="isInColPage(index)"
-                        :data-original-title="getTooltip(row.data[index], modifier)">
+                        :ei-tooltip="getTooltip(row.data[index], modifier)">
                         {{getCellValue(row.data[index], modifier)}}
                     </td>
                 </tr>
@@ -41,7 +41,7 @@
                     <td class="text-left">{{row.name}}</td>
                     <td v-for="(modifier, index) in modifiers" :class="getSumClass(modifier.approximate,getCellValue(row.data[index], modifier))"
                         v-show="isInColPage(index)"
-                        :data-original-title="getTooltip(row.data[index], modifier)">
+                        :ei-tooltip="getTooltip(row.data[index], modifier)">
                         {{getCellValue(row.data[index], modifier)}}
                     </td>
                 </tr>

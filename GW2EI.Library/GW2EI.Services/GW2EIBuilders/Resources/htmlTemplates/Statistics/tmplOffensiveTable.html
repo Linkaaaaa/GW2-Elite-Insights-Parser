@@ -3,11 +3,11 @@
         <div v-if="!targetless" class="d-flex flex-row justify-content-center mt-1 mb-1">
             <ul class="nav nav-pills scale85">
                 <li class="nav-item">
-                    <a class="nav-link" @click="mode = 1" data-original-title="Against selected target(s)."
+                    <a class="nav-link" @click="mode = 1" ei-tooltip="Against selected target(s)."
                        :class="{active: mode}">Target</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" @click="mode = 0" data-original-title="Against all enemies."
+                    <a class="nav-link" @click="mode = 0" ei-tooltip="Against all enemies."
                        :class="{active: !mode }">All</a>
                 </li>
             </ul>
@@ -28,67 +28,67 @@
                         Account
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 2)" @click="sortBy('Data', 2, 1)"
-                        data-original-title="Percent time hits critical">
+                        ei-tooltip="Percent time hits critical">
                         <img :src="UIIcons.Crit" alt="Crits"
                              class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 4)" @click="sortBy('Data', 4, 11)"
-                        data-original-title="Percent time hits while flanking">
+                        ei-tooltip="Percent time hits while flanking">
                         <img :src="UIIcons.Flank" alt="Flank"
                              class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 21)" @click="sortBy('Data', 21, 20)"
-                        data-original-title="Percent time power hits while self above 90% hp">
+                        ei-tooltip="Percent time power hits while self above 90% hp">
                         <img :src="UIIcons.Power" alt="Power"
                              class="icon"> > 90%
                     </th>    
                     <th class="stat-cell" :class="getHeaderClass('Data', 23)" @click="sortBy('Data', 23, 22)"
-                        data-original-title="Percent time condition ticks while self above 90% hp">
+                        ei-tooltip="Percent time condition ticks while self above 90% hp">
                         <img :src="UIIcons.ConditionDamage" alt="Condition"
                              class="icon"> > 90%
                     </th>    
                     <th class="stat-cell" :class="getHeaderClass('Data', 5)" @click="sortBy('Data', 5, 11)"
-                        data-original-title="Percent time hits while glancing">
+                        ei-tooltip="Percent time hits while glancing">
                         <img :src="UIIcons.Glance" alt="Glance"
                              class="icon icon-hover">
                     </th>    
                     <th class="stat-cell" :class="getHeaderClass('Data', 14)" @click="sortBy('Data', 14, 15)"
-                        data-original-title="Times the target got hit while moving">
+                        ei-tooltip="Times the target got hit while moving">
                         <img :src="UIIcons.AgainstMoving" alt="Against Moving"
                              class="icon icon-hover">
                     </th>  
                     <th class="stat-cell" :class="getHeaderClass('Data', 6)" @click="sortBy('Data', 6)"
-                        data-original-title="Number of hits while blinded">
+                        ei-tooltip="Number of hits while blinded">
                         <img :src="UIIcons.Miss" alt="Miss"
                              class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 7)" @click="sortBy('Data', 7)"
-                        data-original-title="Number of hits used to interupt">
+                        ei-tooltip="Number of hits used to interupt">
                         <img :src="UIIcons.Interrupt" alt="Interrupts"                 
                             class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 27)" @click="sortBy('Data', 27)"
-                        data-original-title="CC">
+                        ei-tooltip="CC">
                         <img :src="UIIcons.CC" alt="CC"
                              class="icon icon-hover">
                     </th> 
                     <th class="stat-cell" :class="getHeaderClass('Data', 8)" @click="sortBy('Data', 8)"
-                        data-original-title="Times the enemy was invulnerable to attacks">
+                        ei-tooltip="Times the enemy was invulnerable to attacks">
                         <img :src="UIIcons.Invul" alt="Invuln"
                              class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 9)" @click="sortBy('Data', 9)"
-                        data-original-title="Times the enemy evaded an attack">
+                        ei-tooltip="Times the enemy evaded an attack">
                         <img :src="UIIcons.Evade" alt="Evaded"
                              class="icon icon-hover">
                     </th>
                     <th class="stat-cell" :class="getHeaderClass('Data', 10)" @click="sortBy('Data', 10)"
-                        data-original-title="Times the enemy blocked an attack">
+                        ei-tooltip="Times the enemy blocked an attack">
                         <img :src="UIIcons.Block" alt="Blocked"
                              class="icon icon-hover">
                     </th>     
                     <th class="stat-cell" v-if="wvw" :class="getHeaderClass('Data', 17)" @click="sortBy('Data', 17)"
-                        data-original-title="Down Contribution">
+                        ei-tooltip="Down Contribution">
                          <img :src="UIIcons.Damage" alt="Damage"
                             class="icon">
                         /
@@ -96,13 +96,13 @@
                             class="icon">
                     </th>          
                     <th class="stat-cell" v-if="wvw" :class="getHeaderClass('Data', 13)" @click="sortBy('Data', 13)"
-                        data-original-title="Number of times downed target">
+                        ei-tooltip="Number of times downed target">
                         <img :src="UIIcons.DownedEnemy"
                             alt="Downed" 
                             class="icon icon-hover">
                     </th>   
                     <th class="stat-cell" v-if="wvw" :class="getHeaderClass('Data', 25)" @click="sortBy('Data', 25)"
-                        data-original-title="Damage against downed target">
+                        ei-tooltip="Damage against downed target">
                         <img :src="UIIcons.Damage" alt="Damage"
                             class="icon">
                             &#8658
@@ -111,7 +111,7 @@
                             class="icon">
                     </th>           
                     <th class="stat-cell" v-if="wvw" :class="getHeaderClass('Data', 12)" @click="sortBy('Data', 12)"
-                        data-original-title="Number of times killed target">
+                        ei-tooltip="Number of times killed target">
                         <img :src="UIIcons.Dead"
                             alt="Killed" 
                             class="icon icon-hover">
@@ -125,7 +125,7 @@
                         {{row.player.group}}
                     </td>
                     <td :class="getBodyClass('Prof')"
-                        :data-original-title="row.player.profession">
+                        :ei-tooltip="row.player.profession">
                         <img :src="row.player.icon" :alt="row.player.profession" class="icon"><span
                             style="display:none">{{row.player.profession}}</span>
                     </td>
@@ -136,63 +136,63 @@
                         {{row.player.acc}}
                     </td>
                     <td :class="getBodyClass('Data', 2)"
-                        :data-original-title="numberFormater(row.data[2]) + ' out of ' + numberFormater(row.data[1]) + ' critable hit(s)' +
+                        :ei-tooltip="numberFormater(row.data[2]) + ' out of ' + numberFormater(row.data[1]) + ' critable hit(s)' +
                             '<br>Total Critical Damage: ' + numberFormater(row.data[3]) +
                             '<br>' + percentFormater2(row.data[3]/ row.data[18]) + ' of total damage' +
                             '<br>' + percentFormater2(row.data[3]/ row.data[19]) + ' of total direct damage'">
                         {{ percentFormater2(row.data[2] / row.data[1]) }}
                     </td>
                     <td :class="getBodyClass('Data', 4)"
-                        :data-original-title="numberFormater(row.data[4]) + ' out of ' + numberFormater(row.data[11]) + ' connected direct hit(s)'">
+                        :ei-tooltip="numberFormater(row.data[4]) + ' out of ' + numberFormater(row.data[11]) + ' connected direct hit(s)'">
                         {{ percentFormater2(row.data[4]/ row.data[11]) }}
                     </td>
                     <td :class="getBodyClass('Data', 21)"
-                        :data-original-title="numberFormater(row.data[21]) + ' out of ' + numberFormater(row.data[20]) + ' connected power hit(s)'">
+                        :ei-tooltip="numberFormater(row.data[21]) + ' out of ' + numberFormater(row.data[20]) + ' connected power hit(s)'">
                         {{ percentFormater2(row.data[21]/ row.data[20]) }}
                     </td>
                     <td :class="getBodyClass('Data', 23)"
-                        :data-original-title="numberFormater(row.data[23]) + ' out of ' + numberFormater(row.data[22]) + ' connected condition tick(s)'">
+                        :ei-tooltip="numberFormater(row.data[23]) + ' out of ' + numberFormater(row.data[22]) + ' connected condition tick(s)'">
                         {{ percentFormater2(row.data[23]/ row.data[22]) }}
                     </td>
                     <td :class="getBodyClass('Data', 5)"
-                        :data-original-title="numberFormater(row.data[5]) + ' out of ' + numberFormater(row.data[11]) + ' connected direct hit(s)'">
+                        :ei-tooltip="numberFormater(row.data[5]) + ' out of ' + numberFormater(row.data[11]) + ' connected direct hit(s)'">
                         {{ percentFormater2(row.data[5]/ row.data[11]) }}
                     </td>
                     <td :class="getBodyClass('Data', 14)"
-                        :data-original-title="numberFormater(row.data[14]) + ' out of ' + numberFormater(row.data[15]) + ' connected hit(s)'">
+                        :ei-tooltip="numberFormater(row.data[14]) + ' out of ' + numberFormater(row.data[15]) + ' connected hit(s)'">
                         {{ percentFormater2(row.data[14]/ row.data[15]) }}
                     </td>
                     <td :class="getBodyClass('Data', 6)"
-                        :data-original-title="percentFormater2(row.data[6]/ row.data[0]) + ' of '+ numberFormater(row.data[0]) + ' direct hit(s)'">
+                        :ei-tooltip="percentFormater2(row.data[6]/ row.data[0]) + ' of '+ numberFormater(row.data[0]) + ' direct hit(s)'">
                         {{ numberFormater(row.data[6]) }}
                     </td>
                     <td :class="getBodyClass('Data', 7)">
                         {{ numberFormater(row.data[7]) }}
                     </td>
-                    <td :class="getBodyClass('Data', 27)" :data-original-title="numberFormater3(row.data[28]/1000) + ' seconds'">
+                    <td :class="getBodyClass('Data', 27)" :ei-tooltip="numberFormater3(row.data[28]/1000) + ' seconds'">
                         {{ numberFormater(row.data[27]) }}
                     </td>
                     <td :class="getBodyClass('Data', 8)"
-                        :data-original-title="percentFormater2(row.data[8]/ row.data[0]) + ' of ' + numberFormater(row.data[16]) + ' hit(s)'">
+                        :ei-tooltip="percentFormater2(row.data[8]/ row.data[0]) + ' of ' + numberFormater(row.data[16]) + ' hit(s)'">
                         {{ numberFormater(row.data[8]) }}
                     </td>
                     <td :class="getBodyClass('Data', 9)"
-                        :data-original-title="percentFormater2(row.data[9]/ row.data[0]) + ' of ' + numberFormater(row.data[0]) + ' direct hit(s)'">
+                        :ei-tooltip="percentFormater2(row.data[9]/ row.data[0]) + ' of ' + numberFormater(row.data[0]) + ' direct hit(s)'">
                         {{ numberFormater(row.data[9]) }}
                     </td>
                     <td :class="getBodyClass('Data', 10)"
-                        :data-original-title="percentFormater2(row.data[10]/ row.data[0]) + ' of ' + numberFormater(row.data[0]) + ' direct hit(s)'">
+                        :ei-tooltip="percentFormater2(row.data[10]/ row.data[0]) + ' of ' + numberFormater(row.data[0]) + ' direct hit(s)'">
                         {{ numberFormater(row.data[10]) }}
                     </td>
                     <td v-if="wvw" :class="getBodyClass('Data', 17)"
-                        :data-original-title="percentFormater2(row.data[17]/ row.data[26]) +' of total damage'">
+                        :ei-tooltip="percentFormater2(row.data[17]/ row.data[26]) +' of total damage'">
                         {{ numberFormater(row.data[17]) }}
                     </td>
                     <td v-if="wvw" :class="getBodyClass('Data', 13)">
                         {{ numberFormater(row.data[13]) }}
                     </td>
                     <td v-if="wvw" :class="getBodyClass('Data', 25)"
-                        :data-original-title="numberFormater(row.data[24]) + ' hits<br>' + percentFormater2(row.data[25]/ row.data[26]) +' of total damage'">
+                        :ei-tooltip="numberFormater(row.data[24]) + ' hits<br>' + percentFormater2(row.data[25]/ row.data[26]) +' of total damage'">
                         {{ numberFormater(row.data[25]) }}
                     </td>
                     <td v-if="wvw" :class="getBodyClass('Data', 12)">
@@ -206,52 +206,52 @@
                     <td></td>
                     <td class="text-left">{{row.name}}</td>
                     <td></td>
-                    <td :data-original-title="numberFormater(row.data[2]) + ' out of ' + numberFormater(row.data[1]) + ' critable hit(s)' +
+                    <td :ei-tooltip="numberFormater(row.data[2]) + ' out of ' + numberFormater(row.data[1]) + ' critable hit(s)' +
                             '<br>Total Critical Damage: ' + numberFormater(row.data[3]) +
                             '<br>' + percentFormater2(row.data[3]/ row.data[18]) +' of total damage' +
                             '<br>' + percentFormater2(row.data[3]/ row.data[19]) +' of total direct damage'">
                         {{ percentFormater2(row.data[2] / row.data[1]) }}
                     </td>
-                    <td :data-original-title="numberFormater(row.data[4]) + ' out of ' + numberFormater(row.data[11]) + ' connected direct hit(s)'">
+                    <td :ei-tooltip="numberFormater(row.data[4]) + ' out of ' + numberFormater(row.data[11]) + ' connected direct hit(s)'">
                         {{ percentFormater2(row.data[4]/ row.data[11]) }}
                     </td>
-                    <td :data-original-title="numberFormater(row.data[21]) + ' out of ' + numberFormater(row.data[20]) + ' connected power hit(s)'">
+                    <td :ei-tooltip="numberFormater(row.data[21]) + ' out of ' + numberFormater(row.data[20]) + ' connected power hit(s)'">
                         {{ percentFormater2(row.data[21]/ row.data[20]) }}
                     </td>
-                    <td :data-original-title="numberFormater(row.data[23]) + ' out of ' + numberFormater(row.data[22]) + ' connected condition tick(s)'">
+                    <td :ei-tooltip="numberFormater(row.data[23]) + ' out of ' + numberFormater(row.data[22]) + ' connected condition tick(s)'">
                         {{ percentFormater2(row.data[23]/ row.data[22]) }}
                     </td>
-                    <td :data-original-title="numberFormater(row.data[5]) + ' out of ' + numberFormater(row.data[11]) + ' connected direct hit(s)'">
+                    <td :ei-tooltip="numberFormater(row.data[5]) + ' out of ' + numberFormater(row.data[11]) + ' connected direct hit(s)'">
                         {{ percentFormater2(row.data[5]/ row.data[11]) }}
                     </td>
-                    <td :data-original-title="numberFormater(row.data[14]) + ' out of ' + numberFormater(row.data[15]) + ' connected hit(s)'">
+                    <td :ei-tooltip="numberFormater(row.data[14]) + ' out of ' + numberFormater(row.data[15]) + ' connected hit(s)'">
                         {{ percentFormater2(row.data[14]/ row.data[15]) }}
                     </td>
-                    <td :data-original-title="percentFormater2(row.data[6]/ row.data[0]) + ' of ' + numberFormater(row.data[0]) + ' direct hit(s)'">
+                    <td :ei-tooltip="percentFormater2(row.data[6]/ row.data[0]) + ' of ' + numberFormater(row.data[0]) + ' direct hit(s)'">
                         {{ numberFormater(row.data[6]) }}
                     </td>
                     <td>
                         {{ numberFormater(row.data[7]) }}
                     </td>
-                    <td :data-original-title="numberFormater(row.data[28] / 1000, 3, 3) + ' seconds'">
+                    <td :ei-tooltip="numberFormater(row.data[28] / 1000, 3, 3) + ' seconds'">
                         {{ numberFormater(row.data[27]) }}
                     </td>
-                    <td :data-original-title="percentFormater2(row.data[8] / row.data[0]) + ' of ' + numberFormater(row.data[16]) + ' hit(s)'">
+                    <td :ei-tooltip="percentFormater2(row.data[8] / row.data[0]) + ' of ' + numberFormater(row.data[16]) + ' hit(s)'">
                         {{ numberFormater(row.data[8]) }}
                     </td>
-                    <td :data-original-title="percentFormater2(row.data[9] / row.data[0]) + ' of ' + numberFormater(row.data[0]) + ' direct hit(s)'">
+                    <td :ei-tooltip="percentFormater2(row.data[9] / row.data[0]) + ' of ' + numberFormater(row.data[0]) + ' direct hit(s)'">
                         {{ numberFormater(row.data[9]) }}
                     </td>
-                    <td :data-original-title="percentFormater2(row.data[10] / row.data[0]) + ' of ' + numberFormater(row.data[0]) + ' direct hit(s)'">
+                    <td :ei-tooltip="percentFormater2(row.data[10] / row.data[0]) + ' of ' + numberFormater(row.data[0]) + ' direct hit(s)'">
                         {{ numberFormater(row.data[10]) }}
                     </td>
-                    <td v-if="wvw" :data-original-title="percentFormater2(row.data[17] / row.data[26]) + ' of total damage'">
+                    <td v-if="wvw" :ei-tooltip="percentFormater2(row.data[17] / row.data[26]) + ' of total damage'">
                         {{ numberFormater(row.data[17]) }}
                     </td>
                     <td v-if="wvw">
                         {{ numberFormater(row.data[13]) }}
                     </td>
-                    <td v-if="wvw" :data-original-title="numberFormater(row.data[24]) + ' hits<br>' + percentFormater2(row.data[25] / row.data[26]) +' of total damage'">
+                    <td v-if="wvw" :ei-tooltip="numberFormater(row.data[24]) + ' hits<br>' + percentFormater2(row.data[25] / row.data[26]) +' of total damage'">
                         {{ numberFormater(row.data[25]) }}
                     </td>
                     <td v-if="wvw">

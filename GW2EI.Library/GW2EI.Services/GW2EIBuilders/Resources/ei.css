@@ -1288,3 +1288,73 @@ td.approximate::before {
     line-height: 12px;
     text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
 }
+
+.ei-tooltip {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2147483647;
+    box-sizing: border-box;
+    max-width: min(360px, calc(100vw - 16px));
+    max-height: calc(100vh - 16px);
+    overflow: auto;
+    overflow-wrap: anywhere;
+    padding: 6px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    background: rgba(20, 20, 20, 0.96);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.4;
+    text-align: left;
+    white-space: pre-line;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 80ms ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+    .ei-tooltip.ei-tooltip--visible {
+        visibility: visible;
+        opacity: 1;
+    }
+
+@media (prefers-reduced-motion: reduce) {
+    .ei-tooltip {
+        transition: none;
+    }
+}
+
+.ei-tooltip-arrow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2147483647;
+    width: 0;
+    height: 0;
+    transform: translateX(-50%);
+    pointer-events: none;
+    visibility: hidden;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+}
+
+.ei-tooltip-arrow--visible {
+    visibility: visible;
+}
+
+/* Tooltip above the element: arrow points down */
+.ei-tooltip-arrow--down {
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 8px solid rgba(20, 20, 20, 0.96);
+}
+
+/* Tooltip below the element: arrow points up */
+.ei-tooltip-arrow--up {
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 8px solid rgba(20, 20, 20, 0.96);
+}

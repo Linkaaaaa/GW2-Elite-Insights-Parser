@@ -16,29 +16,29 @@
                         @click="select(player.id)">
                         <div>
                             <img :src="player.icon" :alt="player.profession" class="icon"
-                                :data-original-title="player.profession">
+                                :ei-tooltip="player.profession">
                             <img v-if="player.health > 0" :src="UIIcons.VitalityChar" alt="Health"
-                                class="icon" :data-original-title="'Health: ' + player.health">
+                                class="icon" :ei-tooltip="'Health: ' + player.health">
                         </div>                      
                         <div v-for="(weaponSet, weaponSetIndex) in player.weaponSets">
                             <div v-show="showWeaponSet(weaponSetIndex, player.weaponSets, encounterPhase)">
                                 <div v-if="weaponSet.l1Set.length > 0 || weaponSet.l2Set.length > 0">
-                                    <img v-for="wep in weaponSet.l1Set" :src="getIcon(wep)" :data-original-title="wep" class="icon">
+                                    <img v-for="wep in weaponSet.l1Set" :src="getIcon(wep)" :ei-tooltip="wep" class="icon">
                                     <span v-if="weaponSet.l1Set.length > 0 && weaponSet.l2Set.length > 0">/</span>
-                                    <img v-for="wep in weaponSet.l2Set" :src="getIcon(wep)" :data-original-title="wep" class="icon">
+                                    <img v-for="wep in weaponSet.l2Set" :src="getIcon(wep)" :ei-tooltip="wep" class="icon">
                                 </div>
                                 <div v-if="weaponSet.a1Set.length > 0 || weaponSet.a2Set.length > 0">
-                                    <img v-for="wep in weaponSet.a1Set" :src="getIcon(wep)" :data-original-title="wep" class="icon">
+                                    <img v-for="wep in weaponSet.a1Set" :src="getIcon(wep)" :ei-tooltip="wep" class="icon">
                                     <span v-if="weaponSet.a1Set.length > 0 && weaponSet.a2Set.length > 0">/</span>
-                                    <img v-for="wep in weaponSet.a2Set" :src="getIcon(wep)" :data-original-title="wep" class="icon">
+                                    <img v-for="wep in weaponSet.a2Set" :src="getIcon(wep)" :ei-tooltip="wep" class="icon">
                                 </div>
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-center">
                             <img v-if="player.isCommander"
                                 :src="UIIcons.Commander" alt="Commander"
-                                class="icon" :data-original-title="getCommanderTooltip(player)">
-                            <span class="player-cell-shorten" :data-original-title="player.name + ' - ' + player.acc">
+                                class="icon" :ei-tooltip="getCommanderTooltip(player)">
+                            <span class="player-cell-shorten" :ei-tooltip="player.name + ' - ' + player.acc">
                                 {{ player.name }}
                             </span>
                         </div>

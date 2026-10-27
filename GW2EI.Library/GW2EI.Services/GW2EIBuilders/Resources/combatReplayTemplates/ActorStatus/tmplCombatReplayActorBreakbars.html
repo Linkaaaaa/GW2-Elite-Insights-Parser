@@ -3,7 +3,7 @@
         <ul class="nav nav-pills d-flex flex-row flex-wrap justify-content-center">
             <li class="nav-item" v-for="(phase, id) in breakbarPhases"
                 @click="updatePhaseTime(phase)"
-                :data-original-title="getTooltip(phase)">
+                :ei-tooltip="getTooltip(phase)">
                 <a class="nav-link">{{id + 1}} </a>
             </li>
         </ul>

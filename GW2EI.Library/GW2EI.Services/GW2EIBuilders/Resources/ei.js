@@ -121,6 +121,7 @@ function getDefaultPlayer() {
 }
 
 function mainLoad() {
+    initEITooltipSystem();
     for (let key in WeaponIcons) {
         WeaponIcons[key] = _buildFallBackURL(WeaponIcons[key]);
     }
@@ -292,14 +293,6 @@ function mainLoad() {
             const element = document.getElementById("loading");
             element.parentNode.removeChild(element);
         }
-    });
-    $("body").tooltip({
-        selector: "[data-original-title]",
-        html: true,
-        boundary: "window",
-        trigger: 'hover',
-        animation: false,
-        container: 'body'
     });
 };
 

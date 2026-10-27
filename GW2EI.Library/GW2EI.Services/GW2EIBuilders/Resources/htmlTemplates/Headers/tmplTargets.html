@@ -5,7 +5,7 @@
                 <img class="icon-lg mr-2 ml-2 target-cell" 
                     :src="getTargetData(target.id).icon" 
                     :alt="getTargetData(target.id).name"
-                    :data-original-title="getTargetData(target.id).name" 
+                    :ei-tooltip="getTargetData(target.id).name" 
                     :class="{active: target.data.active}"
                     @click="target.data.active = !target.data.active">
                 <target-data-component :targetid="target.id"></target-data-component>
@@ -17,7 +17,7 @@
                     <img class=" icon-ll mr-2 ml-2 target-cell" 
                         :src="getTargetData(target.id).icon" 
                         :alt="getTargetData(target.id).name"
-                        :data-original-title="getTargetData(target.id).name" 
+                        :ei-tooltip="getTargetData(target.id).name" 
                         :class="{active: target.data.active}"
                         @click="target.data.active = !target.data.active">
                     <target-data-component :targetid="target.id"></target-data-component>

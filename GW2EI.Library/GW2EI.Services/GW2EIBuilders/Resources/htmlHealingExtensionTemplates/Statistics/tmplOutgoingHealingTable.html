@@ -15,52 +15,52 @@
                     <th class="text-left" :class="getHeaderClass('Account')" @click="sortBy('Account')">
                         Account
                     </th>
-                    <th data-original-title="All" class="damage-cell"
+                    <th ei-tooltip="All" class="damage-cell"
                         :class="getHeaderClass('Data', 0)" @click="sortBy('Data', 0)">
                         Target <img :src="UIIcons.Heal" alt="All"
                                     class="icon">
                     </th>
-                    <th data-original-title="Healing Power" class="damage-cell"
+                    <th ei-tooltip="Healing Power" class="damage-cell"
                         :class="getHeaderClass('Data', 1)" @click="sortBy('Data', 1)">
                         Target <img :src="UIIcons.HealingPower" alt="Healing Power"
                                     class="icon">
                     </th>
-                    <th data-original-title="Conversion" class="damage-cell"
+                    <th ei-tooltip="Conversion" class="damage-cell"
                         :class="getHeaderClass('Data', 2)" @click="sortBy('Data', 2)">
                         Target <img :src="UIIcons.ConvertHealing"alt="Conversion"
                                     class="icon">
                     </th>
-                    <th data-original-title="Downed Healing" class="damage-cell"
+                    <th ei-tooltip="Downed Healing" class="damage-cell"
                         :class="getHeaderClass('Data', 3)" @click="sortBy('Data', 3)">
                         Target <img :src="UIIcons.DownedAlly" alt="Downed Healing"
                             class="icon">
                     </th>
-                    <th v-if="hasBarrier" data-original-title="Barrier" class="damage-cell"
+                    <th v-if="hasBarrier" ei-tooltip="Barrier" class="damage-cell"
                         :class="getHeaderClass('Data', 4)" @click="sortBy('Data', 4)">
                         Target <img :src="UIIcons.Barrier"  alt="Barrier"
                                  class="icon">
                     </th>
-                    <th data-original-title="All" class="damage-cell"
+                    <th ei-tooltip="All" class="damage-cell"
                         :class="getHeaderClass('Data', 5)" @click="sortBy('Data', 5)">
                         All <img :src="UIIcons.Heal" alt="All"
                                  class="icon">
                     </th>
-                    <th data-original-title="Healing Power" class="damage-cell"
+                    <th ei-tooltip="Healing Power" class="damage-cell"
                         :class="getHeaderClass('Data', 6)" @click="sortBy('Data', 6)">
                         All <img :src="UIIcons.HealingPower" alt="Healing Power"
                                  class="icon">
                     </th>
-                    <th data-original-title="Conversion" class="damage-cell"
+                    <th ei-tooltip="Conversion" class="damage-cell"
                         :class="getHeaderClass('Data', 7)" @click="sortBy('Data', 7)">
                         All <img :src="UIIcons.ConvertHealing" alt="Conversion"
                                  class="icon">
                     </th>
-                    <th data-original-title="Downed Healing" class="damage-cell"
+                    <th ei-tooltip="Downed Healing" class="damage-cell"
                         :class="getHeaderClass('Data', 8)" @click="sortBy('Data', 8)">
                         All <img :src="UIIcons.DownedAlly"alt="Downed Healing"
                             class="icon ">
                     </th>
-                    <th v-if="hasBarrier" data-original-title="Barrier" class="damage-cell"
+                    <th v-if="hasBarrier" ei-tooltip="Barrier" class="damage-cell"
                         :class="getHeaderClass('Data', 9)" @click="sortBy('Data', 9)">
                         All <img :src="UIIcons.Barrier" alt="Barrier"
                                  class="icon">
@@ -72,7 +72,7 @@
                     <td :class="getBodyClass('Sub')">
                         {{row.player.group}}
                     </td>
-                    <td :class="getBodyClass('Prof')" :data-original-title="row.player.profession">
+                    <td :class="getBodyClass('Prof')" :ei-tooltip="row.player.profession">
                         <img :src="row.player.icon" :alt="row.player.profession" class="icon"><span 
                             style="display:none">{{row.player.profession}}</span>
                     </td>
@@ -83,14 +83,14 @@
                         {{row.player.acc}}
                         <img v-if="playerIsRunningHealingExtension(row.player)"
                             :src="UIIcons.GreenFlag" alt="Complete"
-                            class="icon" data-original-title="Complete Healing Data">
+                            class="icon" ei-tooltip="Complete Healing Data">
                     </td>
                     <td v-if="!showHealing" v-for="(value, index) in row.hps" :class="getBodyClass('Data', index)"
-                        :data-original-title="getPlayerTooltip(value, index, row, tableData.sums, index < 5, index === 6 || index === 1, index === 7 || index === 2)">
+                        :ei-tooltip="getPlayerTooltip(value, index, row, tableData.sums, index < 5, index === 6 || index === 1, index === 7 || index === 2)">
                         {{numberFormater0(value/phase.durationS)}}
                     </td>
                     <td v-if="showHealing" v-for="(value, index) in row.hps" :class="getBodyClass('Data', index)"
-                        :data-original-title="getPlayerTooltip(value, index, row, tableData.sums, index < 5, index === 6 || index === 1, index === 7 || index === 2)">
+                        :ei-tooltip="getPlayerTooltip(value, index, row, tableData.sums, index < 5, index === 6 || index === 1, index === 7 || index === 2)">
                         {{numberFormater0(value)}}
                     </td>
                 </tr>
@@ -103,10 +103,10 @@
                         {{sum.name}}
                     </td>
                     <td></td>
-                    <td v-if="!showHealing" v-for="(value, index) in sum.hps" :data-original-title="numberFormater(value) + ' healing'">
+                    <td v-if="!showHealing" v-for="(value, index) in sum.hps" :ei-tooltip="numberFormater(value) + ' healing'">
                         {{numberFormater0(value/phase.durationS)}}
                     </td>
-                    <td v-if="showHealing" v-for="(value, index) in sum.hps" :data-original-title="numberFormater0(value/phase.durationS) + ' hps'">
+                    <td v-if="showHealing" v-for="(value, index) in sum.hps" :ei-tooltip="numberFormater0(value/phase.durationS) + ' hps'">
                         {{numberFormater(value)}}
                     </td>
                 </tr>

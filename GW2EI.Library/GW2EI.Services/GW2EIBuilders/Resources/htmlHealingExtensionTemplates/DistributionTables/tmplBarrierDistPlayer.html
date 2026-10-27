@@ -14,11 +14,11 @@
         <div class="d-flex flex-row justify-content-center mt-1 mb-1">
             <ul class="nav nav-pills scale85">
                 <li class="nav-item">
-                    <a class="nav-link" @click="targetmode = 1" data-original-title="Against selected target(s)."
+                    <a class="nav-link" @click="targetmode = 1" ei-tooltip="Against selected target(s)."
                        :class="{active: targetmode}">Target</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" @click="targetmode = 0" data-original-title="Against all enemies."
+                    <a class="nav-link" @click="targetmode = 0" ei-tooltip="Against all enemies."
                        :class="{active: !targetmode }">All</a>
                 </li>
             </ul>

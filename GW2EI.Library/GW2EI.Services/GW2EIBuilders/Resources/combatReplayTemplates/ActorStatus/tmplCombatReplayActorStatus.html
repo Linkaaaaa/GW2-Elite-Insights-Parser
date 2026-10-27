@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="text-white" @click="select">
         <div class="actor-status" :style="{'background': getActorGradient(time, status), 'height': getActorHeight()}"
-             :data-original-title="isTarget ? actor.name : actor.name + ' - ' + actor.acc">
+             :ei-tooltip="isTarget ? actor.name : actor.name + ' - ' + actor.acc">
             <p class="mb-0 scale65 cr-status-percent text-left">
                 {{ percentFormater2(getPercent(healths, time) / 100) }}
             </p>

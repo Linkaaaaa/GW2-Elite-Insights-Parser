@@ -4,7 +4,7 @@
             Started with:
             <ul>
                 <li v-for="initial in data.start">
-                    {{initial.name}} <img class="icon" :alt="initial.name" :data-original-title="initial.description"
+                    {{initial.name}} <img class="icon" :alt="initial.name" :ei-tooltip="initial.description"
                         :src="initial.icon">
                     {{initial.stack > 1 ? "("+initial.stack+")" : ""}} ({{round3(initial.duration)}}
                     seconds remaining)
@@ -16,7 +16,7 @@
             <ul>
                 <li v-for="refresh in data.refreshed">
                     {{refresh.dimished ? 'suffered' : 'consumed'}} {{refresh.name}}
-                    <img class="icon" :alt="refresh.name" :data-original-title="refresh.description"
+                    <img class="icon" :alt="refresh.name" :ei-tooltip="refresh.description"
                         :src="refresh.icon">
                     {{refresh.stack > 1 ? "("+refresh.stack+")" : ""}}
                     at {{round3(refresh.time)}}s ({{round3(refresh.duration)}}

@@ -85,18 +85,18 @@
                         :class="{active: event.actor.id === selectedactorid}" @click="selectMechanic(event)">
                         <td class="mech-cell-time" :class="{'mech-actor-active': reactiveAnimationData.selectedMechanic.name === event.mechanic.name &&
                                     reactiveAnimationData.selectedMechanic.actorId === event.actor.id}" 
-                                :data-original-title="'Timestamp'">
+                                :ei-tooltip="'Timestamp'">
                                 {{numberFormater3(event.time / 1000)}}s
                         </td>
                         <td class="text-left mech-cell" 
                             :class="{'mech-active': reactiveAnimationData.selectedMechanic.name === event.mechanic.name}" 
-                            :data-original-title="event.mechanic.description">
+                            :ei-tooltip="event.mechanic.description">
                             {{event.mechanic.name}}
                         </td>
                         <td class="text-left"
                             :class="{'mech-actor-active': reactiveAnimationData.selectedMechanic.name === event.mechanic.name &&
                                 reactiveAnimationData.selectedMechanic.actorId === event.actor.id}">
-                            <span class="cr-ellipsis" :data-original-title="event.actor.name">
+                            <span class="cr-ellipsis" :ei-tooltip="event.actor.name">
                                 {{event.actor.name}}
                             </span>
                         </td>

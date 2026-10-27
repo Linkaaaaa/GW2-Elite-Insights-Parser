@@ -6,7 +6,7 @@
             {{player.name}}       
             <img v-if="playerIsRunningHealingExtension(player)"
                             :src="UIIcons.GreenFlag" alt="Complete"
-                            class="icon" data-original-title="Complete Healing Data">
+                            class="icon" ei-tooltip="Complete Healing Data">
         </h3> 
         <ul class="nav nav-tabs" v-show="activeplayer > -1">
             <li>

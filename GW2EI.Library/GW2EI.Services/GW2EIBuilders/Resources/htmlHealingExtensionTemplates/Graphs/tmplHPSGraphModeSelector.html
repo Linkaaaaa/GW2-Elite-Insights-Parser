@@ -25,23 +25,23 @@
             </li>
         </ul>    
         <ul class="nav nav-pills d-flex flex-wrap justify-content-center ml-3 scale85" :class="{'flex-row': !column, 'flex-column': column}">
-            <li class="nav-item d-flex flex-row justify-content-center align-items-center" data-original-title="All">
+            <li class="nav-item d-flex flex-row justify-content-center align-items-center" ei-tooltip="All">
                 <a class="nav-link" @click="data.healingmode = healingModeEnum.All" :class="{active: data.healingmode === healingModeEnum.All}">
                     <img :src="UIIcons.Heal" alt="All"
                     class="icon"></a>
             </li>    
-            <li class="nav-item d-flex flex-row justify-content-center align-items-centerm" data-original-title="Healing Power">
+            <li class="nav-item d-flex flex-row justify-content-center align-items-centerm" ei-tooltip="Healing Power">
                 <a class="nav-link" @click="data.healingmode = healingModeEnum.HealingPower" :class="{active: data.healingmode === healingModeEnum.HealingPower}">
                     <img :src="UIIcons.HealingPower" alt="Healing Power"
                     class="icon"></a>
             </li>                     
-            <li class="nav-item d-flex flex-row justify-content-center align-items-center" data-original-title="Conversion">
+            <li class="nav-item d-flex flex-row justify-content-center align-items-center" ei-tooltip="Conversion">
                 <a class="nav-link" @click="data.healingmode = healingModeEnum.Conversion" :class="{active: data.healingmode === healingModeEnum.Conversion}">
                     <img :src="UIIcons.ConvertHealing" alt="Conversion"
                     class="icon"></a>
             </li>   
             <!--                 
-            <li class="nav-item d-flex flex-row justify-content-center align-items-center" data-original-title="Hybrid">
+            <li class="nav-item d-flex flex-row justify-content-center align-items-center" ei-tooltip="Hybrid">
                 <a class="nav-link" @click="data.healingmode = healingModeEnum.Hybrid" :class="{active: data.healingmode === healingModeEnum.Hybrid}">
                     <img :src="UIIcons.HealingPower" alt="Hybrid"
                     class="icon"> / <img :src="UIIcons.ConvertHealing" alt="Hybrid"
@@ -49,7 +49,7 @@
             </li>
             //-->
                                  
-            <li v-if="hasBarrier" class="nav-item d-flex flex-row justify-content-center align-items-center" data-original-title="Barrier">
+            <li v-if="hasBarrier" class="nav-item d-flex flex-row justify-content-center align-items-center" ei-tooltip="Barrier">
                 <a class="nav-link" @click="data.healingmode = healingModeEnum.Barrier" :class="{active: data.healingmode === healingModeEnum.Barrier}">
                     <img :src="UIIcons.Barrier" alt="Barrier"
                     class="icon"></a>
@@ -59,7 +59,7 @@
             <li class="nav-item d-flex flex-row justify-content-center align-items-center">
                 <a class="nav-link" @click="data.graphmode = graphModeEnum.DPS" :class="{active: data.graphmode === graphModeEnum.DPS}">PS</a>
             </li>    
-            <li class="nav-item d-flex flex-row justify-content-center align-items-center" data-original-title="Centered">
+            <li class="nav-item d-flex flex-row justify-content-center align-items-center" ei-tooltip="Centered">
                 <a class="nav-link" @click="data.graphmode = graphModeEnum.CenteredDPS" :class="{active: data.graphmode === graphModeEnum.CenteredDPS}">Ctrd.PS</a>
             </li>                     
             <li class="nav-item d-flex flex-row justify-content-center align-items-center">

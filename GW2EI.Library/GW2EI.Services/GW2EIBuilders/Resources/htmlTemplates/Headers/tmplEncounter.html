@@ -25,7 +25,7 @@
                     <div v-if="encounterData.instanceBuffs" class="d-flex flex-row justify-content-around mb-1">
                         <span v-for="instanceBuff in encounterData.instanceBuffs">
                             {{instanceBuff.stack > 1 ? instanceBuff.stack + ' x' : ''}}
-                            <img :data-original-title="getBuffTooltip(instanceBuff)"
+                            <img :ei-tooltip="getBuffTooltip(instanceBuff)"
                                  :src="instanceBuff.buff.icon" class="icon icon-hover" />
                         </span>
                     </div>
@@ -36,7 +36,7 @@
                         <div class="small text-center">
                             {{target.name}}
                         </div>
-                        <div :data-original-title="healthRemaining(target, !!target.hpBars)">
+                        <div :ei-tooltip="healthRemaining(target, !!target.hpBars)">
                             <div v-if="!!target.hpBars">
                                 <div v-for="hpBar in target.hpBars" class="mt-1">
                                     <div class="health-bar" :style="{'background': getGradient(target, hpBar)}"></div>

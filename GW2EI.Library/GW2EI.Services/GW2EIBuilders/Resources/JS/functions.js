@@ -1341,7 +1341,7 @@ function getCastTooltip(cast) {
 function sweepOrphanedOrRefreshedTooltips() {
     if (!window.jQuery) return;
 
-    const $triggers = $('[data-original-title], [data-toggle="tooltip"]').filter(':visible');
+    const $triggers = $('[ei-tooltip], [data-toggle="tooltip"]').filter(':visible');
 
     $triggers.each(function () {
         const $el = $(this);
@@ -1354,13 +1354,13 @@ function sweepOrphanedOrRefreshedTooltips() {
                 const isOpen = $el.attr('aria-describedby');
 
                 // EARLY EXIT: If the tooltip isn't open, do nothing! 
-                // Bootstrap will automatically read the fresh `:data-original-title` attribute when opened later.
+                // Bootstrap will automatically read the fresh `:ei-tooltip` attribute when opened later.
                 if (!isOpen) {
                     return;
                 }
 
                 // --- RUNS ONLY FOR OPEN TOOLTIPS ---
-                const latestTitle = $el.attr('data-original-title') || $el.attr('title');
+                const latestTitle = $el.attr('ei-tooltip') || $el.attr('title');
                 const isTriggerHovered = $el.is(':hover');
                 const isTipHovered = bsTooltip.tip && $(bsTooltip.tip).is(':hover');
                 const isPhysicallyHovered = isTriggerHovered || isTipHovered;

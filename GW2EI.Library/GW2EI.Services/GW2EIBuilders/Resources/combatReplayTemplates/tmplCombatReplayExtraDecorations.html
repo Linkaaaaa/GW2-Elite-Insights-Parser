@@ -2,52 +2,52 @@
     <div class="d-flex flex-column justify-content-center align-items-center max-wd-500px scale85">           
         <h4>General Settings</h4>
         <div class="d-flex flex-row justify-content-center flex-wrap">
-            <div class="form-check mb-2 mr-2" :data-original-title="'Viewpoint will follow selected actor, as long as selected actor is drawn'">
+            <div class="form-check mb-2 mr-2" :ei-tooltip="'Viewpoint will follow selected actor, as long as selected actor is drawn'">
                 <input type="checkbox" class="form-check-input" id="followCheck" 
                     :checked="getAnimator().displaySettings.followSelected" v-on:change="getAnimator().toggleFollowSelected()">
                 <label class="form-check-label" for="followCheck">Follow Selected</label>
             </div>
-            <div class="form-check mb-2 mr-2" :data-original-title="'Viewpoint will  rotate with selected actor, as long as selected actor is drawn and Follow Selected is checked'">
+            <div class="form-check mb-2 mr-2" :ei-tooltip="'Viewpoint will  rotate with selected actor, as long as selected actor is drawn and Follow Selected is checked'">
                 <input type="checkbox" class="form-check-input" id="rotateSelected" 
                     :checked="getAnimator().displaySettings.rotateSelected" v-on:change="getAnimator().toggleRotateSelected()">
                 <label class="form-check-label" for="rotateSelected">Rotate with Selected</label>
             </div>
-            <div class="form-check mb-2 mr-2" :data-original-title="'Selected player in green, group in blue'">
+            <div class="form-check mb-2 mr-2" :ei-tooltip="'Selected player in green, group in blue'">
                 <input type="checkbox" class="form-check-input" id="subgroupCheck" 
                     :checked="getAnimator().displaySettings.highlightSelectedGroup" v-on:change="getAnimator().toggleHighlightSelectedGroup()">
                 <label class="form-check-label" for="subgroupCheck">Highlight Selected Group</label>
             </div>
-            <div v-if="showSecondaryNPCs" class="form-check mb-2 mr-2" :data-original-title="'Display not important NPCs in the arena'">
+            <div v-if="showSecondaryNPCs" class="form-check mb-2 mr-2" :ei-tooltip="'Display not important NPCs in the arena'">
                 <input type="checkbox" class="form-check-input" id="trashCheck" 
                     :checked="getAnimator().displaySettings.displayTrashMobs" v-on:change="getAnimator().toggleTrashMobs()">
                 <label class="form-check-label" for="trashCheck">Secondary NPCs</label>
             </div> 
-            <div v-if="showMechanics" class="form-check mb-2 mr-2" :data-original-title="'Encounter mechanics'">
+            <div v-if="showMechanics" class="form-check mb-2 mr-2" :ei-tooltip="'Encounter mechanics'">
                 <input type="checkbox" class="form-check-input" id="mechanicsCheck" 
                     :checked="getAnimator().displaySettings.displayMechanics" v-on:change="getAnimator().toggleMechanics()">
                 <label class="form-check-label" for="mechanicsCheck">Mechanics</label>
             </div>
-            <div v-if="showSquadMarkers" class="form-check mb-2 mr-2" :data-original-title="'Squad markers, on the ground and on players'">
+            <div v-if="showSquadMarkers" class="form-check mb-2 mr-2" :ei-tooltip="'Squad markers, on the ground and on players'">
                 <input type="checkbox" class="form-check-input" id="markersCheck" 
                     :checked="getAnimator().displaySettings.displaySquadMarkers" v-on:change="getAnimator().toggleSquadMarkers()">
                 <label class="form-check-label" for="markersCheck">Markers</label>
             </div>
-            <div v-if="showSkills" class="form-check mb-2 mr-2" :data-original-title="'Player skills'">
+            <div v-if="showSkills" class="form-check mb-2 mr-2" :ei-tooltip="'Player skills'">
                 <input type="checkbox" class="form-check-input" id="skillsCheck" 
                     :checked="getAnimator().displaySettings.displaySkillMechanics" v-on:change="getAnimator().toggleSkills()">
                 <label class="form-check-label" for="skillsCheck">Skills</label>
             </div>
-            <div class="form-check mb-2 mr-2" :data-original-title="'Use the in game hitbox size'">
+            <div class="form-check mb-2 mr-2" :ei-tooltip="'Use the in game hitbox size'">
                 <input type="checkbox" class="form-check-input" id="actorHitboxCheck" 
                     :checked="getAnimator().displaySettings.useActorHitboxWidth" v-on:change="getAnimator().toggleUseActorHitboxWidth()">
                 <label class="form-check-label" for="actorHitboxCheck">Use Hitbox Size</label>
             </div> 
-            <div class="form-check mb-2 mr-2" :data-original-title="'Display all minions'">
+            <div class="form-check mb-2 mr-2" :ei-tooltip="'Display all minions'">
                 <input type="checkbox" class="form-check-input" id="allMinionsCheck" 
                     :checked="getAnimator().displaySettings.displayAllMinions" v-on:change="getAnimator().toggleDisplayAllMinions()">
                 <label class="form-check-label" for="allMinionsCheck">All Minions</label>
             </div>     
-            <div class="form-check mb-2 mr-2" :data-original-title="'Display current selection minions'">
+            <div class="form-check mb-2 mr-2" :ei-tooltip="'Display current selection minions'">
                 <input type="checkbox" class="form-check-input" id="selectedMinionsCheck" 
                     :checked="getAnimator().displaySettings.displaySelectedMinions" v-on:change="getAnimator().toggleDisplaySelectedMinions()">
                 <label class="form-check-label" for="selectedMinionsCheck">Selected's Minions</label>
@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div class="ml-3">
-                <h4 data-original-title="Has an effect only when facing arrow are present">Cone Indicator</h4>
+                <h4 ei-tooltip="Has an effect only when facing arrow are present">Cone Indicator</h4>
                 <div class="form-check mt-1 mb-2">
                     <input type="checkbox" class="form-check-input" id="coneCheck" 
                         :checked="false" v-on:change="getAnimator().toggleConeDisplay($event.target.checked)">

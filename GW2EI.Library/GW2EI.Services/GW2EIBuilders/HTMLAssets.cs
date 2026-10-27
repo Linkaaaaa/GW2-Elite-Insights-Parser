@@ -20,6 +20,7 @@ public class HTMLAssets
             Properties.Resources.global,
             Properties.Resources.mixins,
             Properties.Resources.functions,
+            Properties.Resources.tooltip,
             Properties.Resources.main_js,
         ];
         string scriptContent = orderedScripts[0];

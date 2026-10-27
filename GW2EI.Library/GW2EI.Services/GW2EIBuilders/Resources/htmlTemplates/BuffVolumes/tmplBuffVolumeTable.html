@@ -1,9 +1,9 @@
 <template>
     <div v-if="buffs.length > 0">
         <img v-if="outgoing" class="mb-1 icon" :src="UIIcons.QuestionMark" style="position: absolute; transform: translate(0px, -20px);"
-            :data-original-title="tooltipExplOut" />
+            :ei-tooltip="tooltipExplOut" />
         <img v-if="!outgoing" class="mb-1 icon" :src="UIIcons.QuestionMark" style="position: absolute; transform: translate(0px, -20px);"
-            :data-original-title="tooltipExplInc" />
+            :ei-tooltip="tooltipExplInc" />
         <div v-if="colPageCount > 0">
             <table-scroll-component :min="0" :max="colPageCount" :width="'600px'" :height="'10px'" :transform="transFormString" :pagestructure="colStructure"></table-scroll-component>
         </div>
@@ -15,7 +15,7 @@
                     <th class="text-left" :class="getHeaderClass('Name')" @click="sortBy('Name')">Name</th>
                     <th class="stat-cell" v-for="(buff, index) in buffs" :class="getHeaderClass('Data', index)" @click="sortBy('Data', index)"
                         v-show="isInColPage(index)"
-                        :data-original-title="buff.name + (buff.description ? '<br> ' + buff.description : '')">
+                        :ei-tooltip="buff.name + (buff.description ? '<br> ' + buff.description : '')">
                         <img :src="buff.icon" :alt="buff.name" class="icon icon-hover">
                     </th>
                 </tr>
@@ -23,7 +23,7 @@
             <tbody>
                 <tr v-show="!row.player.notInSquad || !hidecustom" v-for="row in sortData(playerdata)" :class="{active: row.player.group && row.player.id === playerindex}">
                     <td :class="getBodyClass('Sub')">{{ row.player.group ? row.player.group : '-' }}</td>
-                    <td :class="getBodyClass('Prof')" :data-original-title="row.player.profession ? row.player.profession : row.player.name">
+                    <td :class="getBodyClass('Prof')" :ei-tooltip="row.player.profession ? row.player.profession : row.player.name">
                         <img :src="row.player.icon"
                             :alt="row.player.profession ? row.player.profession : row.player.name" class="icon">
                         <span style="display:none">
@@ -35,7 +35,7 @@
                     </td>
                     <td v-for=" (buff, index) in buffs"  :class="getBodyClass('Data', index)"
                         v-show="isInColPage(index)"
-                        :data-original-title="getCellTooltip(buff, row.data.data[index])">
+                        :ei-tooltip="getCellTooltip(buff, row.data.data[index])">
                         {{ getCellValue(buff, row.data.data[index]) }}
                     </td>
                 </tr>
@@ -43,13 +43,13 @@
             <tfoot v-show="sums.length > 0">
                 <tr v-for="sum in sums">
                     <td></td>
-                    <td v-if="sum.icon" :data-original-title="sum.name"><img :src="sum.icon" :alt="sum.name"
+                    <td v-if="sum.icon" :ei-tooltip="sum.name"><img :src="sum.icon" :alt="sum.name"
                             class="icon"></td>
                     <td v-else></td>
                     <td class="text-left">{{sum.name}}</td>
                     <td v-for=" (buff, index) in buffs"
                         v-show="isInColPage(index)"
-                        :data-original-title="getCellTooltip(buff, sum.data[index], !!sum.icon)">
+                        :ei-tooltip="getCellTooltip(buff, sum.data[index], !!sum.icon)">
                         {{ getCellValue(buff, sum.data[index]) }}
                     </td>
                 </tr>
