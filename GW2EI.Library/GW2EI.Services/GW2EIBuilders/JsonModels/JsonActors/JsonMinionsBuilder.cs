@@ -6,7 +6,6 @@ using GW2EIEvtcParser.EIData;
 using GW2EIEvtcParser.ParsedData;
 using GW2EIJSON;
 using static GW2EIBuilders.JsonModels.JsonLogBuilder;
-using static GW2EIEvtcParser.SpeciesIDs;
 
 namespace GW2EIBuilders.JsonModels.JsonActors;
 

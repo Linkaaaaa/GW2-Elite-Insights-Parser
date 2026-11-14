@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace GW2EIJSON;
+﻿namespace GW2EIJSON;
 
 /// <summary>
 /// Class corresponding to the regrouping of the same type of minions

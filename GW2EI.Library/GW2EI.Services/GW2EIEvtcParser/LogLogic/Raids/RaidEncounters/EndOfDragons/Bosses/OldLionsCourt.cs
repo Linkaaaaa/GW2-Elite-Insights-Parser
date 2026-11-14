@@ -322,7 +322,7 @@ internal class OldLionsCourt : EndOfDragonsRaidEncounter
         {
             base.SetInstanceBuffs(log, instanceBuffs);
         }
-        if (log.CombatData.GetBuffData(AchievementEligibilityFearNotThisKnight).Any())
+        if (log.CombatData.GetBuffData(AchievementEligibilityFearNotThisKnight).Count != 0)
         {
             var encounterPhases = log.LogData.GetEncounterPhases(log, LogID);
             foreach (var encounterPhase in encounterPhases)

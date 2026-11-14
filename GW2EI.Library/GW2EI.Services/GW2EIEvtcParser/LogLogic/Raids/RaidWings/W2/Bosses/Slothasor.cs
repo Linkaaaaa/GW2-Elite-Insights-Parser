@@ -90,7 +90,7 @@ internal class Slothasor : SalvationPass
         {
             base.SetInstanceBuffs(log, instanceBuffs);
         }
-        if (log.CombatData.GetBuffData(SlipperySlubling).Any())
+        if (log.CombatData.GetBuffData(SlipperySlubling).Count != 0)
         {
             var encounterPhases = log.LogData.GetEncounterPhases(log, LogID);
             foreach (var encounterPhase in encounterPhases)
