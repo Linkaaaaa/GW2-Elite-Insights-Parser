@@ -251,7 +251,7 @@ internal class PhaseDto
                     {
                         minionInstanceActiveTimes.Add(minion.GetActiveDuration(log, phase.Start, phase.End));
                     }
-                } 
+                }
                 else
                 {
                     minionActiveTimes.Add([]);

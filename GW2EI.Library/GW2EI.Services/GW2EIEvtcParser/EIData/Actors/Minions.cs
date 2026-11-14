@@ -168,15 +168,15 @@ public class Minions : Actor
         {
             return true;
         }
-        if (log.CombatData.HasEXTHealing && EXTHealing.GetOutgoingHealEvents(null, log).Any())
+        if (log.CombatData.HasEXTHealing && EXTHealing.GetOutgoingHealEvents(null, log).Count != 0)
         {
             return true;
         }
-        if (log.CombatData.HasEXTBarrier && EXTBarrier.GetOutgoingBarrierEvents(null, log).Any())
+        if (log.CombatData.HasEXTBarrier && EXTBarrier.GetOutgoingBarrierEvents(null, log).Count != 0)
         {
             return true;
         }
-        if (GetDamageEvents(null, log).Any())
+        if (GetDamageEvents(null, log).Count != 0)
         {
             return true;
         }

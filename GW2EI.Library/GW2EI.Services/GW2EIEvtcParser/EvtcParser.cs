@@ -1547,7 +1547,7 @@ public class EvtcParser
 
         operation.UpdateProgressWithCancellationCheck("Parsing: Encounter specific processing");
         logData.Logic.EIEvtcParse(gw2Build, evtcVersion, logData, agentData, combatItems, enabledExtensions);
-        if (!logData.Logic.Targets.Any())
+        if (logData.Logic.Targets.Count == 0)
         {
             throw new MissingKeyActorsException("No Targets found");
         }

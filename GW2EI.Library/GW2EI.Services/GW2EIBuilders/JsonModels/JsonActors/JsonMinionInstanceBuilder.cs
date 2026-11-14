@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using GW2EIBuilders.JsonModels.JsonActorUtilities;
+﻿using GW2EIBuilders.JsonModels.JsonActorUtilities;
 using GW2EIEvtcParser;
 using GW2EIEvtcParser.EIData;
 using GW2EIJSON;
@@ -20,7 +19,7 @@ internal static class JsonMinionInstanceBuilder
             FirstAware = (int)minion.FirstAware,
             LastAware = (int)minion.LastAware,
             InstanceID = minion.InstID,
-            UniqueID = minion.UniqueID,         
+            UniqueID = minion.UniqueID,
         };
         IReadOnlyList<PhaseData> phases = log.LogData.GetPhases(log);
 
